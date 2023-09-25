@@ -1,6 +1,6 @@
 # Trading Platform (120-dreamers-forex-trading)
 
-A trading platform that built with quasar framework
+A trading platform built with quasar framework
 
 ## Install the dependencies
 ```bash
