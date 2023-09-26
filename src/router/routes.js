@@ -13,8 +13,15 @@ const routes = [
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: 'app', component: () => import('pages/IndexPage.vue') },
-      { path: 'dashboard', component: () => import('pages/Dashboard.vue') }
+      { 
+        path: 'app',
+        name: 'app', 
+        component: () => import('pages/IndexPage.vue') },
+      { 
+        path: 'dashboard',
+        name: 'dashboard',
+        component: () => import('pages/Dashboard.vue') 
+      }
     ],
     meta: { auth: true }
   },
