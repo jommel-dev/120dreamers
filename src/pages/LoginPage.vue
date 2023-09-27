@@ -72,7 +72,7 @@ const router = useRouter()
 const submit = async () => {
   if (form.value.validate()) {
     await login(user)
-    router.push('/app')
+    router.push('/dashboard')
   }
 }
 </script>
