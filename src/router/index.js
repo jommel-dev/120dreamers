@@ -29,11 +29,11 @@ export default route(function (/* { store, ssrContext } */) {
 
   Router.beforeEach((to, from, next) => {
     if (to.meta.auth && !LocalStorage.has('user')) {
-      return next('/login')
+      return next('/')
     }
 
     if (!to.meta.auth && LocalStorage.has('user')) {
-      return next('/app')
+      return next('/dashboard')
     }
 
     return next()

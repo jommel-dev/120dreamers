@@ -1,16 +1,37 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-      <q-page-container class="pt-0-important bg-auth">
-          <q-page>
-              <div class="row" style="height: 100vh">
-                  <div class="col-12 flex content-center justify-center">
-                      <router-view/>
-                  </div>
-              </div>
-          </q-page>
-      </q-page-container>
-  </q-layout>
+    <q-layout view="lHh Lpr lFf">
+        <q-page-container class="bg-auth bg-custom-blue" style="height: 100vh;">
+            <router-view/>
+        </q-page-container>
+    </q-layout>
 </template>
+
+<script>
+
+export default {
+    name: '',
+    date(){
+        return {
+            thumbStyle: {
+                right: '4px',
+                borderRadius: '5px',
+                backgroundColor: '#027be3',
+                width: '5px',
+                opacity: 0.75
+            },
+
+            barStyle: {
+                right: '2px',
+                borderRadius: '9px',
+                backgroundColor: '#027be3',
+                width: '9px',
+                opacity: 0.2
+            }
+        }
+    }
+}
+</script>
+
 
 <style scoped>
   .wave {
@@ -31,4 +52,8 @@
       background-repeat: no-repeat;
       background-position: center;
   }
+
+  .bg-custom-blue{
+    background: #02186b;
+    }
 </style>
