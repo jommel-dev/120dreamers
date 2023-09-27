@@ -41,7 +41,12 @@ firebase login
 
 ### Deploy the app to firebase hosting, note: build app for production first
 ```bash
-firebase deploy
+firebase deploy --only hosting
+```
+
+### Start firebase emulator for testing cloud functions locally
+```bash
+firebase emulators:start
 ```
 
 ### Customize the configuration
