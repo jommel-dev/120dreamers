@@ -29,5 +29,20 @@ npm run lint
 quasar build
 ```
 
+### Installing firebase cli
+```bash
+npm i -g firebase-tools
+```
+
+### Login to firebase to use cli, note: email must be added to main firebase project
+```bash
+firebase login
+```
+
+### Deploy the app to firebase hosting, note: build app for production first
+```bash
+firebase deploy
+```
+
 ### Customize the configuration
 See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js).
