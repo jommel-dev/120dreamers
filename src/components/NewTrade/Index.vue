@@ -12,7 +12,8 @@
                             <span>Select Broker:</span>
                             <q-select
                                 v-model="broker" 
-                                :options="brokerList" 
+                                :options="brokerList"
+                                @update:model-value="clearRequirements"
                                 dense
                                 options-dense
                             >
@@ -23,7 +24,52 @@
                                 </template>
                             </q-select>
                         </div>
-                        
+                        <div v-if="broker !== null" class="col col-md-6 q-mt-md q-pa-sm">
+                            <span>Start Date:</span>
+                            <q-select
+                                v-model="startDate" 
+                                :options="broker.records" 
+                                dense
+                                options-dense
+                            >
+                                <template v-slot:append>
+                                    <q-avatar>
+                                        <q-icon name="date" size="sm" />
+                                    </q-avatar>
+                                </template>
+                            </q-select>
+                        </div>
+                        <div v-if="broker !== null" class="col col-md-6 q-mt-md q-pa-sm">
+                            <span>Broker:</span>
+                            <q-input v-model="brokerName" dense />
+                        </div>
+                        <div v-if="broker !== null" class="col col-md-6 q-mt-md q-pa-sm">
+                            <span>Server:</span>
+                            <q-select
+                                v-model="server" 
+                                :options="broker.servers" 
+                                dense
+                                options-dense
+                            >
+                                <template v-slot:append>
+                                    <q-avatar>
+                                        <q-icon name="date" size="sm" />
+                                    </q-avatar>
+                                </template>
+                            </q-select>
+                        </div>
+                        <div class="col col-md-12"></div>
+                        <div v-if="broker !== null" class="col col-md-6 q-mt-md q-pa-sm">
+                            <span>Username:</span>
+                            <q-input v-model="username" dense />
+                        </div>
+                        <div v-if="broker !== null" class="col col-md-6 q-mt-md q-pa-sm">
+                            <span>Investor Password:</span>
+                            <q-input type="password" v-model="password" dense />
+                        </div>
+                        <div v-if="broker !== null" class="col col-md-6 q-mt-md q-pa-sm">
+                            <q-btn outline rounded color="primary" icon="stream" label="Connect Broker" />
+                        </div>
                     </q-form>
                 </div>
             </template>
@@ -86,7 +132,16 @@ export default {
   data(){
     return {
         splitterModel: 50,
+        // Form
         broker: null,
+        startDate: "",
+        brokerName: "",
+        server: null,
+        username: "",
+        password: "",
+        type: null,
+
+        // List
         brokerList: [
             {
                 id: 1,
@@ -104,6 +159,12 @@ export default {
                     {
                         label: 'Select Records',
                         value: 'selectRecord',
+                    },
+                ],
+                servers: [
+                    {
+                        label: 'https://server.sample.com/api/v1',
+                        value: 'https://server.sample.com/api/v1',
                     },
                 ]
             },
@@ -124,6 +185,12 @@ export default {
                         label: 'Select Records',
                         value: 'selectRecord',
                     },
+                ],
+                servers: [
+                    {
+                        label: 'https://server.sample.com/api/v2',
+                        value: 'https://server.sample.com/api/v2',
+                    },
                 ]
             },
         ],
@@ -131,6 +198,12 @@ export default {
     }
   },
   created(){},
-  methods: {}
+  methods: {
+    clearRequirements(){
+        this.brokerName = ""
+        this.username = ""
+        this.password = ""
+    }
+  }
 }
 </script>

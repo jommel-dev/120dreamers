@@ -134,12 +134,24 @@ const linksList = [
     title: 'Daily Journal',
     icon: 'stacked_bar_chart',
     link: 'dailyJournal',
-    code: 101
+    code: 101,
   },
   {
     title: 'Portfolio',
     icon: 'insights',
     link: 'portfolio',
+    code: 101
+  },
+  {
+    title: 'Trade Logs',
+    icon: 'dvr',
+    link: 'tradeLogs',
+    code: 101
+  },
+  {
+    title: 'Dreamers University',
+    icon: 'cast_for_education',
+    link: 'dreamersUniversity',
     code: 101
   },
 ];

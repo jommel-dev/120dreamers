@@ -34,6 +34,11 @@ const routes = [
         component: () => import('pages/Portfolio.vue') 
       },
       { 
+        path: 'tradeLogs',
+        name: 'tradeLogs',
+        component: () => import('pages/TradeLogs.vue') 
+      },
+      { 
         path: 'newTrade',
         name: 'newTrade',
         component: () => import('pages/NewTrade.vue') 

@@ -55,8 +55,8 @@
                   <q-btn unelevated rounded color="primary" label="START YOUR JOURNEY" class="q-mt-xl" />
                 </div>
                 <div class="col col-md-6 col-lg-6">
-                  <img src="/imgs/landing_2.png" />
-                  <!-- <img src="/imgs/landing.svg" /> -->
+                  <!-- <img src="/imgs/landing_2.png" /> -->
+                  <img src="/imgs/landing.svg" />
                 </div>
               </div>
             </div>
