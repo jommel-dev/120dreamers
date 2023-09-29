@@ -6,7 +6,6 @@
         tag="a"
         v-if="children.length === 0"
         :to="{name: link}"
-        :active="checkOpen(link)"
       > 
         <q-item-section
           v-if="icon"
@@ -90,11 +89,6 @@ export default defineComponent({
         }
     },
     methods:{
-      checkOpen(link){
-        // Get Current route open
-        let currRoute = this.$router.currentRoute._value.name;
-        return link === currRoute ? true : false;
-      },
       checkSubchildOpen(childs){
         // Get Current route open
         let currRoute = this.$router.currentRoute._value.name;
