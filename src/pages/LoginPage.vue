@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="bg-login">
     <q-header class="transparentGradient" >
       <q-toolbar>
         <q-toolbar-title>
@@ -102,6 +102,11 @@ export default {
 </script>
 
 <style scoped>
+.bg-login{
+  height: 80vh;
+  background: url('/imgs/login-bg.png') no-repeat;
+  background-position: 136% 0%;
+}
 .transparentGradient {
   /* background: rgb(0,139,250);
   background: linear-gradient(80deg, rgba(0,139,250,1) 0%, rgba(253,187,45,0) 60%); */
