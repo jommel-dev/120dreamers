@@ -1,10 +1,10 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-   <q-header elevated>
+   <q-header class="bg-indigo-10" elevated>
     <q-toolbar>
       <q-btn 
         dense 
-        color="primary" 
+        color="indigo-10" 
         round
         unelevated
         :icon="miniState ? 'navigate_next' : 'chevron_left'"
@@ -12,7 +12,7 @@
         @click="toggleLeftDrawer" 
       />
      <q-toolbar-title>
-      Application Title
+      <q-btn unelevated rounded icon="addchart" color="white" text-color="black" to="/newTrade">Add Trade</q-btn> 
      </q-toolbar-title>
 
      <!-- <q-toolbar-subtitle v-if="displayName">Welcome, {{ displayName }}!</q-toolbar-subtitle> -->
@@ -129,7 +129,19 @@ const linksList = [
     icon: 'dashboard',
     link: 'dashboard',
     code: 101
-  }
+  },
+  {
+    title: 'Daily Journal',
+    icon: 'stacked_bar_chart',
+    link: 'dailyJournal',
+    code: 101
+  },
+  {
+    title: 'Portfolio',
+    icon: 'insights',
+    link: 'portfolio',
+    code: 101
+  },
 ];
 
 export default {
@@ -175,7 +187,7 @@ export default {
   },
   created(){
     this.getDisplayNameFromLocalStorage
-  }, 
+  },
   methods: {
     toggleLeftDrawer () {
       this.miniState = !this.miniState

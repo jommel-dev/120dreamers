@@ -22,7 +22,22 @@ const routes = [
         path: 'dashboard',
         name: 'dashboard',
         component: () => import('pages/Dashboard.vue') 
-      }
+      },
+      { 
+        path: 'dailyJournal',
+        name: 'dailyJournal',
+        component: () => import('pages/DailyJournal.vue') 
+      },
+      { 
+        path: 'portfolio',
+        name: 'portfolio',
+        component: () => import('pages/Portfolio.vue') 
+      },
+      { 
+        path: 'newTrade',
+        name: 'newTrade',
+        component: () => import('pages/NewTrade.vue') 
+      },
     ],
     meta: { auth: true }
   },

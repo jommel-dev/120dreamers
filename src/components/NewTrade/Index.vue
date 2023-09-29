@@ -1,0 +1,136 @@
+<template>
+    <div class="q-pa-md" style="width: 100%;">
+        <q-splitter
+            v-model="splitterModel"
+            style="height: 90vh"
+        >
+
+            <template v-slot:before>
+                <div class="q-pa-sm">
+                    <q-form class="row">
+                        <div class="col col-md-12">
+                            <span>Select Broker:</span>
+                            <q-select
+                                v-model="broker" 
+                                :options="brokerList" 
+                                dense
+                                options-dense
+                            >
+                                <template v-slot:append>
+                                    <q-avatar>
+                                        <q-icon name="ion-wallet" size="sm" />
+                                    </q-avatar>
+                                </template>
+                            </q-select>
+                        </div>
+                        
+                    </q-form>
+                </div>
+            </template>
+
+            <template v-slot:after>
+               <div class="q-pa-sm flex">
+
+                    <div v-if="broker !== null" class="q-pa-xl text-center">
+                        <q-icon :name="broker.icon" size="xl" /> <span class="text-h6">{{ broker.label }}</span>
+                        <div class="row q-mt-lg">
+                            <div class="col col-md-12 text-left ">
+                                <span class="text-h6">Supported Assets:</span><br/>
+                                <q-chip 
+                                    v-for="(item, index) in broker.assets"
+                                    :key="index"
+                                    outline
+                                    color="primary" 
+                                    text-color="white" 
+                                    icon="auto_graph"
+                                >
+                                    {{item}}
+                                </q-chip>
+                            </div>
+                            <div class="col col-md-12 text-left q-mt-lg">
+                                <span class="text-h6">Instruction of Linking</span><br/>
+                                {{ broker.description }}
+                            </div>
+                            <div class="col col-md-12 text-left q-mt-lg">
+                                <q-card flat bordered class="my-card">
+                                    <q-card-section>
+                                        <q-chip
+                                            style="width: 100%;"
+                                            color="blue-5" 
+                                            text-color="white" 
+                                            icon="info" 
+                                            label="Note" 
+                                        />
+                                    </q-card-section>
+
+                                    <q-card-section class="q-pt-none">
+                                        {{ notes }}
+                                    </q-card-section>
+                                </q-card>
+                               
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </template>
+
+        </q-splitter>
+    </div>
+</template>
+
+<script>
+export default {
+  name: 'NewTradeForm',
+  components: {},
+  data(){
+    return {
+        splitterModel: 50,
+        broker: null,
+        brokerList: [
+            {
+                id: 1,
+                label: 'MetaTrader4',
+                value: 1,
+                icon: 'pix',
+                color: 'yellow-7',
+                assets: ['asset1', 'asset2', 'asset3', 'asset4'],
+                description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+                records: [
+                    {
+                        label: 'Import All Records',
+                        value: 'importAll',
+                    },
+                    {
+                        label: 'Select Records',
+                        value: 'selectRecord',
+                    },
+                ]
+            },
+            {
+                id: 2,
+                label: 'MetaTrader10',
+                value: 2,
+                icon: 'ion-logo-ionitron',
+                color: 'yellow-4',
+                assets: ['asset1', 'asset2', 'asset3', 'asset4'],
+                description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+                records: [
+                    {
+                        label: 'Import All Records',
+                        value: 'importAll',
+                    },
+                    {
+                        label: 'Select Records',
+                        value: 'selectRecord',
+                    },
+                ]
+            },
+        ],
+        notes: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
+    }
+  },
+  created(){},
+  methods: {}
+}
+</script>
