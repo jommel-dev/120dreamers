@@ -11,7 +11,7 @@
                         <div class="col col-md-12">
                             <span>Select Broker:</span>
                             <q-select
-                                v-model="broker" 
+                                v-model="broker"
                                 :options="brokerList"
                                 @update:model-value="clearRequirements"
                                 dense
@@ -27,8 +27,8 @@
                         <div v-if="broker !== null" class="col col-md-6 q-mt-md q-pa-sm">
                             <span>Start Date:</span>
                             <q-select
-                                v-model="startDate" 
-                                :options="broker.records" 
+                                v-model="startDate"
+                                :options="broker.records"
                                 dense
                                 options-dense
                             >
@@ -46,8 +46,8 @@
                         <div v-if="broker !== null" class="col col-md-6 q-mt-md q-pa-sm">
                             <span>Server:</span>
                             <q-select
-                                v-model="server" 
-                                :options="broker.servers" 
+                                v-model="server"
+                                :options="broker.servers"
                                 dense
                                 options-dense
                             >
@@ -68,7 +68,7 @@
                             <q-input type="password" v-model="password" dense />
                         </div>
                         <div v-if="broker !== null" class="col col-md-6 q-mt-md q-pa-sm">
-                            <q-btn outline rounded color="primary" icon="stream" label="Connect Broker" />
+                            <q-btn outline rounded color="primary" icon="stream" label="Connect Broker" @click="saveToFirestore" :loading="isSaving" />
                         </div>
                     </q-form>
                 </div>
@@ -82,12 +82,12 @@
                         <div class="row q-mt-lg">
                             <div class="col col-md-12 text-left ">
                                 <span class="text-h6">Supported Assets:</span><br/>
-                                <q-chip 
+                                <q-chip
                                     v-for="(item, index) in broker.assets"
                                     :key="index"
                                     outline
-                                    color="primary" 
-                                    text-color="white" 
+                                    color="primary"
+                                    text-color="white"
                                     icon="auto_graph"
                                 >
                                     {{item}}
@@ -102,10 +102,10 @@
                                     <q-card-section>
                                         <q-chip
                                             style="width: 100%;"
-                                            color="blue-5" 
-                                            text-color="white" 
-                                            icon="info" 
-                                            label="Note" 
+                                            color="blue-5"
+                                            text-color="white"
+                                            icon="info"
+                                            label="Note"
                                         />
                                     </q-card-section>
 
@@ -113,11 +113,11 @@
                                         {{ notes }}
                                     </q-card-section>
                                 </q-card>
-                               
+
                             </div>
                         </div>
                     </div>
-                    
+
                 </div>
             </template>
 
@@ -126,83 +126,126 @@
 </template>
 
 <script>
+import { LocalStorage } from 'quasar'
+import createDocument from 'src/firebase/firebase-create'
+import { Timestamp } from '@firebase/firestore'
+
 export default {
   name: 'NewTradeForm',
   components: {},
-  data(){
+  data () {
     return {
-        splitterModel: 50,
-        // Form
-        broker: null,
-        startDate: "",
-        brokerName: "",
-        server: null,
-        username: "",
-        password: "",
-        type: null,
+      splitterModel: 50,
+      // Form
+      broker: null,
+      startDate: null,
+      brokerName: '',
+      server: null,
+      username: '',
+      password: '',
+      type: null,
 
-        // List
-        brokerList: [
+      // List
+      brokerList: [
+        {
+          id: 1,
+          label: 'MetaTrader4',
+          value: 1,
+          icon: 'pix',
+          color: 'yellow-7',
+          assets: ['asset1', 'asset2', 'asset3', 'asset4'],
+          description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+          records: [
             {
-                id: 1,
-                label: 'MetaTrader4',
-                value: 1,
-                icon: 'pix',
-                color: 'yellow-7',
-                assets: ['asset1', 'asset2', 'asset3', 'asset4'],
-                description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-                records: [
-                    {
-                        label: 'Import All Records',
-                        value: 'importAll',
-                    },
-                    {
-                        label: 'Select Records',
-                        value: 'selectRecord',
-                    },
-                ],
-                servers: [
-                    {
-                        label: 'https://server.sample.com/api/v1',
-                        value: 'https://server.sample.com/api/v1',
-                    },
-                ]
+              label: 'Import All Records',
+              value: 'importAll'
             },
             {
-                id: 2,
-                label: 'MetaTrader10',
-                value: 2,
-                icon: 'ion-logo-ionitron',
-                color: 'yellow-4',
-                assets: ['asset1', 'asset2', 'asset3', 'asset4'],
-                description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-                records: [
-                    {
-                        label: 'Import All Records',
-                        value: 'importAll',
-                    },
-                    {
-                        label: 'Select Records',
-                        value: 'selectRecord',
-                    },
-                ],
-                servers: [
-                    {
-                        label: 'https://server.sample.com/api/v2',
-                        value: 'https://server.sample.com/api/v2',
-                    },
-                ]
+              label: 'Select Records',
+              value: 'selectRecord'
+            }
+          ],
+          servers: [
+            {
+              label: 'https://server.sample.com/api/v1',
+              value: 'https://server.sample.com/api/v1'
+            }
+          ]
+        },
+        {
+          id: 2,
+          label: 'MetaTrader10',
+          value: 2,
+          icon: 'ion-logo-ionitron',
+          color: 'yellow-4',
+          assets: ['asset1', 'asset2', 'asset3', 'asset4'],
+          description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+          records: [
+            {
+              label: 'Import All Records',
+              value: 'importAll'
             },
-        ],
-        notes: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
+            {
+              label: 'Select Records',
+              value: 'selectRecord'
+            }
+          ],
+          servers: [
+            {
+              label: 'https://server.sample.com/api/v2',
+              value: 'https://server.sample.com/api/v2'
+            }
+          ]
+        }
+      ],
+      notes: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
+      isSaving: false
     }
   },
-  created(){},
+  created () {},
   methods: {
-    clearRequirements(){
-        this.brokerName = ""
-        this.username = ""
-        this.password = ""
+    clearRequirements () {
+      this.brokerName = ''
+      this.username = ''
+      this.password = ''
+    },
+    async saveToFirestore () {
+      this.isSaving = true
+      const data = {
+        broker: this.broker.label,
+        startDate: this.startDate.value,
+        brokerName: this.brokerName,
+        server: this.server.value,
+        username: this.username,
+        password: this.password, // TODO: Encrypt this
+        type: this.type,
+        createdAt: Timestamp.now()
+      }
+
+      try {
+        const user = LocalStorage.getItem('user')
+        console.log({ user })
+        const userId = user ? user.uid : null
+        if (userId) {
+          await createDocument(`platforms/${userId}/brokers`, data)
+          this.$q.notify({
+            type: 'positive',
+            message: 'Data saved successfully!'
+          })
+        } else {
+          this.$q.notify({
+            type: 'negative',
+            message: 'Missing user id!'
+          })
+        }
+      } catch (error) {
+        this.$q.notify({
+          type: 'negative',
+          message: `Error saving data: ${error.message}`
+        })
+      } finally {
+        this.isSaving = false
+      }
     }
   }
 }

@@ -4,10 +4,10 @@ const routes = [
     component: () => import('layouts/AuthLayout.vue'),
     children: [
       // { path: '/', redirect: '/login' },
-      { 
+      {
         path: '',
-        name: 'landing', 
-        component: () => import('pages/IndexPage.vue') 
+        name: 'landing',
+        component: () => import('pages/IndexPage.vue')
       },
       { path: 'login', component: () => import('src/pages/LoginPage.vue') },
       { path: 'register', component: () => import('src/pages/RegisterPage.vue') }
@@ -18,31 +18,36 @@ const routes = [
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { 
+      {
         path: 'dashboard',
         name: 'dashboard',
-        component: () => import('pages/Dashboard.vue') 
+        component: () => import('pages/Dashboard.vue')
       },
-      { 
+      {
         path: 'dailyJournal',
         name: 'dailyJournal',
-        component: () => import('pages/DailyJournal.vue') 
+        component: () => import('pages/DailyJournal.vue')
       },
-      { 
+      {
         path: 'portfolio',
         name: 'portfolio',
-        component: () => import('pages/Portfolio.vue') 
+        component: () => import('pages/Portfolio.vue')
       },
-      { 
+      {
         path: 'tradeLogs',
         name: 'tradeLogs',
-        component: () => import('pages/TradeLogs.vue') 
+        component: () => import('pages/TradeLogs.vue')
       },
-      { 
+      {
         path: 'newTrade',
         name: 'newTrade',
-        component: () => import('pages/NewTrade.vue') 
+        component: () => import('pages/NewTrade.vue')
       },
+      {
+        path: 'allPlatforms',
+        name: 'allPlatforms',
+        component: () => import('pages/BrokerList.vue')
+      }
     ],
     meta: { auth: true }
   },
