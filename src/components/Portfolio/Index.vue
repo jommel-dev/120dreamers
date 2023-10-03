@@ -27,9 +27,7 @@
                         </q-tab-panel>
 
                         <q-tab-panel name="two">
-                            With so much content to display at once, and often so little screen real-estate,
-                            Cards have fast become the design pattern of choice for many companies, including
-                            the likes of Google and Twitter.
+                            <infoGeneral />
                         </q-tab-panel>
                     </q-tab-panels>
                 </q-card>
@@ -45,16 +43,34 @@
                     :breakpoint="0"
                 >
                     <q-tab name="growth" icon="legend_toggle" label="Growth" />
-                    <q-tab name="trade" icon="candlestick_chart" label="Trade" />
+                    <q-tab name="profit" icon="attach_money" label="Profit" />
+                    <q-tab name="balance" icon="wallet" label="Balance" />
+                    <q-tab name="drawdown" icon="trending_down" label="Drawdown" />
                 </q-tabs>
 
                 <q-tab-panels v-model="chartTab" animated>
                     <q-tab-panel name="growth">
-                        <mixLineBarVue />
+                        <growthChart
+                            v-if="chartTab === 'growth'" 
+                        />
                     </q-tab-panel>
 
-                    <q-tab-panel name="trade">
-                        <candleStickVue />
+                    <q-tab-panel name="profit">
+                        <profitChart 
+                            v-if="chartTab === 'profit'" 
+                        />
+                    </q-tab-panel>
+
+                    <q-tab-panel name="balance">
+                        <balanceChart 
+                            v-if="chartTab === 'balance'" 
+                        />
+                    </q-tab-panel>
+
+                    <q-tab-panel name="drawdown">
+                        <drawDownChart 
+                            v-if="chartTab === 'drawdown'" 
+                        />
                     </q-tab-panel>
                 </q-tab-panels>
                 
@@ -69,8 +85,8 @@
                     :breakpoint="0"
                 >
                     <q-tab name="period" icon="scatter_plot" label="Period" />
-                    <q-tab name="goals" icon="sports_score" label="Goals" />
-                    <q-tab name="browser" icon="web" label="Browser" />
+                    <q-tab name="goals" icon="ads_click" label="Goals" />
+                    <q-tab name="browser" icon="candlestick_chart" label="Browser" />
                 </q-tabs>
 
                 <q-tab-panels v-model="tradingTab" animated>
@@ -78,10 +94,10 @@
                         <periodTable />
                     </q-tab-panel>
                     <q-tab-panel name="goals">
-                        
+                        <goalsTable />
                     </q-tab-panel>
                     <q-tab-panel name="browser">
-                        
+                        <browserTable />
                     </q-tab-panel>
                 </q-tab-panels>
                 
@@ -91,18 +107,36 @@
 </template>
 
 <script>
-import mixLineBarVue from './matrix/mixLineBar.vue'
-import candleStickVue from './matrix/candleStick.vue'
-import periodTable from './matrix/reportTable.vue'
+// Charts
+import growthChart from './matrix/growthChart.vue'
+import profitChart from './matrix/profitChart.vue'
+import balanceChart from './matrix/balanceChart.vue'
+import drawDownChart from './matrix/drawDownChart.vue'
+// Information
 import infoStats from './information/info.vue'
+import infoGeneral from './information/general.vue'
+
+// Tables
+import periodTable from './tables/reportTable.vue'
+import goalsTable from './tables/goalsTable.vue'
+import browserTable from './tables/browserTable.vue'
 
 export default {
-  name: 'DailyJournalComponent',
+  name: 'PortfolioComponent',
   components: {
-    mixLineBarVue,
-    candleStickVue,
+    
+    infoStats,
+    infoGeneral,
+
+    growthChart,
+    balanceChart,
+    profitChart,
+    drawDownChart,
+
     periodTable,
-    infoStats
+    goalsTable,
+    browserTable,
+    
   },
   data(){
     return {
