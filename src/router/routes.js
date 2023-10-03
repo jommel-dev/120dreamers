@@ -10,7 +10,8 @@ const routes = [
         component: () => import('pages/IndexPage.vue') 
       },
       { path: 'login', component: () => import('src/pages/LoginPage.vue') },
-      { path: 'register', component: () => import('src/pages/RegisterPage.vue') }
+      { path: 'register', component: () => import('src/pages/RegisterPage.vue') },
+      { path: 'features', component: () => import('src/pages/FeaturesPage.vue') }
     ],
     meta: { auth: false }
   },

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="bg-login">
     <q-header class="transparentGradient" >
       <q-toolbar>
         <q-toolbar-title>
@@ -9,9 +9,9 @@
         <q-btn flat to="/login" >Sign In</q-btn>
       </q-toolbar>
       <q-tabs v-model="tab">
-        <q-tab name="home" label="Home" />
-        <q-tab name="about" label="About" />
-        <q-tab name="features" label="Features" />
+        <q-route-tab to="/" name="home"  label="Home" />
+        <q-route-tab to="/features" name="features" label="Features" />
+        <q-route-tab  name="about" label="About" />
         <q-tab name="pricing" label="Pricing" />
         <q-tab name="brokers" label="Broker Support" />
       </q-tabs>
@@ -52,11 +52,11 @@
                   <br>
                   <br>
                   <br>
-                  <q-btn unelevated rounded color="primary" label="START YOUR JOURNEY" class="q-mt-xl" />
+                  <q-btn unelevated rounded color="primary" label="START YOUR JOURNEY" to="/features" class="q-mt-xl" />
                 </div>
                 <div class="col col-md-6 col-lg-6">
-                  <!-- <img src="/imgs/landing_2.png" /> -->
-                  <img src="/imgs/landing.svg" />
+                  <img class="landing-img"  src="/imgs/landing_2.png" />
+                  <!-- <img src="/imgs/landing.svg" /> -->
                 </div>
               </div>
             </div>
@@ -88,6 +88,16 @@ export default defineComponent({
   background: rgb(0,139,250);
   background: linear-gradient(178deg, rgba(0,139,250,1) 0%, rgba(253,187,45,0) 58%)
 }
+
+
+.bg-login{
+  height: 80%;
+  background: url('/imgs/bg-landing.svg') center no-repeat;
+  /* background-position: 136% 0%; */
+  background-size: fill;
+ 
+}
+
 
 .ocean {
   width:100%;
