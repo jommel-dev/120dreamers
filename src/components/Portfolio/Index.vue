@@ -75,6 +75,11 @@
                 </q-tab-panels>
                 
             </div>
+            <!-- trading -->
+           <div>
+            <h5>Trading</h5>
+           </div>
+
             <div class="col col-md-12 q-pa-sm">
                 <q-tabs
                     v-model="tradingTab"
@@ -84,6 +89,7 @@
                     inline-label
                     :breakpoint="0"
                 >
+                   
                     <q-tab name="period" icon="scatter_plot" label="Period" />
                     <q-tab name="goals" icon="ads_click" label="Goals" />
                     <q-tab name="browser" icon="candlestick_chart" label="Browser" />
@@ -99,8 +105,112 @@
                     <q-tab-panel name="browser">
                         <browserTable />
                     </q-tab-panel>
-                </q-tab-panels>
-                
+                </q-tab-panels>  
+            </div>
+            <!-- advance statistics -->
+            <div>
+                <h5>Advance Statistics</h5>
+           </div>
+            <div class="col col-md-12 q-pa-sm">
+                <q-tabs
+                    v-model="tradingTab"
+                    dense
+                    align="left"
+                    no-caps
+                    inline-label
+                    :breakpoint="0"
+                >
+                    <q-tab name="trades" icon="candlestick_chart" label="Trades" />
+                    <q-tab name="summary" icon="ads_click" label="Summary" />
+                    <q-tab name="hourly" icon="ads_click" label="Hourly" />
+                    <q-tab name="riskOfRuins" icon="candlestick_chart" label="Risk of Ruins" />
+                    <q-tab name="duration" icon="scatter_plot" label="Duration" />
+                        
+                </q-tabs>
+
+                <q-tab-panels v-model="tradingTab" animated>
+                    <q-tab-panel name="duration">
+                        <durationChart/>
+                    </q-tab-panel>
+                    <q-tab-panel name="hourly">
+                        <hourlyChart/>
+                    </q-tab-panel>
+                    <q-tab-panel name="riskOfRuins">
+                        <riskOfRuinChart/>
+                    </q-tab-panel>
+                    <q-tab-panel name="summary">
+                        <summaryChart/>
+                    </q-tab-panel>
+                    <q-tab-panel name="trades">
+                        <tradesChart/>
+                    </q-tab-panel>
+                </q-tab-panels>  
+            </div>
+
+            <!-- trading activity -->
+            <div>
+                <h5>Trading activity</h5>
+           </div>
+            <div class="col col-md-12 q-pa-sm">
+                <q-tabs
+                    v-model="tradingTab"
+                    dense
+                    align="left"
+                    no-caps
+                    inline-label
+                    :breakpoint="0"
+                >
+
+                    <q-tab name="period" icon="scatter_plot" label="Open Trades" />
+                    <q-tab name="goals" icon="ads_click" label="Open Orders" />
+                    <q-tab name="browser" icon="candlestick_chart" label="History" />
+                    <q-tab name="browser" icon="candlestick_chart" label="Exposure" />    
+                </q-tabs>
+
+                <q-tab-panels v-model="tradingTab" animated>
+                    <q-tab-panel name="period">
+                        <periodTable />
+                    </q-tab-panel>
+                    <q-tab-panel name="goals">
+                        <goalsTable />
+                    </q-tab-panel>
+                    <q-tab-panel name="browser">
+                        <browserTable />
+                    </q-tab-panel>
+                    <q-tab-panel name="browser">
+                        <browserTable />
+                    </q-tab-panel>
+                </q-tab-panels>  
+            </div>
+
+
+            <!-- motnhly analitycs -->
+            <div>
+                <h5>Monthly Analaytics</h5>
+           </div>
+            <div class="col col-md-12 q-pa-sm">
+                <q-tabs
+                    v-model="tradingTab"
+                    dense
+                    align="left"
+                    no-caps
+                    inline-label
+                    :breakpoint="0"
+                >
+                    <q-tab name="period" icon="scatter_plot" label="2022" />
+                    <q-tab name="goals" icon="ads_click" label="2023" />
+              
+
+                </q-tabs>
+
+                <q-tab-panels v-model="tradingTab" animated>
+                    <q-tab-panel name="period">
+                        <periodTable />
+                    </q-tab-panel>
+                    <q-tab-panel name="goals">
+                        <goalsTable />
+                    </q-tab-panel>
+                </q-tab-panels>  
             </div>
         </div>
     </div>
@@ -121,6 +231,16 @@ import periodTable from './tables/reportTable.vue'
 import goalsTable from './tables/goalsTable.vue'
 import browserTable from './tables/browserTable.vue'
 
+//advance Statistics tables
+import durationChart from './statistics/durationChart.vue'
+import hourlyChart from './statistics/hourlyChart.vue'
+import riskOfRuinChart from './statistics/riskOfRuinChart.vue'
+import summaryChart from './statistics/summaryChart.vue'
+import tradesChart from './statistics/tradesChart.vue'
+
+//Trading Activity
+
+
 export default {
   name: 'PortfolioComponent',
   components: {
@@ -136,6 +256,13 @@ export default {
     periodTable,
     goalsTable,
     browserTable,
+
+    durationChart,
+    hourlyChart,
+    riskOfRuinChart,
+    summaryChart,
+    tradesChart,
+
     
   },
   data(){
