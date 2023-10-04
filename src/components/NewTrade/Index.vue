@@ -59,13 +59,14 @@
                             </q-select>
                         </div>
                         <div class="col col-md-12"></div>
+                        <!-- Create tooltip/note message to generate their token and account id from https://metaapi.cloud/ -->
                         <div v-if="broker !== null" class="col col-md-6 q-mt-md q-pa-sm">
-                            <span>Username:</span>
-                            <q-input v-model="username" dense />
+                            <span>Token (Meta API):</span>
+                            <q-input v-model="token" dense />
                         </div>
                         <div v-if="broker !== null" class="col col-md-6 q-mt-md q-pa-sm">
-                            <span>Investor Password:</span>
-                            <q-input type="password" v-model="password" dense />
+                            <span>Account ID (META API):</span>
+                            <q-input v-model="accountId" dense />
                         </div>
                         <div v-if="broker !== null" class="col col-md-6 q-mt-md q-pa-sm">
                             <q-btn outline rounded color="primary" icon="stream" label="Connect Broker" @click="saveToFirestore" :loading="isSaving" />
@@ -141,8 +142,8 @@ export default {
       startDate: null,
       brokerName: '',
       server: null,
-      username: '',
-      password: '',
+      token: '',
+      accountId: '',
       type: null,
 
       // List
@@ -206,8 +207,8 @@ export default {
   methods: {
     clearRequirements () {
       this.brokerName = ''
-      this.username = ''
-      this.password = ''
+      this.token = ''
+      this.accountId = ''
     },
     async saveToFirestore () {
       this.isSaving = true
@@ -216,8 +217,8 @@ export default {
         startDate: this.startDate.value,
         brokerName: this.brokerName,
         server: this.server.value,
-        username: this.username,
-        password: this.password, // TODO: Encrypt this
+        token: this.token,
+        accountId: this.accountId, // TODO: Encrypt this
         type: this.type,
         createdAt: Timestamp.now()
       }
