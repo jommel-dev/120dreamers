@@ -113,7 +113,7 @@
            </div>
             <div class="col col-md-12 q-pa-sm">
                 <q-tabs
-                    v-model="tradingTab"
+                    v-model="advanceTab"
                     dense
                     align="left"
                     no-caps
@@ -125,10 +125,9 @@
                     <q-tab name="hourly" icon="ads_click" label="Hourly" />
                     <q-tab name="riskOfRuins" icon="candlestick_chart" label="Risk of Ruins" />
                     <q-tab name="duration" icon="scatter_plot" label="Duration" />
-                        
                 </q-tabs>
 
-                <q-tab-panels v-model="tradingTab" animated>
+                <q-tab-panels v-model="advanceTab" animated>
                     <q-tab-panel name="duration">
                         <durationChart/>
                     </q-tab-panel>
@@ -153,7 +152,7 @@
            </div>
             <div class="col col-md-12 q-pa-sm">
                 <q-tabs
-                    v-model="tradingTab"
+                    v-model="tradeActTab"
                     dense
                     align="left"
                     no-caps
@@ -167,7 +166,7 @@
                     <q-tab name="browser" icon="candlestick_chart" label="Exposure" />    
                 </q-tabs>
 
-                <q-tab-panels v-model="tradingTab" animated>
+                <q-tab-panels v-model="tradeActTab" animated>
                     <q-tab-panel name="period">
                         <periodTable />
                     </q-tab-panel>
@@ -190,7 +189,7 @@
            </div>
             <div class="col col-md-12 q-pa-sm">
                 <q-tabs
-                    v-model="tradingTab"
+                    v-model="monthlyTab"
                     dense
                     align="left"
                     no-caps
@@ -199,11 +198,9 @@
                 >
                     <q-tab name="period" icon="scatter_plot" label="2022" />
                     <q-tab name="goals" icon="ads_click" label="2023" />
-              
-
                 </q-tabs>
 
-                <q-tab-panels v-model="tradingTab" animated>
+                <q-tab-panels v-model="monthlyTab" animated>
                     <q-tab-panel name="period">
                         <periodTable />
                     </q-tab-panel>
@@ -263,13 +260,15 @@ export default {
     summaryChart,
     tradesChart,
 
-    
   },
   data(){
     return {
         tab: 'one',
         chartTab: 'growth',
         tradingTab: 'period',
+        advanceTab: 'trades',
+        tradeActTab: 'period',
+        monthlyTab: 'period',
     }
   },
   created(){},
