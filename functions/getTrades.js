@@ -111,23 +111,52 @@ async function fetchData (token, accountId) {
     const orders = await connection.getOrders()
     console.log('orders', orders)
 
-    const growthValues = getGrowthValues([...positions, ...orders])
-    console.log('growthValues', growthValues)
+    const history = await connection.getHistoryOrdersByTimeRange('2023-10-01T00:00:00Z', '2023-10-30T00:00:00Z')
+    console.log('history', history)
+
+    const dealsResult = await connection.getDealsByTimeRange('2023-10-01T00:00:00Z', '2023-10-30T00:00:00Z')
+    console.log('dealsResult', dealsResult)
+
+    const deals = dealsResult.deals
+    // const growthValues = getGrowthValues(deals)
+    // console.log('growthValues', growthValues)
+
+    const profitsByDate = getTotalProfitByDate(deals)
+
+    const profits = profitsByDate.map((profit, index) => ({
+      date: profit.time,
+      profit: (profit.profit + (index > 0 ? profitsByDate[index - 1].profit : 0)).toFixed(2)
+    }))
+
+    const growth = profits.map((profit) => ({
+      date: profit.date,
+      growth: profit.profit === profits[0].profit ? profits[0].profit : (parseFloat(profit.profit) / 100).toFixed(2)
+    }))
+
+    const balance = growth.map((profit, index) => ({
+      date: profit.date,
+      balance: (index === 0 || profit.growth === growth[0].growth) ? profit.growth : parseFloat(growth[0].growth) + parseFloat(profit.growth)
+    }))
 
     return {
       accountInformation,
       positions,
       orders,
-      growthValues
+      // growthValues,
+      history,
+      deals,
+      profits,
+      growth,
+      balance
+      // deals
     }
   } catch (e) {
     console.log(e)
   }
 }
 
-function getAverageByDate (positions) {
+function getTotalProfitByDate (positions) {
   const timestamp = {}
-
   positions.forEach(pos => {
     const date = new Date(pos.time).toDateString()
     if (!timestamp[date]) {
@@ -136,46 +165,44 @@ function getAverageByDate (positions) {
       timestamp[date].push(pos.profit)
     }
   })
-
-  const averageByDate = Object.keys(timestamp).map(date => {
-    const average = timestamp[date].reduce((a, b) => a + b, 0) / timestamp[date].length
+  const totalProfitPerDate = Object.keys(timestamp).map(date => {
+    const total = timestamp[date].reduce((a, b) => a + b, 0)
     return {
       time: date,
-      profit: average
+      profit: total
     }
   })
-
-  return averageByDate
+  return totalProfitPerDate
 }
 
-function getGrowthValues (_positions) {
-  const timestamps = []
-  const growthPercentages = []
-  const growthValuesWithTimestamps = []
+// function getGrowthValues (_positions) {
+//   const timestamps = []
+//   const growthPercentages = []
+//   const growthValuesWithTimestamps = []
 
-  const positions = getAverageByDate(_positions)
-  for (let i = 0; i < positions.length; i++) {
-    const dataPoint = positions[i]
-    timestamps.push(dataPoint.time)
-    if (i > 0) {
-      const previousProfit = positions[i - 1].profit
-      const currentProfit = dataPoint.profit
-      const growthPercentage = calculateGrowthPercentage(previousProfit, currentProfit)
-      growthPercentages.push(growthPercentage)
-    } else {
-      growthPercentages.push(0) // First data point, set growth percentage to 0
-    }
+//   const positions = getTotalProfitByDate(_positions)
+//   for (let i = 0; i < positions.length; i++) {
+//     const dataPoint = positions[i]
+//     timestamps.push(dataPoint.time)
+//     if (i > 0) {
+//       const previousProfit = positions[i - 1].profit
+//       const currentProfit = dataPoint.profit
+//       const growthPercentage = calculateGrowthPercentage(previousProfit, currentProfit)
+//       growthPercentages.push(growthPercentage)
+//     } else {
+//       growthPercentages.push(0) // First data point, set growth percentage to 0
+//     }
 
-    growthValuesWithTimestamps.push({
-      time: dataPoint.time,
-      growthPercentage: growthPercentages[i]
-    })
-  }
+//     growthValuesWithTimestamps.push({
+//       time: dataPoint.time,
+//       growthPercentage: growthPercentages[i]
+//     })
+//   }
 
-  return growthValuesWithTimestamps
-}
+//   return growthValuesWithTimestamps
+// }
 
-function calculateGrowthPercentage (previousProfit, currentProfit) {
-  const growthPercentage = ((currentProfit - previousProfit) / Math.abs(previousProfit)) * 100
-  return growthPercentage.toFixed(3)
-}
+// function calculateGrowthPercentage (previousProfit, currentProfit) {
+//   const growthPercentage = ((currentProfit - previousProfit) / Math.abs(previousProfit)) * 100
+//   return growthPercentage.toFixed(3)
+// }
