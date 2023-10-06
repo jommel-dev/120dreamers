@@ -111,12 +111,47 @@ async function fetchData (token, accountId) {
     const orders = await connection.getOrders()
     console.log('orders', orders)
 
+    const growthValues = getGrowthValues([...positions, ...orders])
+    console.log('growthValues', growthValues)
+
     return {
       accountInformation,
       positions,
-      orders
+      orders,
+      growthValues
     }
   } catch (e) {
     console.log(e)
   }
+}
+
+function getGrowthValues (positions) {
+  const timestamps = []
+  const growthPercentages = []
+  const growthValuesWithTimestamps = []
+
+  for (let i = 0; i < positions.length; i++) {
+    const dataPoint = positions[i]
+    timestamps.push(dataPoint.time)
+    if (i > 0) {
+      const previousProfit = positions[i - 1].profit
+      const currentProfit = dataPoint.profit
+      const growthPercentage = calculateGrowthPercentage(previousProfit, currentProfit)
+      growthPercentages.push(growthPercentage)
+    } else {
+      growthPercentages.push(0) // First data point, set growth percentage to 0
+    }
+
+    growthValuesWithTimestamps.push({
+      time: dataPoint.time,
+      growthPercentage: growthPercentages[i]
+    })
+  }
+
+  return growthValuesWithTimestamps
+}
+
+function calculateGrowthPercentage (previousProfit, currentProfit) {
+  const growthPercentage = ((currentProfit - previousProfit) / Math.abs(previousProfit)) * 100
+  return growthPercentage.toFixed(3)
 }
