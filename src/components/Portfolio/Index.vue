@@ -31,7 +31,6 @@
                         </q-tab-panel>
                     </q-tab-panels>
                 </q-card>
-                
             </div>
             <div class="col col-md-9 q-pa-sm">
                 <q-tabs
@@ -51,29 +50,30 @@
                 <q-tab-panels v-model="chartTab" animated>
                     <q-tab-panel name="growth">
                         <growthChart
-                            v-if="chartTab === 'growth'" 
+                            v-if="chartTab === 'growth' && trades"
+                            :growthValues="rawGrowthValues"
                         />
                     </q-tab-panel>
 
                     <q-tab-panel name="profit">
-                        <profitChart 
-                            v-if="chartTab === 'profit'" 
+                        <profitChart
+                            v-if="chartTab === 'profit'"
                         />
                     </q-tab-panel>
 
                     <q-tab-panel name="balance">
-                        <balanceChart 
-                            v-if="chartTab === 'balance'" 
+                        <balanceChart
+                            v-if="chartTab === 'balance'"
                         />
                     </q-tab-panel>
 
                     <q-tab-panel name="drawdown">
-                        <drawDownChart 
-                            v-if="chartTab === 'drawdown'" 
+                        <drawDownChart
+                            v-if="chartTab === 'drawdown'"
                         />
                     </q-tab-panel>
                 </q-tab-panels>
-                
+
             </div>
             <!-- trading -->
            <div>
@@ -89,7 +89,6 @@
                     inline-label
                     :breakpoint="0"
                 >
-                   
                     <q-tab name="period" icon="scatter_plot" label="Period" />
                     <q-tab name="goals" icon="ads_click" label="Goals" />
                     <q-tab name="browser" icon="candlestick_chart" label="Browser" />
@@ -105,7 +104,7 @@
                     <q-tab-panel name="browser">
                         <browserTable />
                     </q-tab-panel>
-                </q-tab-panels>  
+                </q-tab-panels>
             </div>
             <!-- advance statistics -->
             <div>
@@ -143,7 +142,7 @@
                     <q-tab-panel name="trades">
                         <tradesChart/>
                     </q-tab-panel>
-                </q-tab-panels>  
+                </q-tab-panels>
             </div>
 
             <!-- trading activity -->
@@ -163,7 +162,7 @@
                     <q-tab name="period" icon="scatter_plot" label="Open Trades" />
                     <q-tab name="goals" icon="ads_click" label="Open Orders" />
                     <q-tab name="browser" icon="candlestick_chart" label="History" />
-                    <q-tab name="browser" icon="candlestick_chart" label="Exposure" />    
+                    <q-tab name="browser" icon="candlestick_chart" label="Exposure" />
                 </q-tabs>
 
                 <q-tab-panels v-model="tradeActTab" animated>
@@ -179,9 +178,8 @@
                     <q-tab-panel name="browser">
                         <browserTable />
                     </q-tab-panel>
-                </q-tab-panels>  
+                </q-tab-panels>
             </div>
-
 
             <!-- motnhly analitycs -->
             <div>
@@ -207,7 +205,7 @@
                     <q-tab-panel name="goals">
                         <goalsTable />
                     </q-tab-panel>
-                </q-tab-panels>  
+                </q-tab-panels>
             </div>
         </div>
     </div>
@@ -228,20 +226,21 @@ import periodTable from './tables/reportTable.vue'
 import goalsTable from './tables/goalsTable.vue'
 import browserTable from './tables/browserTable.vue'
 
-//advance Statistics tables
+// advance Statistics tables
 import durationChart from './statistics/durationChart.vue'
 import hourlyChart from './statistics/hourlyChart.vue'
 import riskOfRuinChart from './statistics/riskOfRuinChart.vue'
 import summaryChart from './statistics/summaryChart.vue'
 import tradesChart from './statistics/tradesChart.vue'
 
-//Trading Activity
+// Trading Activity
 
+import { toRaw } from 'vue'
 
 export default {
   name: 'PortfolioComponent',
   components: {
-    
+
     infoStats,
     infoGeneral,
 
@@ -258,20 +257,33 @@ export default {
     hourlyChart,
     riskOfRuinChart,
     summaryChart,
-    tradesChart,
+    tradesChart
 
   },
-  data(){
+  data () {
     return {
-        tab: 'one',
-        chartTab: 'growth',
-        tradingTab: 'period',
-        advanceTab: 'trades',
-        tradeActTab: 'period',
-        monthlyTab: 'period',
+      tab: 'one',
+      chartTab: 'growth',
+      tradingTab: 'period',
+      advanceTab: 'trades',
+      tradeActTab: 'period',
+      monthlyTab: 'period',
+      trades: null
     }
   },
-  created(){},
-  methods: {}
+  created () {
+    this.catchTrades()
+  },
+  methods: {
+    async catchTrades () {
+      this.trades = await this.$fireApi.trades.getTrades()
+      console.log('trades from index', this.trades)
+    }
+  },
+  computed: {
+    rawGrowthValues () {
+      return this.trades ? toRaw(this.trades.growthValues) : null
+    }
+  }
 }
 </script>

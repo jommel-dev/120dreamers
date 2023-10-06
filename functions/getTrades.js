@@ -125,11 +125,35 @@ async function fetchData (token, accountId) {
   }
 }
 
-function getGrowthValues (positions) {
+function getAverageByDate (positions) {
+  const timestamp = {}
+
+  positions.forEach(pos => {
+    const date = new Date(pos.time).toDateString()
+    if (!timestamp[date]) {
+      timestamp[date] = [pos.profit]
+    } else {
+      timestamp[date].push(pos.profit)
+    }
+  })
+
+  const averageByDate = Object.keys(timestamp).map(date => {
+    const average = timestamp[date].reduce((a, b) => a + b, 0) / timestamp[date].length
+    return {
+      time: date,
+      profit: average
+    }
+  })
+
+  return averageByDate
+}
+
+function getGrowthValues (_positions) {
   const timestamps = []
   const growthPercentages = []
   const growthValuesWithTimestamps = []
 
+  const positions = getAverageByDate(_positions)
   for (let i = 0; i < positions.length; i++) {
     const dataPoint = positions[i]
     timestamps.push(dataPoint.time)
