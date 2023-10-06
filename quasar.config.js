@@ -32,6 +32,7 @@ module.exports = configure(function (/* ctx */) {
       'i18n',
       'axios',
       'apexchart',
+      'firebaseFunctions',
     ],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
