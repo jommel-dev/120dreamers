@@ -20,13 +20,16 @@ export default {
   },
   computed: {
     growthTimeData () {
-      return this.growthTrades.map(item => item.time)
+      return this.growthTrades.map(item => item.date)
     },
     growthPercentageData () {
-      return this.growthTrades.map(item => parseFloat(item.growthPercentage))
+      return this.growthTrades.map(item => parseFloat(item.growth))
     }
   },
   watch: {
+    // growthValues(newVal){
+    //   console.log(newVal)
+    // }
     growthValues: {
       immediate: true,
       async handler (newVal) {
@@ -56,12 +59,12 @@ export default {
         yAxis: [
           {
             type: 'value',
-            name: 'Precipitation'
+            name: 'Growth'
           // ... other yAxis properties ...
           },
           {
             type: 'value',
-            name: 'Temperature'
+            name: 'Equity Growth'
           // ... other yAxis properties ...
           }
         ],
