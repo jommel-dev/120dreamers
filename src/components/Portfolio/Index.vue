@@ -49,9 +49,16 @@
 
                 <q-tab-panels v-model="chartTab" animated>
                     <q-tab-panel name="growth">
+                        <div v-if="dataLoader">
+                            <q-spinner-bars
+                                color="primary"
+                                size="2em"
+                            />
+                            <q-tooltip :offset="[0, 8]">Loading Analytic Chart Data</q-tooltip>
+                        </div>
                         <growthChart
-                            v-if="chartTab === 'growth' && trades"
-                            :growthValues="rawGrowthValues"
+                            v-if="chartTab === 'growth' && !dataLoader"
+                            :growthValues="trades.growth"
                         />
                     </q-tab-panel>
 
@@ -268,7 +275,8 @@ export default {
       advanceTab: 'trades',
       tradeActTab: 'period',
       monthlyTab: 'period',
-      trades: null
+      trades: null,
+      dataLoader: false
     }
   },
   created () {
@@ -276,8 +284,17 @@ export default {
   },
   methods: {
     async catchTrades () {
-      this.trades = await this.$fireApi.trades.getTrades()
-      console.log('trades from index', this.trades)
+        // Set Loading State
+        this.dataLoader = true
+
+        // Fetch Data
+        let data = await this.$fireApi.trades.getTrades()
+        
+        console.log(data)
+        this.trades = Object.keys(data).length !== 0 ? data : null
+       
+        // Close Loading State
+        this.dataLoader = false
     }
   },
   computed: {
