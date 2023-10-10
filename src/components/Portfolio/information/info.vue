@@ -5,7 +5,7 @@
                 Gain
             </div>
             <div class="col-auto text-green-7 text-bold  row no-wrap items-center">
-                +250.45%
+                {{ lastGrowthValue }}
             </div>
         </div>
         <div class="row no-wrap items-center">
@@ -13,7 +13,7 @@
                 Abs. Gain
             </div>
             <div class="col-auto text-green-7 text-caption  row no-wrap items-center">
-                +94.3%
+                {{ lastGrowthValue }}
             </div>
         </div>
 
@@ -35,14 +35,14 @@
                 4.33%
             </div>
         </div>
-        <div class="row no-wrap items-center">
+        <!-- <div class="row no-wrap items-center">
             <div class="col text-grey-7 ellipsis">
                 Drawdown
             </div>
             <div class="col-auto text-grey-7 text-caption  row no-wrap items-center">
                 35.3%
             </div>
-        </div>
+        </div> -->
 
         <q-separator class="q-mt-sm q-mb-sm" />
 
@@ -51,7 +51,7 @@
                 Balance
             </div>
             <div class="col-auto text-grey-7 text-caption  row no-wrap items-center">
-                $3043.67
+                {{ info.balance }}
             </div>
         </div>
         <div class="row no-wrap items-center">
@@ -59,7 +59,7 @@
                 Equity
             </div>
             <div class="col-auto text-grey-7 text-caption  row no-wrap items-center">
-                $3044.67
+                {{ info.equity }}
             </div>
         </div>
         <div class="row no-wrap items-center">
@@ -75,17 +75,17 @@
                 Profit
             </div>
             <div class="col-auto text-green-7 text-bold text-caption  row no-wrap items-center">
-                $3544.67
+                {{ lastProfitValue }}
             </div>
         </div>
-        <div class="row no-wrap items-center">
+        <!-- <div class="row no-wrap items-center">
             <div class="col text-grey-7 ellipsis">
                 Interest
             </div>
             <div class="col-auto text-grey-7 text-bold text-caption  row no-wrap items-center">
                 -$203.67
             </div>
-        </div>
+        </div> -->
 
         <q-separator class="q-mt-sm q-mb-sm" />
 
@@ -102,11 +102,11 @@
                 Withdrawals
             </div>
             <div class="col-auto text-grey-7 text-caption  row no-wrap items-center">
-                $3000.00
+                $0.00
             </div>
         </div>
 
-        <q-separator class="q-mt-sm q-mb-sm" />
+        <!-- <q-separator class="q-mt-sm q-mb-sm" />
 
         <div class="row no-wrap items-center">
             <div class="col text-grey-7 ellipsis">
@@ -123,18 +123,41 @@
             <div class="col-auto text-grey-7 text-caption  row no-wrap items-center">
                 123
             </div>
-        </div>
+        </div> -->
     </div>
 </template>
 
 <script>
-import moment from 'moment';
-
 export default {
   name: 'InfoCard',
-  data(){
+  props: {
+    infoStatsData: Object
+  },
+  data () {
     return {
+      info: this.infoStatsData.accountInformation
     }
   },
+  computed: {
+    lastGrowthValue () {
+      const keys = Object.keys(this.infoStatsData.growth)
+
+      const lastKey = keys[keys.length - 1]
+
+      const lastGrowthValue = this.infoStatsData.growth[lastKey].growth
+
+      return lastGrowthValue
+    },
+    lastProfitValue () {
+      const keys = Object.keys(this.infoStatsData.profits)
+
+      const lastKey = keys[keys.length - 1]
+
+      const lastProfitValue = this.infoStatsData.profits[lastKey].profit
+
+      return lastProfitValue
+    }
+  }
 }
+
 </script>
