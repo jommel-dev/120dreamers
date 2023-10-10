@@ -64,13 +64,15 @@
 
                     <q-tab-panel name="profit">
                         <profitChart
-                            v-if="chartTab === 'profit'"
+                            v-if="chartTab === 'profit' && !dataLoader"
+                            :profits="trades.profits"
                         />
                     </q-tab-panel>
 
                     <q-tab-panel name="balance">
                         <balanceChart
-                            v-if="chartTab === 'balance'"
+                            v-if="chartTab === 'balance' && !dataLoader"
+                            :balances="trades.balance"
                         />
                     </q-tab-panel>
 
@@ -242,8 +244,6 @@ import tradesChart from './statistics/tradesChart.vue'
 
 // Trading Activity
 
-import { toRaw } from 'vue'
-
 export default {
   name: 'PortfolioComponent',
   components: {
@@ -284,22 +284,17 @@ export default {
   },
   methods: {
     async catchTrades () {
-        // Set Loading State
-        this.dataLoader = true
+      // Set Loading State
+      this.dataLoader = true
 
-        // Fetch Data
-        let data = await this.$fireApi.trades.getTrades()
-        
-        console.log(data)
-        this.trades = Object.keys(data).length !== 0 ? data : null
-       
-        // Close Loading State
-        this.dataLoader = false
-    }
-  },
-  computed: {
-    rawGrowthValues () {
-      return this.trades ? toRaw(this.trades.growthValues) : null
+      // Fetch Data
+      const data = await this.$fireApi.trades.getTrades()
+
+      // console.log(data)
+      this.trades = Object.keys(data).length !== 0 ? data : null
+
+      // Close Loading State
+      this.dataLoader = false
     }
   }
 }
