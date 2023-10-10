@@ -98,7 +98,14 @@ export default {
       ],
     }
   },
-  created(){},
-  methods: {}
+  created(){
+    this.catchTrades();
+  },
+  methods: {
+    async catchTrades(){
+      const trades = await this.$fireApi.trades.getTrades()
+      console.log(trades)
+    }
+  }
 }
 </script>

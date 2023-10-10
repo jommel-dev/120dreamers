@@ -50,7 +50,6 @@
                         </q-tab-panel>
                     </q-tab-panels>
                 </q-card>
-                
             </div>
             <div class="col col-md-9 q-pa-sm">
                 <q-tabs
@@ -69,26 +68,20 @@
 
                 <q-tab-panels v-model="chartTab" animated>
                     <q-tab-panel name="growth">
-<<<<<<< Updated upstream
-=======
-                        <div v-if="dataLoader" class="text-center q-ma-auto q-mt-xl">
+                        <div v-if="dataLoader">
                             <q-spinner-bars
                                 color="primary"
                                 size="2em"
                             />
                             <q-tooltip :offset="[0, 8]">Loading Analytic Chart Data</q-tooltip>
                         </div>
->>>>>>> Stashed changes
                         <growthChart
-                            v-if="chartTab === 'growth'" 
+                            v-if="chartTab === 'growth' && !dataLoader"
+                            :growthValues="trades.growth"
                         />
                     </q-tab-panel>
 
                     <q-tab-panel name="profit">
-<<<<<<< Updated upstream
-                        <profitChart 
-                            v-if="chartTab === 'profit'" 
-=======
                         <div v-if="dataLoader" class="text-center q-ma-auto q-mt-xl">
                             <q-spinner-bars
                                 color="primary"
@@ -99,21 +92,10 @@
                         <profitChart
                             v-if="chartTab === 'profit' && !dataLoader"
                             :profits="trades.profits"
->>>>>>> Stashed changes
                         />
                     </q-tab-panel>
 
                     <q-tab-panel name="balance">
-<<<<<<< Updated upstream
-                        <balanceChart 
-                            v-if="chartTab === 'balance'" 
-                        />
-                    </q-tab-panel>
-
-                    <q-tab-panel name="drawdown">
-                        <drawDownChart 
-                            v-if="chartTab === 'drawdown'" 
-=======
                         <div v-if="dataLoader" class="text-center q-ma-auto q-mt-xl">
                             <q-spinner-bars
                                 color="primary"
@@ -130,12 +112,16 @@
                     <!-- <q-tab-panel name="drawdown">
                         <drawDownChart
                             v-if="chartTab === 'drawdown'"
->>>>>>> Stashed changes
                         />
                     </q-tab-panel> -->
                 </q-tab-panels>
-                
+
             </div>
+            <!-- trading -->
+           <div>
+            <h5>Trading</h5>
+           </div>
+
             <div class="col col-md-12 q-pa-sm">
                 <q-tabs
                     v-model="tradingTab"
@@ -161,7 +147,107 @@
                         <browserTable />
                     </q-tab-panel>
                 </q-tab-panels>
-                
+            </div>
+            <!-- advance statistics -->
+            <div>
+                <h5>Advance Statistics</h5>
+           </div>
+            <div class="col col-md-12 q-pa-sm">
+                <q-tabs
+                    v-model="advanceTab"
+                    dense
+                    align="left"
+                    no-caps
+                    inline-label
+                    :breakpoint="0"
+                >
+                    <q-tab name="trades" icon="candlestick_chart" label="Trades" />
+                    <q-tab name="summary" icon="ads_click" label="Summary" />
+                    <q-tab name="hourly" icon="ads_click" label="Hourly" />
+                    <q-tab name="riskOfRuins" icon="candlestick_chart" label="Risk of Ruins" />
+                    <q-tab name="duration" icon="scatter_plot" label="Duration" />
+                </q-tabs>
+
+                <q-tab-panels v-model="advanceTab" animated>
+                    <q-tab-panel name="duration">
+                        <durationChart/>
+                    </q-tab-panel>
+                    <q-tab-panel name="hourly">
+                        <hourlyChart/>
+                    </q-tab-panel>
+                    <q-tab-panel name="riskOfRuins">
+                        <riskOfRuinChart/>
+                    </q-tab-panel>
+                    <q-tab-panel name="summary">
+                        <summaryChart/>
+                    </q-tab-panel>
+                    <q-tab-panel name="trades">
+                        <tradesChart/>
+                    </q-tab-panel>
+                </q-tab-panels>
+            </div>
+
+            <!-- trading activity -->
+            <div>
+                <h5>Trading activity</h5>
+           </div>
+            <div class="col col-md-12 q-pa-sm">
+                <q-tabs
+                    v-model="tradeActTab"
+                    dense
+                    align="left"
+                    no-caps
+                    inline-label
+                    :breakpoint="0"
+                >
+
+                    <q-tab name="period" icon="scatter_plot" label="Open Trades" />
+                    <q-tab name="goals" icon="ads_click" label="Open Orders" />
+                    <q-tab name="browser" icon="candlestick_chart" label="History" />
+                    <q-tab name="browser" icon="candlestick_chart" label="Exposure" />
+                </q-tabs>
+
+                <q-tab-panels v-model="tradeActTab" animated>
+                    <q-tab-panel name="period">
+                        <periodTable />
+                    </q-tab-panel>
+                    <q-tab-panel name="goals">
+                        <goalsTable />
+                    </q-tab-panel>
+                    <q-tab-panel name="browser">
+                        <browserTable />
+                    </q-tab-panel>
+                    <q-tab-panel name="browser">
+                        <browserTable />
+                    </q-tab-panel>
+                </q-tab-panels>
+            </div>
+
+            <!-- motnhly analitycs -->
+            <div>
+                <h5>Monthly Analaytics</h5>
+           </div>
+            <div class="col col-md-12 q-pa-sm">
+                <q-tabs
+                    v-model="monthlyTab"
+                    dense
+                    align="left"
+                    no-caps
+                    inline-label
+                    :breakpoint="0"
+                >
+                    <q-tab name="period" icon="scatter_plot" label="2022" />
+                    <q-tab name="goals" icon="ads_click" label="2023" />
+                </q-tabs>
+
+                <q-tab-panels v-model="monthlyTab" animated>
+                    <q-tab-panel name="period">
+                        <periodTable />
+                    </q-tab-panel>
+                    <q-tab-panel name="goals">
+                        <goalsTable />
+                    </q-tab-panel>
+                </q-tab-panels>
             </div>
         </div>
     </div>
@@ -172,7 +258,7 @@
 import growthChart from './matrix/growthChart.vue'
 import profitChart from './matrix/profitChart.vue'
 import balanceChart from './matrix/balanceChart.vue'
-import drawDownChart from './matrix/drawDownChart.vue'
+// import drawDownChart from './matrix/drawDownChart.vue'
 // Information
 import infoStats from './information/info.vue'
 import infoGeneral from './information/general.vue'
@@ -182,31 +268,67 @@ import periodTable from './tables/reportTable.vue'
 import goalsTable from './tables/goalsTable.vue'
 import browserTable from './tables/browserTable.vue'
 
+// advance Statistics tables
+import durationChart from './statistics/durationChart.vue'
+import hourlyChart from './statistics/hourlyChart.vue'
+import riskOfRuinChart from './statistics/riskOfRuinChart.vue'
+import summaryChart from './statistics/summaryChart.vue'
+import tradesChart from './statistics/tradesChart.vue'
+
+// Trading Activity
+
 export default {
   name: 'PortfolioComponent',
   components: {
-    
+
     infoStats,
     infoGeneral,
 
     growthChart,
     balanceChart,
     profitChart,
-    drawDownChart,
+    // drawDownChart,
 
     periodTable,
     goalsTable,
     browserTable,
-    
+
+    durationChart,
+    hourlyChart,
+    riskOfRuinChart,
+    summaryChart,
+    tradesChart
+
   },
-  data(){
+  data () {
     return {
-        tab: 'one',
-        chartTab: 'growth',
-        tradingTab: 'period',
+      tab: 'one',
+      chartTab: 'growth',
+      tradingTab: 'period',
+      advanceTab: 'trades',
+      tradeActTab: 'period',
+      monthlyTab: 'period',
+      trades: null,
+      dataLoader: false
     }
   },
-  created(){},
-  methods: {}
+  created () {
+    this.catchTrades()
+  },
+  methods: {
+    async catchTrades () {
+      // Set Loading State
+      this.dataLoader = true
+
+      // Fetch Data
+      const data = await this.$fireApi.trades.getTrades()
+
+      // console.log(data)
+      this.trades = Object.keys(data).length !== 0 ? data : null
+
+      // Close Loading State
+      this.dataLoader = false
+    }
+  }
 }
 </script>
