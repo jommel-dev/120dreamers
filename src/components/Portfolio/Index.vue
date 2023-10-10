@@ -68,7 +68,7 @@
 
                 <q-tab-panels v-model="chartTab" animated>
                     <q-tab-panel name="growth">
-                        <div v-if="dataLoader">
+                        <div v-if="dataLoader" class="text-center q-ma-auto q-mt-xl">
                             <q-spinner-bars
                                 color="primary"
                                 size="2em"
