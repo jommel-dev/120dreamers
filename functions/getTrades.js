@@ -135,7 +135,7 @@ async function fetchData (token, accountId) {
 
     const balance = growth.map((profit, index) => ({
       date: profit.date,
-      balance: (index === 0 || profit.growth === growth[0].growth) ? profit.growth : parseFloat(growth[0].growth) + parseFloat(profit.growth)
+      balance: (index === 0 || profit.growth === growth[0].growth) ? parseFloat(profit.growth) : parseFloat(growth[0].growth) + parseFloat(profit.growth)
     }))
 
     return {
