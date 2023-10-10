@@ -23,11 +23,30 @@
 
                     <q-tab-panels v-model="tab" animated>
                         <q-tab-panel name="one">
-                            <infoStats />
+                            <div v-if="dataLoader" class="text-center q-ma-auto">
+                                <q-spinner-bars
+                                    color="primary"
+                                    size="2em"
+                                />
+                                <q-tooltip :offset="[0, 8]">Loading Statistics Data</q-tooltip>
+                            </div>
+                            <infoStats
+                                v-if="tab === 'one' && !dataLoader"
+                                :infoStatsData="trades"
+                            />
                         </q-tab-panel>
 
                         <q-tab-panel name="two">
-                            <infoGeneral />
+                            <div v-if="dataLoader" class="text-center q-ma-auto">
+                                <q-spinner-bars
+                                    color="primary"
+                                    size="2em"
+                                />
+                                <q-tooltip :offset="[0, 8]">Loading General Data</q-tooltip>
+                            </div>
+                            <infoGeneral
+                            v-if="tab === 'two' && !dataLoader"
+                            :generalData="trades.accountInformation"/>
                         </q-tab-panel>
                     </q-tab-panels>
                 </q-card>
@@ -45,23 +64,47 @@
                     <q-tab name="growth" icon="legend_toggle" label="Growth" />
                     <q-tab name="profit" icon="attach_money" label="Profit" />
                     <q-tab name="balance" icon="wallet" label="Balance" />
-                    <q-tab name="drawdown" icon="trending_down" label="Drawdown" />
+                    <!-- <q-tab name="drawdown" icon="trending_down" label="Drawdown" /> -->
                 </q-tabs>
 
                 <q-tab-panels v-model="chartTab" animated>
                     <q-tab-panel name="growth">
+<<<<<<< Updated upstream
+=======
+                        <div v-if="dataLoader" class="text-center q-ma-auto q-mt-xl">
+                            <q-spinner-bars
+                                color="primary"
+                                size="2em"
+                            />
+                            <q-tooltip :offset="[0, 8]">Loading Analytic Chart Data</q-tooltip>
+                        </div>
+>>>>>>> Stashed changes
                         <growthChart
                             v-if="chartTab === 'growth'" 
                         />
                     </q-tab-panel>
 
                     <q-tab-panel name="profit">
+<<<<<<< Updated upstream
                         <profitChart 
                             v-if="chartTab === 'profit'" 
+=======
+                        <div v-if="dataLoader" class="text-center q-ma-auto q-mt-xl">
+                            <q-spinner-bars
+                                color="primary"
+                                size="2em"
+                            />
+                            <q-tooltip :offset="[0, 8]">Loading Profit Chart Data</q-tooltip>
+                        </div>
+                        <profitChart
+                            v-if="chartTab === 'profit' && !dataLoader"
+                            :profits="trades.profits"
+>>>>>>> Stashed changes
                         />
                     </q-tab-panel>
 
                     <q-tab-panel name="balance">
+<<<<<<< Updated upstream
                         <balanceChart 
                             v-if="chartTab === 'balance'" 
                         />
@@ -70,8 +113,26 @@
                     <q-tab-panel name="drawdown">
                         <drawDownChart 
                             v-if="chartTab === 'drawdown'" 
+=======
+                        <div v-if="dataLoader" class="text-center q-ma-auto q-mt-xl">
+                            <q-spinner-bars
+                                color="primary"
+                                size="2em"
+                            />
+                            <q-tooltip :offset="[0, 8]">Loading Balance Chart Data</q-tooltip>
+                        </div>
+                        <balanceChart
+                            v-if="chartTab === 'balance' && !dataLoader"
+                            :balances="trades.balance"
                         />
                     </q-tab-panel>
+
+                    <!-- <q-tab-panel name="drawdown">
+                        <drawDownChart
+                            v-if="chartTab === 'drawdown'"
+>>>>>>> Stashed changes
+                        />
+                    </q-tab-panel> -->
                 </q-tab-panels>
                 
             </div>
