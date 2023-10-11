@@ -231,8 +231,22 @@ export default {
       this.eventList = [...this.calendarData.map(item => ({
         title: `${item.profit} (${item.dataCount} trades)`,
         start: item.date,
-        color: parseFloat(item.profit) >= 0 ? 'green' : 'red'
+        display: 'background',
+        color: this.checkValueColor(item.profit)
       }))]
+    },
+    checkValueColor(val){
+      console.log(val)
+            let positiveMatch = /[+]/gi;
+            let negativeMatch = /[-]/gi;
+            let color = "#89ff92";
+            if(val.match(positiveMatch)){
+                color = '#89ff92';
+            } else if(val.match(negativeMatch)){
+                color = '#f44336';
+            }
+
+            return color;
     }
   },
   watch: {
