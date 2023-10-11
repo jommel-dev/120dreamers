@@ -1,0 +1,221 @@
+<template>
+    <div>
+        <q-table
+            :rows="tableRow"
+            :columns="tableColumns"
+            row-key="name"
+            hide-bottom
+            separator="cell"
+        >
+            <template v-slot:header="props">
+                <q-tr :props="props">
+                    <q-th auto-width >
+                        <q-icon name="help_outline" />
+                    </q-th>
+                    <q-th
+                        v-for="col in props.cols"
+                        :key="col.name"
+                        :props="props"
+                    >
+                        {{ col.label }}
+                    </q-th>
+                </q-tr>
+            </template>
+            <template v-slot:body="props">
+                <q-tr :props="props">
+                    <q-td auto-width>
+                        {{props.row.period}}
+                    </q-td>
+                    <q-td
+                        v-for="col in props.cols"
+                        :key="col.name"
+                        :props="props"
+                    >
+                    <span class="text-bold"
+                        v-if="col.name == 'action' ? (col.value == 'POSITION_TYPE_BUY' ? 'Buy' : 'Sell') : col.value"
+                        :class="col.name == 'netProfit' ? checkValueColor(col.value) : ' '"
+                        >
+                        {{ `${col.value}` }}
+                    </span>
+                    </q-td>
+                </q-tr>
+            </template>
+        </q-table>
+    </div>
+</template>
+
+<script>
+import moment from 'moment'
+import { getTrades } from 'src/firebase/firebase-functions'
+
+export default {
+  name: 'historyTable',
+  data () {
+    return {
+      tableRow: []
+    }
+  },
+  components: {},
+  created () {},
+  methods: {
+    moment,
+    checkValueColor (val) {
+      const positiveMatch = /[+]/gi
+      const negativeMatch = /[-]/gi
+      let color = ''
+      if (val.match(positiveMatch)) {
+        color = 'text-green-7'
+      } else if (val.match(negativeMatch)) {
+        color = 'text-red-7'
+      }
+
+      return color
+    }
+    // end
+  },
+  async mounted () {
+    try {
+      const trades = await getTrades()
+      //   console.log({ trades })
+
+      if (trades?.history.historyOrders) {
+        // console.log('setting history value')
+        this.tableRow = trades.history.historyOrders
+      }
+    } catch (error) {
+      console.error('Failed to fetch trades:', error)
+    }
+  },
+  computed: {
+
+    tableColumns: function () {
+      // ["Business Name", "Address", "Category", "Call", "Remarks", "Action"];
+      return [
+        {
+          name: 'openDate',
+          required: true,
+          label: 'Open Date',
+          align: 'left',
+          field: row => row.doneTime,
+          sortable: true
+        },
+        {
+          name: 'closeDate',
+          required: true,
+          label: 'Close Date',
+          align: 'left',
+          field: row => row.brokerTime,
+          sortable: true
+        },
+        {
+          name: 'symbol',
+          required: true,
+          label: 'Symbol',
+          align: 'left',
+          field: row => row.symbol,
+          format: val => `${val}`,
+          sortable: true
+        },
+        {
+          name: 'action',
+          required: true,
+          label: 'Action',
+          align: 'left',
+          field: row => row.type,
+          format: val => `${val}`,
+          sortable: true
+        },
+        // {
+        //   name: 'lots',
+        //   required: true,
+        //   label: 'Lots',
+        //   align: 'left',
+        //   field: row => row.win,
+        //   format: val => `${val}`,
+        //   sortable: true
+        // },
+        {
+          name: 'sl',
+          required: true,
+          label: 'SL (Price)',
+          align: 'left',
+          field: row => row.stopLoss,
+          format: val => `${val}`,
+          sortable: true
+        },
+        {
+          name: 'tp',
+          required: true,
+          label: 'TP (Price)',
+          align: 'left',
+          field: row => row.takeProfit,
+          format: val => `${val}`,
+          sortable: true
+        },
+        {
+          name: 'openPrice',
+          required: true,
+          label: 'Open Price',
+          align: 'left',
+          field: row => row.openPrice,
+          format: val => `${val}`,
+          sortable: true
+        },
+        {
+          name: 'closePrice',
+          required: true,
+          label: 'Close Price',
+          align: 'left',
+          field: row => row.openPrice,
+          format: val => `${val}`,
+          sortable: true
+        },
+        // {
+        //   name: 'pips',
+        //   required: true,
+        //   label: 'Pips',
+        //   align: 'left',
+        //   field: row => row.lots,
+        //   format: val => `${val}`,
+        //   sortable: true
+        // },
+        {
+          name: 'netProfit',
+          required: true,
+          label: 'Net Profit',
+          align: 'left',
+          field: row => row.profit,
+          format: val => `${val}`,
+          sortable: true
+        }
+        // {
+        //   name: 'duration',
+        //   required: true,
+        //   label: 'Duration',
+        //   align: 'left',
+        //   field: row => row.swap,
+        //   format: val => `${val}`,
+        //   sortable: true
+        // },
+        // {
+        //   name: 'gain',
+        //   required: true,
+        //   label: 'Gain',
+        //   align: 'left',
+        //   field: row => row.swap,
+        //   format: val => `${val}`,
+        //   sortable: true
+        // }
+
+      ]
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.title{
+    font-weight: 600;
+    font-size: 18pt;
+}
+</style>

@@ -20,9 +20,9 @@
               <div class="q-pa-sm">
                 <div class="row">
                     <!-- Small cards -->
-                    <div 
-                    v-for="(item, index) in dashCards" 
-                    :key="index" 
+                    <div
+                    v-for="(item, index) in dashCards"
+                    :key="index"
                     class="col col-md-12 col-lg-12 q-mb-sm"
                     >
                         <q-card flat bordered class="my-card q-pa-sm">
@@ -40,7 +40,7 @@
               </div>
             </template>
       </q-splitter>
-      
+
     </div>
 </template>
 
@@ -54,55 +54,56 @@ export default {
     tradeReportTableVue,
     areaChart
   },
-  data(){
+  data () {
     return {
       splitterModel: 70,
       dashCards: [
         {
-            title:'Net P&L',
-            value: '$ 1,000',
-            subVal:'35',
-            type: '',
-            info: '',
-            color: 'text-green-5',
-            icon: 'analytics',
-            iconColor: 'primary',
-            valueType: '',   
-            chartType: '',
-            component: '',
+          title: 'Net P&L',
+          value: '$ 1,000',
+          subVal: '35',
+          type: '',
+          info: '',
+          color: 'text-green-5',
+          icon: 'analytics',
+          iconColor: 'primary',
+          valueType: '',
+          chartType: '',
+          component: ''
         },
         {
-            title:'Trade Win %',
-            value: "75.43%",
-            subVal:'35',
-            type: '',
-            info: '',
-            color: '',
-            icon: 'speed',
-            iconColor: 'green',
-            valueType: '',   
-            chartType: '', 
+          title: 'Trade Win %',
+          value: '75.43%',
+          subVal: '35',
+          type: '',
+          info: '',
+          color: '',
+          icon: 'speed',
+          iconColor: 'green',
+          valueType: '',
+          chartType: ''
         },
         {
-            title:'Profit Factor',
-            value: 10.86,
-            subVal:'35',
-            type: '',
-            info: '',
-            color: '',
-            icon: 'donut_large',
-            iconColor: 'blue-7',
-            valueType: '',   
-            chartType: '', 
-        },
-      ],
+          title: 'Profit Factor',
+          value: 10.86,
+          subVal: '35',
+          type: '',
+          info: '',
+          color: '',
+          icon: 'donut_large',
+          iconColor: 'blue-7',
+          valueType: '',
+          // eslint-disable-next-line no-trailing-spaces
+          chartType: '' 
+        }
+      ]
     }
   },
-  created(){
-    this.catchTrades();
+  created () {
+    this.catchTrades()
   },
   methods: {
-    async catchTrades(){
+    async catchTrades () {
       const trades = await this.$fireApi.trades.getTrades()
       console.log(trades)
     }
