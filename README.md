@@ -39,9 +39,20 @@ npm i -g firebase-tools
 firebase login
 ```
 
-### Deploy the app to firebase hosting, note: build app for production first
+### Deploy the app to firebase hosting
 ```bash
-firebase deploy --only hosting
+npm run deploy:prod
+```
+
+### Deploy the functions to cloud
+```bash
+firebase deploy --only functions
+```
+
+### Install dependencies for firebase functions
+```bash
+cd functions
+npm install
 ```
 
 ### Start firebase emulator for testing cloud functions locally
