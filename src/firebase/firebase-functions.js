@@ -1,11 +1,13 @@
-const BASE_URL = 'http://127.0.0.1:5001/dreamers-eb67b/us-central1'
 import { auth } from './index'
+import { LocalStorage } from 'quasar'
 
-export const getTrades = async () => {
+const fetchData = async (endpoint) => {
   try {
     const platform = 'MetaTrader4' // TODO: add more platforms
-    const authToken = await auth.currentUser.getIdToken()
-    const response = await fetch(`${BASE_URL}/getTrades?platform=${platform}`, {
+    const user = LocalStorage.getItem('user')
+    const authToken = await auth.currentUser?.getIdToken() ?? user?.stsTokenManager?.accessToken
+
+    const response = await fetch(`${process.env.BASE_URL}/${endpoint}?platform=${platform}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -20,7 +22,15 @@ export const getTrades = async () => {
     const data = await response.json()
     return data
   } catch (error) {
-    console.error('Error fetching trades:', error)
+    console.error(`Error fetching ${endpoint}:`, error)
     throw error
   }
+}
+
+export const getTrades = async () => {
+  return fetchData('getTrades')
+}
+
+export const getCalendar = async () => {
+  return fetchData('getCalendar')
 }

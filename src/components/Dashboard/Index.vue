@@ -2,9 +2,9 @@
     <div class="q-pa-md" style="width: 100%;">
       <div class="row">
         <!-- Small cards -->
-        <div 
-          v-for="(item, index) in dashCards" 
-          :key="index" 
+        <div
+          v-for="(item, index) in dashCards"
+          :key="index"
           class="col col-md-3 col-lg-3 q-pa-sm"
         >
             <q-card flat bordered class="my-card q-pa-sm">
@@ -22,8 +22,9 @@
       <div class="row">
         <!-- Cards -->
         <div class="col col-md-6 q-pa-sm">
-            <FullCalendar 
+            <FullCalendar
                 :options="calendarOptions"
+                :events="eventList"
             >
                 <!-- <template v-slot:eventContent='arg'>
                     <b>{{ arg.event.title }}</b>
@@ -125,11 +126,11 @@
           </div>
         </div>
 
-            <div class="col col-md-3 q-pa-sm"> 
-              
+            <div class="col col-md-3 q-pa-sm">
+
             </div>
             <div class="col col-md-3 q-pa-sm">
-                
+
             </div>
         </div>
     </div>
@@ -143,85 +144,100 @@ import roundVue from './matix/round.vue'
 import mixLineBar from './matix/mixLineBar.vue'
 
 export default {
+  // eslint-disable-next-line vue/multi-word-component-names
   name: 'Dashboard',
   components: {
     FullCalendar,
     roundVue,
     mixLineBar
   },
-  data(){
+  data () {
     return {
       calendarOptions: {
-        plugins: [ dayGridPlugin, interactionPlugin ],
+        plugins: [dayGridPlugin, interactionPlugin],
         dayMaxEvents: true,
         initialView: 'dayGridMonth',
         // Date Action Handler
         dateClick: (args) => { return this.handleDateClick(args.event) },
         selectable: true,
-        events: [],
-        eventContent: 'Show Details',
+        events: this.eventList
+        // eventContent: 'Show Details'
       },
       dashCards: [
-          {
-            title:'Net P&L',
-            value: '$ 1,000',
-            subVal:'35',
-            type: '',
-            info: '',
-            color: 'text-green-5',
-            icon: 'analytics',
-            iconColor: 'primary',
-            valueType: '',   
-            chartType: '', 
-          },
-          {
-            title:'Trade Win %',
-            value: "75.43%",
-            subVal:'35',
-            type: '',
-            info: '',
-            color: '',
-            icon: 'speed',
-            iconColor: 'green',
-            valueType: '',   
-            chartType: '', 
-          },
-          {
-            title:'Profit Factor',
-            value: 10.86,
-            subVal:'35',
-            type: '',
-            info: '',
-            color: '',
-            icon: 'donut_large',
-            iconColor: 'blue-7',
-            valueType: '',   
-            chartType: '', 
-          },
-          {
-            title:'Day Win',
-            value: 91.73,
-            subVal:'35',
-            type: '',
-            info: '',
-            color: '',
-            icon: 'emoji_events',
-            iconColor: 'yellow-6',
-            valueType: '',   
-            chartType: '', 
-          },
-        ],
+        {
+          title: 'Net P&L2',
+          value: '$ 1,000',
+          subVal: '35',
+          type: '',
+          info: '',
+          color: 'text-green-5',
+          icon: 'analytics',
+          iconColor: 'primary',
+          valueType: '',
+          chartType: ''
+        },
+        {
+          title: 'Trade Win %',
+          value: '75.43%',
+          subVal: '35',
+          type: '',
+          info: '',
+          color: '',
+          icon: 'speed',
+          iconColor: 'green',
+          valueType: '',
+          chartType: ''
+        },
+        {
+          title: 'Profit Factor',
+          value: 10.86,
+          subVal: '35',
+          type: '',
+          info: '',
+          color: '',
+          icon: 'donut_large',
+          iconColor: 'blue-7',
+          valueType: '',
+          chartType: ''
+        },
+        {
+          title: 'Day Win',
+          value: 91.73,
+          subVal: '35',
+          type: '',
+          info: '',
+          color: '',
+          icon: 'emoji_events',
+          iconColor: 'yellow-6',
+          valueType: '',
+          chartType: ''
+        }
+      ],
       eventList: [],
-
-      
+      calendarData: null
     }
   },
-  created(){
-    this.renderChart();
+  created () {
+    this.renderChart()
+    this.getCalendar()
   },
   methods: {
-    renderChart(){
-      
+    renderChart () {
+
+    },
+    async getCalendar () {
+      const data = await this.$fireApi.trades.getCalendar()
+      this.calendarData = data.profits
+      this.eventList = [...this.calendarData.map(item => ({
+        title: `${item.profit} (${item.dataCount} trades)`,
+        start: item.date,
+        color: parseFloat(item.profit) >= 0 ? 'green' : 'red'
+      }))]
+    }
+  },
+  watch: {
+    eventList (newVal) {
+      this.calendarOptions.events = newVal
     }
   }
 }
