@@ -9,7 +9,10 @@
     "lint": "eslint --ext .js,.vue ./",
     "test": "echo \"No test specified\" && exit 0",
     "dev": "quasar dev",
-    "build": "quasar build"
+    "build": "quasar build",
+    "dev:prod": "PROFILE=prod quasar dev",
+    "build:prod": "PROFILE=prod quasar build",
+    "deploy:prod": "npm run build:prod && firebase deploy --only hosting"
   },
   "dependencies": {
     "@fullcalendar/core": "^6.1.9",
@@ -22,7 +25,6 @@
     "dotenv": "^16.3.1",
     "echarts": "^5.4.3",
     "firebase": "^10.4.0",
-    "metaapi.cloud-sdk": "^23.6.5",
     "moment": "^2.29.4",
     "pinia": "^2.0.11",
     "quasar": "^2.6.0",

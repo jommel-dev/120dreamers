@@ -12,6 +12,8 @@ const { configure } = require('quasar/wrappers')
 const path = require('path')
 
 module.exports = configure(function (/* ctx */) {
+  const envFile = `.env.${process.env.PROFILE || 'local'}`
+  const envConfig = require('dotenv').config({ path: envFile }).parsed
   return {
     // eslint: {
     //   // fix: true,
@@ -32,7 +34,7 @@ module.exports = configure(function (/* ctx */) {
       'i18n',
       'axios',
       'apexchart',
-      'firebaseFunctions',
+      'firebaseFunctions'
     ],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
@@ -70,7 +72,14 @@ module.exports = configure(function (/* ctx */) {
 
       // publicPath: '/',
       // analyze: true,
-      env: require('dotenv').config({ path: './.env.local' }).parsed,
+      env: {
+        // Convert the envConfig object to a format that can be
+        // consumed by our application
+        ...Object.keys(envConfig).reduce((env, key) => {
+          env[key] = envConfig[key]
+          return env
+        }, {})
+      },
       // rawDefine: {}
       // ignorePublicFolder: true,
       // minify: false,
