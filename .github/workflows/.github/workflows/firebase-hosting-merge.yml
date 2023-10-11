@@ -1,0 +1,33 @@
+name: Deploy to Firebase Hosting and Functions on merge
+
+'on':
+  push:
+    branches:
+      - master
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      # Installing dependencies and building the Quasar app
+      - name: Install Quasar dependencies and build
+        run: |
+          npm ci
+          npx quasar build -m spa
+      # Installing dependencies for Firebase functions and building if needed
+      - name: Setup Firebase Functions
+        run: |
+          cd functions
+          npm ci
+          npm run build # If you have a build script for your functions
+      # Deploy to Firebase Hosting and Functions
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_DREAMERS_EB67B }}'
+          channelId: live
+          projectId: dreamers-eb67b
+        env:
+          FIREBASE_CLI_PREVIEWS: hostingchannels # Necessary if you're using the live channels feature
