@@ -4,7 +4,7 @@
             <div class="col text-bold ellipsis">
                 Gain
             </div>
-            <div class="col-auto text-green-7 text-bold  row no-wrap items-center">
+            <div class="col-auto text-bold row no-wrap items-center" :class="lastGrowthValue < 0 ? 'text-negative' : 'text-green-7'">
                 {{ lastGrowthValue }}
             </div>
         </div>
@@ -12,7 +12,7 @@
             <div class="col text-grey-7 ellipsis">
                 Abs. Gain
             </div>
-            <div class="col-auto text-green-7 text-caption  row no-wrap items-center">
+            <div class="col-auto text-caption  row no-wrap items-center" :class="lastGrowthValue < 0 ? 'text-negative' : 'text-green-7'">
                 {{ lastGrowthValue }}
             </div>
         </div>
@@ -51,7 +51,7 @@
                 Balance
             </div>
             <div class="col-auto text-grey-7 text-caption  row no-wrap items-center">
-                {{ info.balance }}
+                {{ balance }}
             </div>
         </div>
         <div class="row no-wrap items-center">
@@ -59,7 +59,7 @@
                 Equity
             </div>
             <div class="col-auto text-grey-7 text-caption  row no-wrap items-center">
-                {{ info.equity }}
+                {{ equity }}
             </div>
         </div>
         <div class="row no-wrap items-center">
@@ -67,14 +67,14 @@
                 Highest
             </div>
             <div class="col-auto text-grey-7 text-caption  row no-wrap items-center">
-                (Sept. 10) $4042.67
+                {{ formattedHighestBalance }}
             </div>
         </div>
         <div class="row no-wrap items-center">
             <div class="col text-grey-7 ellipsis">
                 Profit
             </div>
-            <div class="col-auto text-green-7 text-bold text-caption  row no-wrap items-center">
+            <div class="col-auto text-bold text-caption  row no-wrap items-center" :class="lastProfitValue < 0 ? 'text-negative' : 'text-green-7'">
                 {{ lastProfitValue }}
             </div>
         </div>
@@ -156,6 +156,26 @@ export default {
       const lastProfitValue = this.infoStatsData.profits[lastKey].profit
 
       return lastProfitValue
+    },
+    highestBalance () {
+      // Use the reduce function to find the highest balance in the array
+      return this.infoStatsData.balance.reduce((max, item) => (item.balance > max ? item.balance : max), 0)
+    },
+    formattedHighestBalance () {
+      const highestBalance = this.highestBalance.toFixed(2) // Round to two decimal places
+      const date = this.infoStatsData.balance.find(item => item.balance === this.highestBalance).date
+      const formattedDate = new Date(date).toLocaleDateString('en-US', { month: 'short', day: '2-digit' })
+
+      return `(${formattedDate}) $${highestBalance.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}`
+    },
+    equity () {
+      const equity = this.info.equity.toFixed(2)
+      const percentage = (this.info.equity / this.info.balance) * 100
+      return `(${percentage.toFixed(2)}%) $${equity.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}`
+    },
+    balance () {
+      const balance = this.info.balance.toFixed(2)
+      return `$${balance.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}`
     }
   }
 }

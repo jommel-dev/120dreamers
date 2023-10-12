@@ -33,7 +33,7 @@
                 Leverage:
             </div>
             <div class="col-auto text-green-7 text-caption  row no-wrap items-center">
-                {{ generalData.leverage }}
+                1:{{ generalData.leverage }}
             </div>
         </div>
         <div class="row no-wrap items-center">

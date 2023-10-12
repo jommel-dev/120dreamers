@@ -5,7 +5,7 @@
                 <q-card class="my-card" flat bordered>
                     <q-card-section>
                         <div class="text-h6">Information</div>
-                        <div class="text-subtitle2">by Broker</div>
+                        <div class="text-subtitle2">by Broker Name</div>
                     </q-card-section>
 
                     <q-tabs
@@ -68,7 +68,7 @@
 
                 <q-tab-panels v-model="chartTab" animated>
                     <q-tab-panel name="growth">
-                        <div v-if="dataLoader">
+                        <div v-if="dataLoader" class="text-center q-ma-auto q-mt-xl">
                             <q-spinner-bars
                                 color="primary"
                                 size="2em"
@@ -118,7 +118,7 @@
 
             </div>
             <!-- trading -->
-           <div>
+           <!-- <div>
             <h5>Trading</h5>
            </div>
 
@@ -147,9 +147,10 @@
                         <browserTable />
                     </q-tab-panel>
                 </q-tab-panels>
-            </div>
+            </div> -->
+
             <!-- advance statistics -->
-            <div>
+            <!-- <div>
                 <h5>Advance Statistics</h5>
            </div>
             <div class="col col-md-12 q-pa-sm">
@@ -185,7 +186,7 @@
                         <tradesChart/>
                     </q-tab-panel>
                 </q-tab-panels>
-            </div>
+            </div> -->
 
             <!-- trading activity -->
             <div>
@@ -201,30 +202,30 @@
                     :breakpoint="0"
                 >
 
-                    <q-tab name="period" icon="scatter_plot" label="Open Trades" />
-                    <q-tab name="goals" icon="ads_click" label="Open Orders" />
-                    <q-tab name="browser" icon="candlestick_chart" label="History" />
-                    <q-tab name="browser" icon="candlestick_chart" label="Exposure" />
+                    <q-tab name="openTrade" icon="scatter_plot" label="Open Trades" />
+                    <!-- <q-tab name="openOrder" icon="ads_click" label="Open Orders" /> -->
+                    <q-tab name="history" icon="candlestick_chart" label="History" />
+                    <!-- <q-tab name="exposure" icon="candlestick_chart" label="Exposure" /> -->
                 </q-tabs>
 
                 <q-tab-panels v-model="tradeActTab" animated>
-                    <q-tab-panel name="period">
-                        <periodTable />
+                    <q-tab-panel name="openTrade">
+                        <openTradeTable />
                     </q-tab-panel>
-                    <q-tab-panel name="goals">
-                        <goalsTable />
+                    <q-tab-panel name="openOrder">
+                        <openOrderTable />
                     </q-tab-panel>
-                    <q-tab-panel name="browser">
-                        <browserTable />
+                    <q-tab-panel name="history">
+                        <historyTable />
                     </q-tab-panel>
-                    <q-tab-panel name="browser">
-                        <browserTable />
+                    <q-tab-panel name="exposure">
+                        <exposureTable />
                     </q-tab-panel>
                 </q-tab-panels>
             </div>
 
             <!-- motnhly analitycs -->
-            <div>
+            <!-- <div>
                 <h5>Monthly Analaytics</h5>
            </div>
             <div class="col col-md-12 q-pa-sm">
@@ -248,7 +249,7 @@
                         <goalsTable />
                     </q-tab-panel>
                 </q-tab-panels>
-            </div>
+            </div> -->
         </div>
     </div>
 </template>
@@ -259,9 +260,16 @@ import growthChart from './matrix/growthChart.vue'
 import profitChart from './matrix/profitChart.vue'
 import balanceChart from './matrix/balanceChart.vue'
 // import drawDownChart from './matrix/drawDownChart.vue'
+
 // Information
 import infoStats from './information/info.vue'
 import infoGeneral from './information/general.vue'
+
+// Trading Activity Tables
+import openTradeTable from './tables/openTradeTable.vue'
+import openOrderTable from './tables/openOrderTable.vue'
+import historyTable from './tables/historyTable.vue'
+import exposureTable from './tables/exposureTable.vue'
 
 // Tables
 import periodTable from './tables/reportTable.vue'
@@ -290,6 +298,10 @@ export default {
     // drawDownChart,
 
     periodTable,
+    openTradeTable,
+    openOrderTable,
+    historyTable,
+    exposureTable,
     goalsTable,
     browserTable,
 
@@ -306,7 +318,7 @@ export default {
       chartTab: 'growth',
       tradingTab: 'period',
       advanceTab: 'trades',
-      tradeActTab: 'period',
+      tradeActTab: 'openTrade',
       monthlyTab: 'period',
       trades: null,
       dataLoader: false
