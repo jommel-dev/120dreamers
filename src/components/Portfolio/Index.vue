@@ -5,7 +5,7 @@
                 <q-card class="my-card" flat bordered>
                     <q-card-section>
                         <div class="text-h6">Information</div>
-                        <div class="text-subtitle2">by Broker Name</div>
+                        <div class="text-subtitle2">by {{ trades?.accountInformation.broker }}</div>
                     </q-card-section>
 
                     <q-tabs
