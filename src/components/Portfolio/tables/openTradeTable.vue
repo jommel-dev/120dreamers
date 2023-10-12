@@ -4,7 +4,6 @@
             :rows="tableRow"
             :columns="tableColumns"
             row-key="name"
-            hide-bottom
             separator="cell"
         >
             <template v-slot:header="props">
@@ -96,7 +95,7 @@ export default {
           required: true,
           label: 'Open Date',
           align: 'left',
-          field: row => row.brokerTime,
+          field: row => moment(row.brokerTime).format('MM.DD.YYYY HH:mm'),
           sortable: true
         },
         {
@@ -113,7 +112,7 @@ export default {
           required: true,
           label: 'Action',
           align: 'left',
-          field: row => row.type,
+          field: row => row.type === 'ORDER_TYPE_BUY' ? 'Buy' : 'Sell',
           format: val => `${val}`,
           sortable: true
         },
@@ -131,7 +130,7 @@ export default {
           required: true,
           label: 'Open Price',
           align: 'left',
-          field: row => row.openPrice,
+          field: row => `$${row.openPrice}`,
           format: val => `${val}`,
           sortable: true
         },
@@ -140,7 +139,7 @@ export default {
           required: true,
           label: 'SL (Price)',
           align: 'left',
-          field: row => row.stopLoss,
+          field: row => row.stopLoss ?? 0,
           format: val => `${val}`,
           sortable: true
         },
@@ -149,7 +148,7 @@ export default {
           required: true,
           label: 'TP (Price)',
           align: 'left',
-          field: row => row.takeProfit,
+          field: row => row.takeProfit ?? 0,
           format: val => `${val}`,
           sortable: true
         },
