@@ -23,13 +23,11 @@ export default {
       return this.growthTrades.map(item => item.date)
     },
     growthPercentageData () {
-      let cumulativeGrowth = 0
       return this.growthTrades.map((item, index) => {
         if (index === 0 || item.growth === this.growthTrades[index - 1].growth) {
           return 0
         } else {
-          cumulativeGrowth += parseFloat(item.growth)
-          return cumulativeGrowth
+          return parseFloat(item.growth)
         }
       })
     }

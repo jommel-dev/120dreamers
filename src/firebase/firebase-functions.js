@@ -3,11 +3,13 @@ import { LocalStorage } from 'quasar'
 
 const fetchData = async (endpoint) => {
   try {
-    const platform = 'MetaTrader4' // TODO: add more platforms
+    // const platform = 'MetaTrader4' // TODO: add more platforms
+    const savedBrokerId = LocalStorage.getItem('selectedBrokerId')
+
     const user = LocalStorage.getItem('user')
     const authToken = await auth.currentUser?.getIdToken() ?? user?.stsTokenManager?.accessToken
 
-    const response = await fetch(`${process.env.BASE_URL}/${endpoint}?platform=${platform}`, {
+    const response = await fetch(`${process.env.BASE_URL}/${endpoint}?platformId=${savedBrokerId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

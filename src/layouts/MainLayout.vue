@@ -2,28 +2,28 @@
   <q-layout view="lHh Lpr lFf">
    <q-header class="bg-indigo-10" elevated>
     <q-toolbar>
-      <q-btn 
-        dense 
-        color="indigo-10" 
+      <q-btn
+        dense
+        color="indigo-10"
         round
         unelevated
         :icon="miniState ? 'navigate_next' : 'chevron_left'"
         class="drawerBtn"
-        @click="toggleLeftDrawer" 
+        @click="toggleLeftDrawer"
       />
      <q-toolbar-title>
-      <q-btn unelevated rounded icon="addchart" color="white" text-color="black" to="/newTrade">Add Trade</q-btn> 
+      <q-btn unelevated rounded icon="addchart" color="white" text-color="black" to="/newTrade">Add Trade</q-btn>
      </q-toolbar-title>
 
      <!-- <q-toolbar-subtitle v-if="displayName">Welcome, {{ displayName }}!</q-toolbar-subtitle> -->
 
      <!-- <q-btn flat @click="logout">Logout</q-btn> -->
-     <q-btn 
-        dense 
+     <q-btn
+        dense
         color="white"
         text-color="black"
-        round 
         icon="paid"
+        :label="balance"
       />
       <q-select
           filled
@@ -31,7 +31,6 @@
           v-model="filterAccount"
           :options="options"
           label="Accounts"
-          multiple
           dense
           outlined
           bg-color="white"
@@ -51,11 +50,11 @@
           </q-item>
         </template>
       </q-select>
-      <q-btn 
-        dense 
+      <q-btn
+        dense
         color="white"
         text-color="black"
-        round 
+        round
         icon="manage_accounts"
       >
         <q-menu>
@@ -88,22 +87,22 @@
     </q-toolbar>
    </q-header>
 
-    <q-drawer 
-      show-if-above 
-      v-model="leftDrawerOpen" 
-      side="left" 
+    <q-drawer
+      show-if-above
+      v-model="leftDrawerOpen"
+      side="left"
       bordered
       :mini="miniState"
       dark
       class="gradient-bg"
     >
       <!-- drawer content -->
-      <Profile v-if="!miniState" :fullName.sync="displayName" />
+      <Profile v-if="!miniState" v-model:fullName="displayName" />
       <q-avatar v-if="miniState" class="q-pa-xs">
         <q-icon name="account_circle" />
       </q-avatar>
       <q-separator dark />
-      <SideNav 
+      <SideNav
         v-for="link in filteredMenus"
         :key="link.title"
         v-bind="link"
@@ -120,8 +119,9 @@
 <script>
 import signout from 'src/firebase/firebase-signout'
 import { LocalStorage } from 'quasar'
-import SideNav from '../components/Templates/Sidenav.vue';
-import Profile from '../components/Templates/Profile.vue';
+import SideNav from '../components/Templates/Sidenav.vue'
+import Profile from '../components/Templates/Profile.vue'
+import listDocuments from 'src/firebase/firebase-list'
 
 const linksList = [
   {
@@ -134,7 +134,7 @@ const linksList = [
     title: 'Daily Journal',
     icon: 'stacked_bar_chart',
     link: 'dailyJournal',
-    code: 101,
+    code: 101
   },
   {
     title: 'Portfolio',
@@ -153,61 +153,86 @@ const linksList = [
     icon: 'cast_for_education',
     link: 'dreamersUniversity',
     code: 101
-  },
-];
+  }
+]
 
 export default {
   name: 'MainLayout',
-  data() {
+  data () {
     return {
       linksList,
+      brokers: [], // Add this line to store the brokers
       displayName: '',
       miniState: false,
-      filterAccount: [2],
-      options: [
-        {
-          label: 'Account 1',
-          value: 2
-        },
-        {
-          label: 'Account 2',
-          value: 3
-        },
-        {
-          label: 'Account 3',
-          value: 4
-        },
-        {
-          label: 'Account 4',
-          value: 5
-        }
-      ]
+      filterAccount: [],
+      options: [], // initialize as an empty array
+      balance: 0
     }
   },
-  components:{
+  components: {
     SideNav,
     Profile
   },
   computed: {
-    filteredMenus: function(){
-      return this.linksList;
-    },
-    getDisplayNameFromLocalStorage(){
-      const user = LocalStorage.getItem('user')
-      this.displayName = user ? user.displayName : null;
+    filteredMenus: function () {
+      return this.linksList
     }
   },
-  created(){
-    this.getDisplayNameFromLocalStorage
+  async created () {
+    await this.fetchBrokers() // Fetch brokers when the component is created
+    this.getDisplayNameFromLocalStorage()
+
+    const savedBrokerId = LocalStorage.getItem('selectedBrokerId')
+    if (savedBrokerId && this.brokers.some(broker => broker.id === savedBrokerId)) {
+      this.filterAccount = savedBrokerId
+    } else if (this.brokers.length > 0) {
+      this.filterAccount = this.brokers[0].id
+    }
+
+    this.getCalendar()
   },
   methods: {
     toggleLeftDrawer () {
       this.miniState = !this.miniState
     },
-    async logout(){
+    async logout () {
       signout().then(() => {
         this.$router.push('/login')
       })
+    },
+    getDisplayNameFromLocalStorage () {
+      const user = LocalStorage.getItem('user')
+      this.displayName = user ? user.displayName : null
+    },
+    async fetchBrokers () {
+      const user = LocalStorage.getItem('user')
+      const userId = user ? user.uid : null
+      this.brokers = await listDocuments(`platforms/${userId}/brokers`)
+      this.options = this.brokers.map(broker => {
+        return {
+          label: broker.brokerName,
+          value: broker.id
+        }
+      })
+
+      if (!this.filterAccount && this.brokers.length > 0) {
+        this.filterAccount = this.brokers[0].id
+      }
+    },
+    async getCalendar () {
+      const data = await this.$fireApi.trades.getCalendar()
+      if (data.accountInformation.balance) {
+        this.balance = data.accountInformation.balance
+      }
+    }
+  },
+  watch: {
+    filterAccount (newVal, oldVal) {
+      LocalStorage.set('selectedBrokerId', newVal)
+      // added condition to prevent reload on init
+      if (typeof oldVal === 'string' && typeof newVal === 'string') {
+        window.location.reload()
+      }
     }
   }
 }
