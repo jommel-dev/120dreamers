@@ -210,13 +210,19 @@
 
                 <q-tab-panels v-model="tradeActTab" animated>
                     <q-tab-panel name="openTrade">
-                        <openTradeTable />
+                        <openTradeTable
+                        v-if="trades != null"
+                        :openTrades="trades.positions"
+                        />
                     </q-tab-panel>
                     <q-tab-panel name="openOrder">
                         <openOrderTable />
                     </q-tab-panel>
                     <q-tab-panel name="history">
-                        <historyTable />
+                        <historyTable
+                        v-if="trades != null"
+                        :tradeHistory="trades.history.historyOrders"
+                        />
                     </q-tab-panel>
                     <q-tab-panel name="exposure">
                         <exposureTable />
@@ -272,16 +278,16 @@ import historyTable from './tables/historyTable.vue'
 import exposureTable from './tables/exposureTable.vue'
 
 // Tables
-import periodTable from './tables/reportTable.vue'
-import goalsTable from './tables/goalsTable.vue'
-import browserTable from './tables/browserTable.vue'
+// import periodTable from './tables/reportTable.vue'
+// import goalsTable from './tables/goalsTable.vue'
+// import browserTable from './tables/browserTable.vue'
 
 // advance Statistics tables
-import durationChart from './statistics/durationChart.vue'
-import hourlyChart from './statistics/hourlyChart.vue'
-import riskOfRuinChart from './statistics/riskOfRuinChart.vue'
-import summaryChart from './statistics/summaryChart.vue'
-import tradesChart from './statistics/tradesChart.vue'
+// import durationChart from './statistics/durationChart.vue'
+// import hourlyChart from './statistics/hourlyChart.vue'
+// import riskOfRuinChart from './statistics/riskOfRuinChart.vue'
+// import summaryChart from './statistics/summaryChart.vue'
+// import tradesChart from './statistics/tradesChart.vue'
 
 // Trading Activity
 
@@ -297,19 +303,19 @@ export default {
     profitChart,
     // drawDownChart,
 
-    periodTable,
+    // periodTable,
     openTradeTable,
     openOrderTable,
     historyTable,
-    exposureTable,
-    goalsTable,
-    browserTable,
+    exposureTable
+    // goalsTable,
+    // browserTable,
 
-    durationChart,
-    hourlyChart,
-    riskOfRuinChart,
-    summaryChart,
-    tradesChart
+    // durationChart,
+    // hourlyChart,
+    // riskOfRuinChart,
+    // summaryChart,
+    // tradesChart
 
   },
   data () {
