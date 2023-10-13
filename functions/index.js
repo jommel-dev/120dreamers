@@ -13,9 +13,10 @@ const corsHandler = cors({ origin: true })
 
 const globalConnection = {} // Declare the global variable to store the connection
 
-async function getGlobalConnection (token, accountId, uid) {
-  if (globalConnection[uid]) {
-    return globalConnection[uid] // If a connection already exists, return it
+async function getGlobalConnection (token, accountId, uid, platformId) {
+  const id = `${uid}-${platformId}`
+  if (globalConnection[id]) {
+    return globalConnection[id] // If a connection already exists, return it
   }
 
   const MetaApi = require('metaapi.cloud-sdk').default
@@ -23,12 +24,12 @@ async function getGlobalConnection (token, accountId, uid) {
   const account = await metaApi.metatraderAccountApi.getAccount(accountId)
 
   await account.waitConnected()
-  globalConnection[uid] = account.getRPCConnection()
+  globalConnection[id] = account.getRPCConnection()
 
-  await globalConnection[uid].connect()
-  await globalConnection[uid].waitSynchronized()
+  await globalConnection[id].connect()
+  await globalConnection[id].waitSynchronized()
 
-  return globalConnection[uid]
+  return globalConnection[id]
 }
 
 exports.getTrades = functions.https.onRequest((req, res) => {

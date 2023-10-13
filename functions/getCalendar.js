@@ -11,22 +11,22 @@ exports.handler = async function (request, response, logger, admin, firestore, g
   try {
     logger.info('Hello logs!', { structuredData: true })
 
-    const platform = request.query.platform
-    if (!platform) {
+    const platformId = request.query.platformId
+    if (!platformId) {
       response.status(401).json({
-        message: 'Platform is required.'
+        message: 'Platform id is required.'
       })
       return
     }
 
     const uid = await validateAuthorization(request.headers.authorization, admin)
-    const userPlatformData = await getPlatformData(uid, firestore)
+    const userPlatformData = await getPlatformData(uid, firestore, platformId)
 
     let result = null
-    const { token, accountId } = userPlatformData
-    switch (platform) {
+    const { token, accountId, broker } = userPlatformData
+    switch (broker) {
       case MT4:
-        result = await fetchData(token, accountId, uid, getGlobalConnection)
+        result = await fetchData(token, accountId, uid, getGlobalConnection, platformId)
         response.status(200).json(result)
         break
       default:
@@ -45,9 +45,12 @@ exports.handler = async function (request, response, logger, admin, firestore, g
   }
 }
 
-async function fetchData (token, accountId, uid, getGlobalConnection) {
+async function fetchData (token, accountId, uid, getGlobalConnection, platformId) {
   try {
-    const connection = await getGlobalConnection(token, accountId, uid)
+    const connection = await getGlobalConnection(token, accountId, uid, platformId)
+
+    const accountInformation = await connection.getAccountInformation()
+    console.log('accountInformation', accountInformation)
 
     const dealsResult = await connection.getDealsByTimeRange('2023-10-01T00:00:00Z', '2023-10-30T00:00:00Z')
     // console.log('dealsResult', dealsResult)
@@ -65,7 +68,8 @@ async function fetchData (token, accountId, uid, getGlobalConnection) {
     }))
 
     return {
-      profits
+      profits,
+      accountInformation
     }
   } catch (e) {
     console.log('[fetchData] error:', e)
