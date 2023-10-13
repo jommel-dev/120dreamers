@@ -1,3 +1,8 @@
+/**
+ * Computes the total profit per date from a list of positions.
+ * @param {Array} positions - An array of position objects.
+ * @returns {Object} An object containing total profits per date and the base amount.
+ */
 exports.getTotalProfitByDate = function (positions) {
   const timestamp = {}
   let baseAmount = 0
@@ -6,11 +11,13 @@ exports.getTotalProfitByDate = function (positions) {
     if (!timestamp[date]) {
       timestamp[date] = {
         profits: [pos.profit],
-        count: 1
+        count: 1,
+        trades: [pos]
       }
     } else {
       timestamp[date].profits.push(pos.profit)
       timestamp[date].count += 1
+      timestamp[date].trades.push(pos)
     }
 
     if (pos.type === 'DEAL_TYPE_BALANCE') {
@@ -22,7 +29,8 @@ exports.getTotalProfitByDate = function (positions) {
     return {
       time: date,
       profit: total,
-      dataCount: timestamp[date].count
+      dataCount: timestamp[date].count,
+      trades: timestamp[date].trades
     }
   })
   return {
@@ -31,6 +39,13 @@ exports.getTotalProfitByDate = function (positions) {
   }
 }
 
+/**
+ * Validates the provided ID token to ensure the user is authorized.
+ * @param {string} idToken - The ID token to validate.
+ * @param {Object} admin - Firebase admin instance.
+ * @returns {string} Returns the UID of the authenticated user.
+ * @throws Will throw an error if the authorization header is not provided or user data is not found.
+ */
 exports.validateAuthorization = async function (idToken, admin) {
   if (!idToken) {
     throw new Error('Authorization header not provided.')
@@ -42,6 +57,14 @@ exports.validateAuthorization = async function (idToken, admin) {
   return decodedToken.uid
 }
 
+/**
+ * Retrieves platform data for a given user from Firestore.
+ * @param {string} uid - The user's UID.
+ * @param {Object} firestore - Firestore instance.
+ * @param {string} platformId - The platform ID to retrieve data for.
+ * @returns {Object} Returns the platform data for the user.
+ * @throws Will throw an error if platform data is not found or essential parameters are missing.
+ */
 exports.getPlatformData = async function (uid, firestore, platformId) {
   const brokerRef = firestore.doc(`platforms/${uid}/brokers/${platformId}`)
 
