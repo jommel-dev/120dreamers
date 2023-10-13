@@ -64,7 +64,8 @@ async function fetchData (token, accountId, uid, getGlobalConnection, platformId
     const profits = profitsByDate.filter(({ profit }) => profit !== baseAmount).map((profit) => ({
       date: formatDate(profit.time),
       profit: profit.profit.toFixed(2),
-      dataCount: profit.dataCount
+      dataCount: profit.dataCount,
+      trades: profit.trades
     }))
 
     return {
