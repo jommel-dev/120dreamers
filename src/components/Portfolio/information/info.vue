@@ -4,16 +4,16 @@
             <div class="col text-bold ellipsis">
                 Gain
             </div>
-            <div class="col-auto text-bold row no-wrap items-center" :class="lastGrowthValue < 0 ? 'text-negative' : 'text-green-7'">
-                {{ lastGrowthValue }}
+            <div class="col-auto text-bold row no-wrap items-center" :class="getLastValue (this.infoStatsData.growth, 'growth') < 0 ? 'text-negative' : 'text-green-7'">
+                {{ getLastValue (this.infoStatsData.growth, 'growth') }}
             </div>
         </div>
         <div class="row no-wrap items-center">
             <div class="col text-grey-7 ellipsis">
                 Abs. Gain
             </div>
-            <div class="col-auto text-caption  row no-wrap items-center" :class="lastGrowthValue < 0 ? 'text-negative' : 'text-green-7'">
-                {{ lastGrowthValue }}
+            <div class="col-auto text-caption  row no-wrap items-center" :class="getLastValue (this.infoStatsData.growth, 'growth') < 0 ? 'text-negative' : 'text-green-7'">
+                {{ getLastValue (this.infoStatsData.growth, 'growth') }}
             </div>
         </div>
 
@@ -74,8 +74,8 @@
             <div class="col text-grey-7 ellipsis">
                 Profit
             </div>
-            <div class="col-auto text-bold text-caption  row no-wrap items-center" :class="lastProfitValue < 0 ? 'text-negative' : 'text-green-7'">
-                {{ lastProfitValue }}
+            <div class="col-auto text-bold text-caption  row no-wrap items-center" :class="getLastValue (this.infoStatsData.profits, 'profit') < 0 ? 'text-negative' : 'text-green-7'">
+                {{ getLastValue (this.infoStatsData.profits, 'profit') }}
             </div>
         </div>
         <!-- <div class="row no-wrap items-center">
@@ -138,25 +138,36 @@ export default {
       info: this.infoStatsData.accountInformation
     }
   },
+  methods: {
+    getLastValue (list, type) {
+      const keys = Object.keys(list)
+
+      const lastKey = keys[keys.length - 1]
+
+      const lastkeyValue = list[lastKey][type]
+
+      return lastkeyValue
+    }
+  },
   computed: {
-    lastGrowthValue () {
-      const keys = Object.keys(this.infoStatsData.growth)
+    // lastGrowthValue () {
+    //   const keys = Object.keys(this.infoStatsData.growth)
 
-      const lastKey = keys[keys.length - 1]
+    //   const lastKey = keys[keys.length - 1]
 
-      const lastGrowthValue = this.infoStatsData.growth[lastKey].growth
+    //   const lastGrowthValue = this.infoStatsData.growth[lastKey].growth
 
-      return lastGrowthValue
-    },
-    lastProfitValue () {
-      const keys = Object.keys(this.infoStatsData.profits)
+    //   return lastGrowthValue
+    // },
+    // lastProfitValue () {
+    //   const keys = Object.keys(this.infoStatsData.profits)
 
-      const lastKey = keys[keys.length - 1]
+    //   const lastKey = keys[keys.length - 1]
 
-      const lastProfitValue = this.infoStatsData.profits[lastKey].profit
+    //   const lastProfitValue = this.infoStatsData.profits[lastKey].profit
 
-      return lastProfitValue
-    },
+    //   return lastProfitValue
+    // },
     highestBalance () {
       // Use the reduce function to find the highest balance in the array
       return this.infoStatsData.balance.reduce((max, item) => (item.balance > max ? item.balance : max), 0)

@@ -1,7 +1,7 @@
 <template>
     <div>
         <q-table
-            :rows="tableRow"
+            :rows="openTrades"
             :columns="tableColumns"
             row-key="name"
             separator="cell"
@@ -45,7 +45,7 @@
 
 <script>
 import moment from 'moment'
-import { getTrades } from 'src/firebase/firebase-functions'
+// import { getTrades } from 'src/firebase/firebase-functions'
 
 export default {
   name: 'openTradeTable',
@@ -53,6 +53,9 @@ export default {
     return {
       tableRow: []
     }
+  },
+  props: {
+    openTrades: Object
   },
   components: {},
   created () {},
@@ -72,19 +75,19 @@ export default {
     }
     // end
   },
-  async mounted () {
-    try {
-      const trades = await getTrades()
-      //   console.log({ trades })
+  // async mounted () {
+  //   try {
+  //     const trades = await getTrades()
+  //     //   console.log({ trades })
 
-      if (trades?.positions) {
-        // console.log('setting positions value')
-        this.tableRow = trades.positions
-      }
-    } catch (error) {
-      console.error('Failed to fetch trades:', error)
-    }
-  },
+  //     if (trades?.positions) {
+  //       // console.log('setting positions value')
+  //       this.tableRow = trades.positions
+  //     }
+  //   } catch (error) {
+  //     console.error('Failed to fetch trades:', error)
+  //   }
+  // },
   computed: {
 
     tableColumns: function () {

@@ -1,7 +1,7 @@
 <template>
     <div>
         <q-table
-            :rows="tableRow"
+            :rows="tradeHistory"
             :columns="tableColumns"
             row-key="name"
             separator="cell"
@@ -45,7 +45,7 @@
 
 <script>
 import moment from 'moment'
-import { getTrades } from 'src/firebase/firebase-functions'
+// import { getTrades } from 'src/firebase/firebase-functions'
 
 export default {
   name: 'historyTable',
@@ -53,6 +53,9 @@ export default {
     return {
       tableRow: []
     }
+  },
+  props: {
+    tradeHistory: Object
   },
   components: {},
   created () {},
@@ -72,19 +75,19 @@ export default {
     }
     // end
   },
-  async mounted () {
-    try {
-      const trades = await getTrades()
-      //   console.log({ trades })
+  // async mounted () {
+  //   try {
+  //     const trades = await getTrades()
+  //     //   console.log({ trades })
 
-      if (trades?.history.historyOrders) {
-        // console.log('setting history value')
-        this.tableRow = trades.history.historyOrders
-      }
-    } catch (error) {
-      console.error('Failed to fetch trades:', error)
-    }
-  },
+  //     if (trades?.history.historyOrders) {
+  //       // console.log('setting history value')
+  //       this.tableRow = trades.history.historyOrders
+  //     }
+  //   } catch (error) {
+  //     console.error('Failed to fetch trades:', error)
+  //   }
+  // },
   computed: {
 
     tableColumns: function () {
@@ -168,7 +171,7 @@ export default {
           field: row => `$${row.openPrice}`,
           format: val => `${val}`,
           sortable: true
-        },
+        }
         // {
         //   name: 'pips',
         //   required: true,
@@ -178,15 +181,15 @@ export default {
         //   format: val => `${val}`,
         //   sortable: true
         // },
-        {
-          name: 'netProfit',
-          required: true,
-          label: 'Net Profit',
-          align: 'left',
-          field: row => row.profit ?? 0,
-          format: val => `${val}`,
-          sortable: true
-        }
+        // {
+        //   name: 'netProfit',
+        //   required: true,
+        //   label: 'Net Profit',
+        //   align: 'left',
+        //   field: row => row.profit ?? 0,
+        //   format: val => `${val}`,
+        //   sortable: true
+        // }
         // {
         //   name: 'duration',
         //   required: true,
