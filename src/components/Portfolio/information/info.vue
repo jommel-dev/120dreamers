@@ -94,7 +94,7 @@
                 Deposits
             </div>
             <div class="col-auto text-green-7 text-caption  row no-wrap items-center">
-                $5000.00
+                {{`$ ${lastDeposit.profit.toFixed(2)}`}}
             </div>
         </div>
         <div class="row no-wrap items-center">
@@ -168,6 +168,13 @@ export default {
 
     //   return lastProfitValue
     // },
+    lastDeposit(){
+        let deposits = this.infoStatsData.deals.filter((el) => {
+            return el.comment === "Deposit"
+        })
+        let lastDeposit = deposits.slice(-1)
+        return lastDeposit.length > 0 ? lastDeposit[0] : {profit:0};
+    },
     highestBalance () {
       // Use the reduce function to find the highest balance in the array
       return this.infoStatsData.balance.reduce((max, item) => (item.balance > max ? item.balance : max), 0)
