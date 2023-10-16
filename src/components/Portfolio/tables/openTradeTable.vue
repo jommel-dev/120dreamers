@@ -31,8 +31,6 @@
                         :props="props"
                     >
                         <span class="text-bold"
-                        v-if="col.name == 'action' ? (col.value == 'POSITION_TYPE_BUY' ? 'Buy' : 'Sell') : col.value"
-                        :class="col.name == 'netProfit' ? checkValueColor(col.value) : ' '"
                         >
                             {{ `${col.value}` }}
                         </span>

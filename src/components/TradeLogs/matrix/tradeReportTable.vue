@@ -37,7 +37,7 @@
                         :color="checkStatus(props.row.status)"
                         text-color="white"
                         :icon="checkStatusIcon(props.row.status)"
-                        :label="props.row.status"
+                        :label="props.row.netROI"
                     />
                 </q-td>
             </template>
@@ -55,6 +55,18 @@
         selection="multiple"
         v-model:selected="selected"
       >
+
+      <template v-slot:body-cell-type="props">
+                <q-td :props="props">
+                    <q-chip
+                        size="sm"
+                        :color="props.row.type == 'POSITION_TYPE_BUY' ? 'green-7' : 'red-7'"
+                        text-color="white"
+                        :label="props.row.type == 'POSITION_TYPE_BUY' ? 'Buy' : 'Sell'"
+                    />
+                </q-td>
+      </template>
+
       </q-table>
       </div>
 </template>

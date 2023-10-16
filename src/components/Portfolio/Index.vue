@@ -202,9 +202,9 @@
                     :breakpoint="0"
                 >
 
-                    <q-tab name="openTrade" icon="scatter_plot" label="Open Trades" />
+                    <q-tab name="openTrade" icon="scatter_plot" :label="`Open Trades (${trades?.positions.length})`" />
                     <!-- <q-tab name="openOrder" icon="ads_click" label="Open Orders" /> -->
-                    <q-tab name="history" icon="candlestick_chart" label="History" />
+                    <q-tab name="history" icon="candlestick_chart" :label="`History (${trades?.history.historyOrders.length})`" />
                     <!-- <q-tab name="exposure" icon="candlestick_chart" label="Exposure" /> -->
                 </q-tabs>
 
