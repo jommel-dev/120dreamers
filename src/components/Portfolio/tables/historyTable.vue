@@ -62,16 +62,15 @@ export default {
   methods: {
     moment,
     checkValueColor (val) {
-      const positiveMatch = /[+]/gi
-      const negativeMatch = /[-]/gi
-      let color = ''
-      if (val.match(positiveMatch)) {
-        color = 'text-green-7'
-      } else if (val.match(negativeMatch)) {
-        color = 'text-red-7'
+      const value = val.split('$')[1]
+      if (value) {
+        if (parseFloat(value) > 0) {
+          return 'text-green-7'
+        } else if (parseFloat(value) < 0) {
+          return 'text-red-7'
+        }
       }
-
-      return color
+      return ''
     }
     // end
   },
@@ -171,7 +170,7 @@ export default {
           field: row => `$${row.openPrice}`,
           format: val => `${val}`,
           sortable: true
-        }
+        },
         // {
         //   name: 'pips',
         //   required: true,
@@ -181,15 +180,15 @@ export default {
         //   format: val => `${val}`,
         //   sortable: true
         // },
-        // {
-        //   name: 'netProfit',
-        //   required: true,
-        //   label: 'Net Profit',
-        //   align: 'left',
-        //   field: row => row.profit ?? 0,
-        //   format: val => `${val}`,
-        //   sortable: true
-        // }
+        {
+          name: 'netProfit',
+          required: true,
+          label: 'Profit',
+          align: 'left',
+          field: row => row.profit ?? 0,
+          format: val => `$${val}`,
+          sortable: true
+        }
         // {
         //   name: 'duration',
         //   required: true,

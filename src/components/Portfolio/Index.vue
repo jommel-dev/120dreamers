@@ -341,8 +341,19 @@ export default {
       // Fetch Data
       const data = await this.$fireApi.trades.getTrades()
 
-      // console.log(data)
       this.trades = Object.keys(data).length !== 0 ? data : null
+
+      if (this.trades) {
+        if (this.trades?.history?.historyOrders?.length && this.trades.positions.length) {
+          this.trades.history.historyOrders.map((order) => {
+            const positionData = this.trades.positions.find((position) => position.id === order.positionId)
+            if (positionData) {
+              order.profit = positionData.profit
+            }
+            return order
+          })
+        }
+      }
 
       // Close Loading State
       this.dataLoader = false
