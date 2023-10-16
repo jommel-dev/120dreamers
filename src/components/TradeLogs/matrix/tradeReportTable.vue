@@ -37,7 +37,7 @@
                         :color="checkStatus(props.row.status)"
                         text-color="white"
                         :icon="checkStatusIcon(props.row.status)"
-                        :label="props.row.status"
+                        :label="props.row.netROI"
                     />
                 </q-td>
             </template>
