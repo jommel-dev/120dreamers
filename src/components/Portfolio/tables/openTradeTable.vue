@@ -30,7 +30,13 @@
                         :key="col.name"
                         :props="props"
                     >
-                        <span class="text-bold"
+                    <q-chip v-if="col.name === 'action'"
+                        size="sm"
+                        :color="col.value === 'Buy' ? 'green-7' : 'red-7'"
+                        text-color="white"
+                        :label="col.value"
+                    />
+                        <span v-else class="text-bold"
                         >
                             {{ `${col.value}` }}
                         </span>
