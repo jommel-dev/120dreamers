@@ -30,9 +30,14 @@
                         :key="col.name"
                         :props="props"
                     >
-                    <span class="text-bold"
-                        v-if="col.name == 'action' ? (col.value == 'POSITION_TYPE_BUY' ? 'Buy' : 'Sell') : col.value"
-                        :class="col.name == 'netProfit' ? checkValueColor(col.value) : ' '"
+                    <q-chip v-if="col.name === 'action'"
+                        size="sm"
+                        :color="col.value === 'Buy' ? 'green-7' : 'red-7'"
+                        text-color="white"
+                        :label="col.value"
+                    />
+
+                    <span v-else class="text-bold"
                         >
                         {{ `${col.value}` }}
                     </span>
