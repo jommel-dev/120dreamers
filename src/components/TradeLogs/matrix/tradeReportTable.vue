@@ -55,18 +55,17 @@
         selection="multiple"
         v-model:selected="selected"
       >
-
-      <template v-slot:body-cell-type="props">
+        <template v-slot:body-cell-type="props">
                 <q-td :props="props">
                     <q-chip
                         size="sm"
-                        :color="props.row.type == 'POSITION_TYPE_BUY' ? 'green-7' : 'red-7'"
+                        :color="checkPositionType(props.row.type)"
                         text-color="white"
-                        :label="props.row.type == 'POSITION_TYPE_BUY' ? 'Buy' : 'Sell'"
+                        :icon="checkTypeIcon(props.row.type)"
+                        :label="props.row.type"
                     />
                 </q-td>
-      </template>
-
+        </template>
       </q-table>
       </div>
 </template>
@@ -166,7 +165,7 @@ export default {
         { name: 'currentPrice', label: 'Current Price', align: 'center', field: row => row.currentPrice, sortable: true },
         { name: 'currentTickValue', label: 'Current Tick value', align: 'center', field: row => row.currentTickValue, sortable: true },
         { name: 'profit', label: 'Profit', align: 'center', field: row => row.profit, sortable: true },
-        { name: 'type', label: 'Type', align: 'center', field: row => row.type, sortable: true },
+        { name: 'type', label: 'Type', align: 'center', field: row => row.type === 'ORDER_TYPE_BUY' ? 'Buy' : 'Sell', sortable: true },
         { name: 'platform', label: 'Platform', align: 'center', field: row => row.platform, sortable: true }
       ]
     }
@@ -196,6 +195,26 @@ export default {
       }
 
       return color
+    },
+    checkPositionType (val) {
+      let color = ''
+      if (val === 'BUY') {
+        color = 'green-7'
+      } else {
+        color = 'red-7'
+      }
+
+      return color
+    },
+    checkTypeIcon (val) {
+      let icon = ''
+      if (val === 'BUY') {
+        icon = 'payments'
+      } else {
+        icon = 'sell'
+      }
+
+      return icon
     },
     checkStatusIcon (val) {
       let icon = ''
