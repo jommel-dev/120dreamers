@@ -21,15 +21,26 @@
       </div>
       <div class="row">
         <!-- Cards -->
-        <div class="col col-12">
-            <FullCalendar
+        <div class="col col-12 q-pa-md example-row-equal-width">
+          <div class="row">
+            <div class="col">
+              <!-- Tradeding activity -->
+              
+              
+            </div>
+            <div class="col calendar">
+               <!-- test calendar -->
+               <FullCalendar
                 :options="calendarOptions"
                 :events="eventList"
-            >
+                >
                 <!-- <template v-slot:eventContent='arg'>
                     <b>{{ arg.event.title }}</b>
                 </template> -->
-            </FullCalendar>
+               </FullCalendar>
+              
+           </div>
+          </div>
         </div>
         <!-- <div class="col col-md-6 q-pa-sm">
           <div class="row">
@@ -421,3 +432,15 @@ export default {
   }
 }
 </script>
+<style scoped>
+  .calendar  {
+    background: rgb(0,0,94);
+     background-image: url('../Dashboard/matix/login-bg.png'); 
+     background-size:contain;
+    background-position: center; 
+    background-repeat: no-repeat;
+    border-radius: 10px;
+
+      color: white;
+  }
+</style>
