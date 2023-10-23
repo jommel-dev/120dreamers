@@ -20,8 +20,8 @@
      <!-- <q-btn flat @click="logout">Logout</q-btn> -->
      <q-btn
         dense
-        color="white"
-        text-color="black"
+        color=""
+        text-color="amber-7"
         icon="paid"
         :label="balance"
       />
