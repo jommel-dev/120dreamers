@@ -240,7 +240,9 @@
 <script>
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
+import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
+import listPlugin from '@fullcalendar/list'
 // import roundVue from './matix/round.vue'
 // import mixLineBar from './matix/mixLineBar.vue'
 import moment from 'moment'
@@ -256,12 +258,19 @@ export default {
   data () {
     return {
       calendarOptions: {
-        plugins: [dayGridPlugin, interactionPlugin],
+        plugins: [dayGridPlugin, interactionPlugin, listPlugin, timeGridPlugin],
         dayMaxEvents: true,
         initialView: 'dayGridMonth',
-        // Date Action Handler
+        headerToolbar: {
+          left: 'prev, next, today',
+          center: 'title',
+          right: 'dayGridMonth, dayGridWeek, listDay',
+
+        },     
+          // Date Action Handler
         dateClick: (args) => { return this.handleDateClick(args) },
         selectable: true,
+        // editable: true,
         events: this.eventList
         // eventContent: 'Show Details'
       },
@@ -439,8 +448,8 @@ export default {
      background-size:contain;
     background-position: center; 
     background-repeat: no-repeat;
-    border-radius: 10px;
-
+    border-radius: 10px; 
+    padding: 10px;
       color: white;
   }
 </style>
