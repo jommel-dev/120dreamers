@@ -24,9 +24,46 @@
         <div class="col col-12 q-pa-md example-row-equal-width">
           <div class="row">
             <div class="col">
-              <!-- Tradeding activity -->
-              
-              
+            <div>
+                <h5>Trading activity</h5>
+           </div>
+            <div class="col col-md-12 q-pa-sm">
+                <q-tabs
+                    v-model="tradeActTab"
+                    dense
+                    align="left"
+                    no-caps
+                    inline-label
+                    :breakpoint="0"
+                >
+
+                    <q-tab name="openTrade" icon="scatter_plot" :label="`Open Trades (${trades?.positions.length})`" />
+                    <!-- <q-tab name="openOrder" icon="ads_click" label="Open Orders" /> -->
+                    <q-tab name="history" icon="candlestick_chart" :label="`History (${trades?.history.historyOrders.length})`" />
+                    <!-- <q-tab name="exposure" icon="candlestick_chart" label="Exposure" /> -->
+                </q-tabs>
+
+                <q-tab-panels v-model="tradeActTab" animated>
+                    <q-tab-panel name="openTrade">
+                        <openTradeTable
+                        v-if="trades != null"
+                        :openTrades="trades.positions"
+                        />
+                    </q-tab-panel>
+                    <q-tab-panel name="openOrder">
+                        <openOrderTable />
+                    </q-tab-panel>
+                    <q-tab-panel name="history">
+                        <historyTable
+                        v-if="trades != null"
+                        :tradeHistory="trades.history.historyOrders"
+                        />
+                    </q-tab-panel>
+                    <q-tab-panel name="exposure">
+                        <exposureTable />
+                    </q-tab-panel>
+                </q-tab-panels>
+            </div>
             </div>
             <div class="col calendar">
                <!-- test calendar -->
@@ -38,7 +75,7 @@
                     <b>{{ arg.event.title }}</b>
                 </template> -->
                </FullCalendar>
-              
+
            </div>
           </div>
         </div>
@@ -198,7 +235,7 @@
                     <td>{{ `$${selectedData.profit}` }}</td>
                   </tr>
                   <tr>
-                    <td class="q-pt-lg">Volume:</td>
+                    <td class="q-pt-lg">Lot Size:</td>
                     <td class="q-pt-lg">{{ selectedData.volumes }}</td>
                   </tr>
                 </table>
@@ -238,11 +275,18 @@
 </template>
 
 <script>
+// Trading Activity Tables
+import openTradeTable from '../Portfolio/tables/openTradeTable.vue'
+import openOrderTable from '../Portfolio/tables/openOrderTable.vue'
+import historyTable from '../Portfolio/tables/historyTable.vue'
+import exposureTable from '../Portfolio/tables/exposureTable.vue'
+
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import listPlugin from '@fullcalendar/list'
+
 // import roundVue from './matix/round.vue'
 // import mixLineBar from './matix/mixLineBar.vue'
 import moment from 'moment'
@@ -251,7 +295,11 @@ export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: 'Dashboard',
   components: {
-    FullCalendar
+    FullCalendar,
+    openTradeTable,
+    openOrderTable,
+    historyTable,
+    exposureTable
     // roundVue,
     // mixLineBar
   },
@@ -264,10 +312,10 @@ export default {
         headerToolbar: {
           left: 'prev, next, today',
           center: 'title',
-          right: 'dayGridMonth, dayGridWeek, listDay',
+          right: 'dayGridMonth, dayGridWeek, listDay'
 
-        },     
-          // Date Action Handler
+        },
+        // Date Action Handler
         dateClick: (args) => { return this.handleDateClick(args) },
         selectable: true,
         // editable: true,
@@ -327,11 +375,13 @@ export default {
       ],
       eventList: [],
       calendarData: null,
-      selectedData: null
+      selectedData: null,
+      tradeActTab: 'openTrade'
     }
   },
   created () {
     this.getCalendar()
+    this.catchTrades()
   },
   methods: {
     handleDateClick (data) {
@@ -369,6 +419,30 @@ export default {
 
         this.dateTradeDetailModal = true
       }
+    },
+    async catchTrades () {
+      // Set Loading State
+      this.dataLoader = true
+
+      // Fetch Data
+      const data = await this.$fireApi.trades.getTrades()
+
+      this.trades = Object.keys(data).length !== 0 ? data : null
+
+      if (this.trades) {
+        if (this.trades?.history?.historyOrders?.length && this.trades.positions.length) {
+          this.trades.history.historyOrders.map((order) => {
+            const positionData = this.trades.positions.find((position) => position.id === order.positionId)
+            if (positionData) {
+              order.profit = positionData.profit
+            }
+            return order
+          })
+        }
+      }
+
+      // Close Loading State
+      this.dataLoader = false
     },
     calculateWinrate (total, dividend) {
       return (dividend / total) * 100
@@ -427,11 +501,11 @@ export default {
     tradeCols () {
       return [
         { name: 'time', required: true, label: 'Open Time', align: 'center', field: row => moment(row.time).format('h:mm:ss'), sortable: true },
-        { name: 'volume', required: true, label: 'Volume', align: 'center', field: row => row.volume, sortable: true },
+        { name: 'lotSize', required: true, label: 'Lot Size', align: 'center', field: row => row.volume, sortable: true },
         { name: 'netPL', required: true, label: 'Net P&L', align: 'center', field: row => row.profit, sortable: true },
         { name: 'symbol', required: true, label: 'Symbol', align: 'center', field: row => row.symbol, sortable: true },
         { name: 'profit', label: 'Profit', align: 'center', field: row => row.profit, sortable: true },
-        { name: 'type', label: 'Type', align: 'center', field: row => row.type === 'ORDER_TYPE_BUY' ? 'Buy' : 'Sell', sortable: true },
+        { name: 'position', label: 'Position', align: 'center', field: row => row.type === 'ORDER_TYPE_BUY' ? 'Buy' : 'Sell', sortable: true },
         { name: 'platform', label: 'Platform', align: 'center', field: row => row.platform, sortable: true }
 
         // new Set
@@ -444,11 +518,11 @@ export default {
 <style scoped>
   .calendar  {
     background: rgb(0,0,94);
-     background-image: url('../Dashboard/matix/login-bg.png'); 
+     background-image: url('../Dashboard/matix/login-bg.png');
      background-size:contain;
-    background-position: center; 
+    background-position: center;
     background-repeat: no-repeat;
-    border-radius: 10px; 
+    border-radius: 10px;
     padding: 10px;
       color: white;
   }

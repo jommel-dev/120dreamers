@@ -30,7 +30,7 @@
                         :key="col.name"
                         :props="props"
                     >
-                    <q-chip v-if="col.name === 'action'"
+                    <q-chip v-if="col.name === 'position'"
                         size="sm"
                         :color="col.value === 'Buy' ? 'green-7' : 'red-7'"
                         text-color="white"
@@ -123,9 +123,9 @@ export default {
           sortable: true
         },
         {
-          name: 'action',
+          name: 'position',
           required: true,
-          label: 'Action',
+          label: 'Position',
           align: 'left',
           field: row => row.type === 'ORDER_TYPE_BUY' ? 'Buy' : 'Sell',
           format: val => `${val}`,
