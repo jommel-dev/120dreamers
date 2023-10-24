@@ -1,7 +1,7 @@
 <template>
   <div class="q-pa-md" style="width: 100%;">
       <div id="chart">
-          <apexchart type="line" height="450" :options="chartOptions" :series="series"></apexchart>
+          <apexchart type="bar" height="450" :options="chartOptions" :series="series"></apexchart>
       </div>
   </div>
 </template>
@@ -13,19 +13,36 @@ export default {
   props: {
     profits: Array
   },
+  // data () {
+  //   return {
+  //     series: [],
+  //     chartOptions: {
+  //       stroke: {
+  //         width: [0, 4]
+  //       },
+  //       title: {
+  //         text: 'Profits Analysis'
+  //       },
+  //       dataLabels: {
+  //         enabled: true
+  //       },
+  //       xaxis: {
+  //         type: 'datetime'
+  //       },
+  //       yaxis: [{
+  //         title: {
+  //           text: 'Profit Value'
+  //         }
+  //       }]
+  //     }
+  //   }
+  // },
   data () {
     return {
-      series: [],
+      series: [], // Your data series
       chartOptions: {
         chart: {
-          height: 350,
-          type: 'line'
-        },
-        stroke: {
-          width: [0, 4]
-        },
-        title: {
-          text: 'Profits Analysis'
+          type: 'bar' // Specify the chart type as 'bar'
         },
         dataLabels: {
           enabled: true
@@ -33,11 +50,16 @@ export default {
         xaxis: {
           type: 'datetime'
         },
-        yaxis: [{
-          title: {
-            text: 'Profit Value'
+        yaxis: [
+          {
+            title: {
+              text: 'Profit Value'
+            }
           }
-        }]
+        ],
+        title: {
+          text: 'Profits Analysis'
+        }
       }
     }
   },

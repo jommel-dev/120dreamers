@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <!-- <div>
         <q-table
             class="q-mt-md"
             :rows="tableRow"
@@ -42,7 +42,7 @@
                 </q-td>
             </template>
         </q-table>
-    </div>
+    </div> -->
 
     <div>
       <q-table
@@ -166,7 +166,7 @@ export default {
         { name: 'currentPrice', label: 'Current Price', align: 'center', field: row => row.currentPrice, sortable: true },
         { name: 'currentTickValue', label: 'Current Tick value', align: 'center', field: row => row.currentTickValue, sortable: true },
         { name: 'profit', label: 'Profit', align: 'center', field: row => row.profit, sortable: true },
-        { name: 'type', label: 'Type', align: 'center', field: row => row.type, sortable: true },
+        { name: 'position', label: 'Position', align: 'center', field: row => row.type, sortable: true },
         { name: 'platform', label: 'Platform', align: 'center', field: row => row.platform, sortable: true }
       ]
     }
