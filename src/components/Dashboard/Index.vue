@@ -517,13 +517,19 @@ export default {
 </script>
 <style scoped>
   .calendar  {
-    background: rgb(0,0,94);
-     background-image: url('../Dashboard/matix/login-bg.png'); 
+    
+     background-image: url('../Dashboard/matix/Illustration.svg'); 
      background-size:contain;
     background-position: center; 
     background-repeat: no-repeat;
     border-radius: 10px;
-    padding: 10px;
+    padding: 15px;
       color: white;
+      background-color: #242423;
+
+      /*  */
+      box-shadow: 0px 0px 14px 8px rgba(15,51,224,0.88) inset;
+      -webkit-box-shadow: 0px 0px 14px 8px rgba(15,51,224,0.88) inset;
+      -moz-box-shadow: 0px 0px 14px 8px rgba(15,51,224,0.88) inset;
   }
 </style>

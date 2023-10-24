@@ -151,7 +151,7 @@ const linksList = [
   {
     title: 'Dreamers University',
     icon: 'cast_for_education',
-    link: 'dreamersUniversity',
+    link: 'dreamers',
     code: 101
   }
 ]
