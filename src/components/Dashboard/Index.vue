@@ -518,9 +518,9 @@ export default {
 <style scoped>
   .calendar  {
     background: rgb(0,0,94);
-     background-image: url('../Dashboard/matix/login-bg.png');
+     background-image: url('../Dashboard/matix/login-bg.png'); 
      background-size:contain;
-    background-position: center;
+    background-position: center; 
     background-repeat: no-repeat;
     border-radius: 10px;
     padding: 10px;
