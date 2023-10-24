@@ -518,8 +518,8 @@ export default {
 <style scoped>
   .calendar  {
     
-     background-image: url('../Dashboard/matix/Illustration.svg'); 
-     background-size:contain;
+    background-image: url('../Dashboard/matix/Illustration.svg'); 
+    background-size:contain;
     background-position: center; 
     background-repeat: no-repeat;
     border-radius: 10px;
