@@ -1,12 +1,5 @@
 <template>
     <div class="q-pa-md" style="width: 100%;">
-        <!-- <div class="">
-           
-        </div>
-        <div>
-
-        </div> -->
-        <!-- testdrawer for notes -->
         <div class="q-pa-md">
           <q-layout view="hHh Lpr lff" container style="height: 500px" class="shadow-2 rounded-borders">
             <q-header elevated :class="$q.dark.isActive ? 'bg-primary' : 'bg-indigo-9'">
