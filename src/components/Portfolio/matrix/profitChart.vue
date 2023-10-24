@@ -7,39 +7,19 @@
 </template>
 
 <script>
-
 export default {
   name: 'MixLineBar',
   props: {
     profits: Array
   },
-  // data () {
-  //   return {
-  //     series: [],
-  //     chartOptions: {
-  //       stroke: {
-  //         width: [0, 4]
-  //       },
-  //       title: {
-  //         text: 'Profits Analysis'
-  //       },
-  //       dataLabels: {
-  //         enabled: true
-  //       },
-  //       xaxis: {
-  //         type: 'datetime'
-  //       },
-  //       yaxis: [{
-  //         title: {
-  //           text: 'Profit Value'
-  //         }
-  //       }]
-  //     }
-  //   }
-  // },
   data () {
     return {
-      series: [], // Your data series
+      // series: [{
+      //   name: 'Profit Value',
+      //   type: 'column',
+      //   data: [-2, 3, -6, 2, 1]
+      // }], // Your data series
+      series: [],
       chartOptions: {
         chart: {
           type: 'bar' // Specify the chart type as 'bar'
@@ -59,12 +39,32 @@ export default {
         ],
         title: {
           text: 'Profits Analysis'
+        },
+        plotOptions: {
+          bar: {
+            columnWidth: '50%',
+            colors: {
+              ranges: [
+                {
+                  from: -Infinity,
+                  to: 0,
+                  color: '#FF0000' // Red for negative values
+                },
+                {
+                  from: 0,
+                  to: Infinity,
+                  color: '#00FF00' // Green for positive values
+                }
+              ]
+            }
+          }
         }
       }
     }
   },
   created () {
     this.calculateChartData()
+    console.log(this.series)
   },
   watch: {
     profits: {
@@ -94,5 +94,4 @@ export default {
     }
   }
 }
-
 </script>
