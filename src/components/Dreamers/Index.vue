@@ -1,28 +1,51 @@
 <template>
-        <header class="q-ml-lg">
-                    <h3>120 University</h3>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit, eligendi.</p>
-        </header>
-        <div class="content-container" id="q-app">
+        
+        <div class="text-grey">
+            <div class="row">
+
+                <div class="col col-md-12 q-pa-lg ">
+                    <span class="text-h3">120 University</span><br/>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit, eligendi.
+                </div>                
+            </div>
             
                 <div class="q-pa-md example-row-mix-and-match">
                     <!-- Stack the columns on mobile by making one full-width and the other half-width -->
-                    <h4 class="text-center text-blue-grey-2">title</h4>
+                    <!-- <h4 class="text-center text-blue-grey-2">title</h4> -->
                     <div class="row">
                         <div class="col col-md-8">
+                            <span class="text-h5" >Discription</span> <br/>
+                            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Possimus earum doloribus sint repudiandae libero eligendi similique animi qui nam debitis.</p>
                             <q-video
-                            :ratio="17/9"
-                            src="https://www.youtube.com/embed/PDdT-rWY1AI"
-                            title="🔴Live FOREX Day Trading (NAS100, US30) - Unemployment Claims" 
-                            frameborder="0" 
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                            allowfullscreen
-                            
+                                :ratio="17/9"
+                                src="https://www.youtube.com/embed/PDdT-rWY1AI"
+                                title="🔴Live FOREX Day Trading (NAS100, US30) - Unemployment Claims" 
+                                frameborder="0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                allowfullscreen
+                                style="border-radius: 20px;"
                             ></q-video>
+                           
                         </div>
                         <div class="col-6 col-md-4">
-                            <h5>Discription</h5>
-                            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Possimus earum doloribus sint repudiandae libero eligendi similique animi qui nam debitis.</p>
+                            <q-toolbar class="">
+                                <q-btn flat round dense>
+                                    <q-icon name="menu" />
+                                </q-btn>
+                                <q-toolbar-title>
+                                    More Video's
+                                </q-toolbar-title>
+                                <q-btn flat round dense>
+                                    <q-icon name="more_vert" />
+                                </q-btn>
+                            </q-toolbar>
+                            <q-video
+                                v-for="(item, index) in videoList"
+                                :key="index"
+                                v-bind="item"
+                                class="q-ma-md"
+                                style="border-radius: 20px;height: 160px;"
+                            />
                         </div>
                     </div>
 
@@ -94,34 +117,62 @@
                     </div>
                 </div>
         </div>
-        <Footer>
+        <!-- <Footer>
                 <h3 class="text-center">This Footer</h3>
-        </Footer>
+        </Footer> -->
 </template>
+
+<script>
+export default {
+    name: "dreamersUniversity",
+    data(){
+        return {
+            videoRatio: "17/9",
+            videoList: [
+                {
+                    src: "https://www.youtube.com/embed/2Hwbj96eArg",
+                    title:"🔴Live FOREX Day Trading (NAS100, US30) - Core Retail Sales News!!!",
+                    frameborder: "0",
+                    allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share",
+                    allowfullscreen: true
+                },
+                {
+                    src: "https://www.youtube.com/embed/twp2riCcVPw",
+                    title:"🔴Live FOREX Day Trading (NAS100, US50) - Core Retail Sales News!!!",
+                    frameborder: "0",
+                    allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share",
+                    allowfullscreen: false
+                },
+                {
+                    src: "https://www.youtube.com/embed/PDdT-rWY1AI",
+                    title:"🔴Live FOREX Day Trading (NAS100, US60) - Core Retail Sales News!!!",
+                    frameborder: "0",
+                    allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share",
+                    allowfullscreen: false
+                },
+            ]
+        }
+    },
+
+}
+</script>
+
   
-  <style scoped>
-    header {
-        background: rgb(0,0,94);
-        background: linear-gradient(187deg, rgba(0,0,94,1) 0%, rgba(0,8,255,1) 51%, rgba(0,0,94,1) 100%);
-    }
-    .example-row-mix-and-match .row > div {
-    padding: 10px 15px;
-    background: rgba(153, 153, 153, 0.15);
-    border: 1px solid rgba(153, 153, 153, 0.2);
-    }
-    .example-row-mix-and-match .row + .row {
-    margin-top: 1rem;
-    }
-    .content-container {
-        background-color: rgb(1, 1, 118);
-        background-image: url(./Illustration-test.svg);
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: contain;
-    }
-    footer {
-        background: rgb(0,0,94);
-        background: linear-gradient(187deg, rgba(0,0,94,1) 0%, rgba(0,8,255,1) 51%, rgba(0,0,94,1) 100%);
-    }
-    
-  </style>
+<style scoped>
+header {
+    background: rgb(0,0,94);
+    background: linear-gradient(187deg, rgba(0,0,94,1) 0%, rgba(0,8,255,1) 51%, rgba(0,0,94,1) 100%);
+}
+.example-row-mix-and-match .row > div {
+padding: 10px 15px;
+/* background: rgba(153, 153, 153, 0.15); */
+/* border: 1px solid rgba(153, 153, 153, 0.2); */
+}
+.example-row-mix-and-match .row + .row {
+margin-top: 1rem;
+}
+footer {
+    background: rgb(0,0,94);
+    background: linear-gradient(187deg, rgba(0,0,94,1) 0%, rgba(0,8,255,1) 51%, rgba(0,0,94,1) 100%);
+}
+</style>

@@ -37,9 +37,9 @@
                     :breakpoint="0"
                 >
 
-                    <q-tab name="openTrade" icon="scatter_plot" :label="`Open Trades (${trades?.positions.length})`" />
+                    <q-tab name="openTrade" icon="scatter_plot" :label="`Open Trades (${trades?.positions?.length})`" />
                     <!-- <q-tab name="openOrder" icon="ads_click" label="Open Orders" /> -->
-                    <q-tab name="history" icon="candlestick_chart" :label="`History (${trades?.history.historyOrders.length})`" />
+                    <q-tab name="history" icon="candlestick_chart" :label="`History (${trades?.history?.historyOrders?.length})`" />
                     <!-- <q-tab name="exposure" icon="candlestick_chart" label="Exposure" /> -->
                 </q-tabs>
 
@@ -376,12 +376,18 @@ export default {
       eventList: [],
       calendarData: null,
       selectedData: null,
-      tradeActTab: 'openTrade'
+      tradeActTab: 'openTrade',
+      trades: {}
     }
   },
   created () {
-    this.getCalendar()
-    this.catchTrades()
+    this.$q.loading.show();
+    this.getCalendar().then(() => {
+      this.catchTrades().then(() => {
+        this.$q.loading.hide();
+      })
+    })
+    
   },
   methods: {
     handleDateClick (data) {
@@ -454,7 +460,9 @@ export default {
         title: `${item.profit} (${item.dataCount} trades)`,
         start: item.date,
         display: 'background',
-        color: this.checkValueColor(item.profit)
+        allDay: true,
+        color: this.checkValueColor(item.profit),
+        textColor: '#ffffff'
       }))]
     },
     checkValueColor (val) {
