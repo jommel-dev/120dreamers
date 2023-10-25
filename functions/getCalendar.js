@@ -2,7 +2,7 @@
  * Get current user and fetch data from firestore
  */
 
-const { getTotalProfitByDate, validateAuthorization, getPlatformData } = require('./common')
+const { getTotalProfitByDate, validateAuthorization, getPlatformData, fetchTradesFromFirestore, formatFirebaseTimestamp } = require('./common')
 
 // TODO: add more platforms
 const MT4 = 'MetaTrader4'
@@ -26,7 +26,7 @@ exports.handler = async function (request, response, logger, admin, firestore, g
     const { token, accountId, broker } = userPlatformData
     switch (broker) {
       case MT4:
-        result = await fetchData(token, accountId, uid, getGlobalConnection, platformId)
+        result = await fetchData(token, accountId, uid, getGlobalConnection, platformId, firestore)
         response.status(200).json(result)
         break
       default:
@@ -45,7 +45,7 @@ exports.handler = async function (request, response, logger, admin, firestore, g
   }
 }
 
-async function fetchData (token, accountId, uid, getGlobalConnection, platformId) {
+async function fetchData (token, accountId, uid, getGlobalConnection, platformId, firestore) {
   try {
     const connection = await getGlobalConnection(token, accountId, uid, platformId)
 
@@ -56,6 +56,24 @@ async function fetchData (token, accountId, uid, getGlobalConnection, platformId
     // console.log('dealsResult', dealsResult)
 
     const deals = dealsResult.deals
+
+    const firestoreTrades = await fetchTradesFromFirestore(uid, firestore)
+
+    firestoreTrades.forEach((trade) => {
+      const { close, symbol, type, volume, price, profit, commission, swap, comment, platform } = trade
+      deals.push({
+        time: formatFirebaseTimestamp(close),
+        symbol,
+        type,
+        volume,
+        price,
+        profit,
+        commission,
+        swap,
+        comment,
+        platform
+      })
+    })
 
     const { data: profitsByDate, baseAmount } = getTotalProfitByDate(deals)
     console.log({ baseAmount }, { profitsByDate })

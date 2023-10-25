@@ -82,3 +82,23 @@ exports.getPlatformData = async function (uid, firestore, platformId) {
 
   return userPlatformData
 }
+
+exports.fetchTradesFromFirestore = async function (uid, firestore) {
+  const tradesRef = firestore.collection(`platforms/${uid}/trades`)
+  const snapshot = await tradesRef.get()
+
+  const trades = []
+  snapshot.forEach(doc => trades.push(doc.data()))
+
+  return trades
+}
+
+exports.formatFirebaseTimestamp = function (timestamp) {
+  // Convert the Firebase Timestamp to a JavaScript Date object
+  const date = timestamp.toDate()
+
+  // Format the Date object to the desired string format
+  const formattedDate = date.toISOString()
+
+  return formattedDate
+}
