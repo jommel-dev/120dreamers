@@ -53,7 +53,7 @@ const routes = [
         path: 'allPlatforms',
         name: 'allPlatforms',
         component: () => import('pages/BrokerList.vue')
-      }
+      },
     ],
     meta: { auth: true }
   },
