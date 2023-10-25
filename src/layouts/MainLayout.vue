@@ -12,18 +12,12 @@
         @click="toggleLeftDrawer"
       />
      <q-toolbar-title>
-      <q-btn unelevated rounded icon="addchart" color="white" text-color="black" to="/newTrade">Add Trade</q-btn>
-      <q-btn unelevated rounded color="white" text-color="black" @click="openModal">Add trade log</q-btn>
-      <q-btn unelevated rounded color="white" text-color="black" @click="openFilePicker">Import trade log (CSV)</q-btn>
+      <q-btn unelevated rounded icon="addchart" color="white" text-color="black" to="/allPlatforms">Add Trade</q-btn>
+      <!-- <q-btn unelevated rounded icon="addchart" color="white" text-color="black" to="/newTrade">Add Trade</q-btn> -->
+      <!-- <q-btn unelevated rounded color="white" text-color="black" @click="openModal">Add trade log</q-btn>
+      <q-btn unelevated rounded color="white" text-color="black" @click="openFilePicker">Import trade log (CSV)</q-btn> -->
 
-      <!-- Hidden input element for file picking -->
-      <input
-        ref="fileInput"
-        type="file"
-        accept=".csv,text/csv"
-        style="display: none"
-        @change="handleFileSelected"
-      />
+      
      </q-toolbar-title>
 
      <!-- <q-toolbar-subtitle v-if="displayName">Welcome, {{ displayName }}!</q-toolbar-subtitle> -->
@@ -121,8 +115,6 @@
       />
     </q-drawer>
 
-    <TradeForm ref="tradeFormModal" />
-
    <q-page-container>
     <router-view />
    </q-page-container>
@@ -135,10 +127,6 @@ import { LocalStorage } from 'quasar'
 import SideNav from '../components/Templates/Sidenav.vue'
 import Profile from '../components/Templates/Profile.vue'
 import listDocuments from 'src/firebase/firebase-list'
-import TradeForm from '../components/Dashboard/TradeForm.vue'
-import Papa from 'papaparse'
-import { Timestamp } from '@firebase/firestore'
-import createDocument from 'src/firebase/firebase-create'
 
 const linksList = [
   {
@@ -188,8 +176,7 @@ export default {
   },
   components: {
     SideNav,
-    Profile,
-    TradeForm
+    Profile
   },
   computed: {
     filteredMenus: function () {
@@ -243,67 +230,6 @@ export default {
         this.balance = data.accountInformation.balance
       }
     },
-    openModal () {
-      this.$refs.tradeFormModal.openModal()
-    },
-    openFilePicker () {
-      this.$refs.fileInput.click()
-    },
-    handleFileSelected (event) {
-      const selectedFile = event.target.files[0]
-      if (selectedFile) {
-        console.log('File selected:', selectedFile.name)
-        const user = LocalStorage.getItem('user')
-        Papa.parse(selectedFile, {
-          complete: async (results) => {
-            for (const row of results.data) {
-            // Assuming the first row of CSV contains headers
-              if (results.data.indexOf(row) === 0) continue
-
-              const data = {
-                ticket: row[0],
-                open: Timestamp.fromDate(new Date(row[1])),
-                type: row[2],
-                volume: row[3],
-                symbol: row[4],
-                price: parseFloat(row[5]),
-                sl: row[6],
-                tp: row[7],
-                close: Timestamp.fromDate(new Date(row[8])),
-                price: parseFloat(row[9]),
-                swap: row[10],
-                commissions: parseFloat(row[11]),
-                profit: parseFloat(row[12]),
-                pips: row[13],
-                tradeDuration: row[14]
-              }
-
-              try {
-                const userId = user ? user.uid : null
-                if (userId) {
-                  await createDocument(`platforms/${userId}/trades`, data)
-                } else {
-                  this.$q.notify({
-                    type: 'negative',
-                    message: 'Missing user id!'
-                  })
-                }
-              } catch (error) {
-                this.$q.notify({
-                  type: 'negative',
-                  message: `Error saving data: ${error.message}`
-                })
-              }
-            }
-
-            this.$q.notify({
-              type: 'positive',
-              message: 'Data imported successfully!'
-            })
-          }
-        })
-      }
-    }
   },
   watch: {
     filterAccount (newVal, oldVal) {
