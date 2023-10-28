@@ -2,11 +2,10 @@
   <q-dialog v-model="modalOpen">
     <q-card class="wide-card">
       <q-card-section>
-        <q-form @submit="saveToFirestore">
-          <q-input v-model="form.ticket" label="Ticket" />
+        <q-form  @submit.prevent="submitForm" ref="myForm">
+          <q-input v-model="form.ticket" label="Ticket" required :rules="[val => !!val || 'Field is required']" />
 
-          <!-- Open date picker -->
-          <q-input filled v-model="form.open" label="Open">
+          <q-input filled v-model="form.open" label="Open" required :rules="[val => (val && !isNaN(Date.parse(val))) || 'Please select a valid date']">
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
                 <q-popup-proxy ref="qDateProxyOpen" transition-show="scale" transition-hide="scale">
@@ -16,8 +15,7 @@
             </template>
           </q-input>
 
-          <!-- Close date picker -->
-          <q-input filled v-model="form.close" label="Close">
+          <q-input filled v-model="form.close" label="Close" required :rules="[val => (val && !isNaN(Date.parse(val))) || 'Please select a valid date']">
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
                 <q-popup-proxy ref="qDateProxyClose" transition-show="scale" transition-hide="scale">
@@ -27,17 +25,27 @@
             </template>
           </q-input>
 
-          <q-input v-model="form.type" label="Type" />
-          <q-input v-model="form.volume" label="Volume" />
-          <q-input v-model="form.symbol" label="Symbol" />
-          <q-input v-model="form.price" label="Price" type="number"/>
-          <q-input v-model="form.sl" label="SL" />
-          <q-input v-model="form.tp" label="TP" />
-          <q-input v-model="form.swap" label="Swap" />
-          <q-input v-model="form.commissions" label="Commissions" type="number" />
-          <q-input v-model="form.profit" label="Profit" type="number" />
-          <q-input v-model="form.pips" label="Pips" />
-          <q-input v-model="form.tradeDuration" label="Trade duration in seconds" />
+          <q-select
+            filled
+            v-model="form.type"
+            :options="['buy', 'sell']"
+            label="Type"
+            emit-value
+            map-options
+            required
+            :rules="[val => !!val || 'Field is required']"
+          />
+
+          <q-input v-model="form.volume" label="Volume" required :rules="[val => !!val || 'Field is required']"/>
+          <q-input v-model="form.symbol" label="Symbol" required :rules="[val => !!val || 'Field is required']" />
+          <q-input v-model="form.price" label="Price" type="number" required :rules="[val => !!val || 'Field is required']"/>
+          <q-input v-model="form.sl" label="SL"/>
+          <q-input v-model="form.tp" label="TP"/>
+          <q-input v-model="form.swap" label="Swap" required :rules="[val => !!val || 'Field is required']"/>
+          <q-input v-model="form.commissions" label="Commissions" type="number" required :rules="[val => !!val || 'Field is required']"/>
+          <q-input v-model="form.profit" label="Profit" type="number" required :rules="[val => !!val || 'Field is required']"/>
+          <q-input v-model="form.pips" label="Pips" required :rules="[val => !!val || 'Field is required']"/>
+          <q-input v-model="form.tradeDuration" label="Trade duration in seconds" required :rules="[val => !!val || 'Field is required']"/>
           <q-select
             filled
             v-model="form.platform"
@@ -45,6 +53,8 @@
             label="Platform"
             emit-value
             map-options
+            required
+            :rules="[val => !!val || 'Field is required']"
           />
           <div>
             <q-btn label="Save" type="submit" color="primary" />
@@ -94,13 +104,40 @@ export default {
     openModal () {
       this.modalOpen = true
     },
+    submitForm () {
+      this.$refs.myForm.validate().then(valid => {
+        if (valid) {
+          this.saveToFirestore()
+        }
+      })
+    },
     async saveToFirestore () {
       this.isSaving = true
+      const getCurrentTime = () => {
+        const now = new Date()
+        return {
+          hours: now.getHours(),
+          minutes: now.getMinutes(),
+          seconds: now.getSeconds()
+        }
+      }
+
+      const addCurrentTimeToDate = (dateStr) => {
+        const date = new Date(dateStr)
+        const currentTime = getCurrentTime()
+        date.setHours(currentTime.hours)
+        date.setMinutes(currentTime.minutes)
+        date.setSeconds(currentTime.seconds)
+        return date
+      }
+
+      const openDateTime = this.form.open ? addCurrentTimeToDate(this.form.open) : null
+      const closeDateTime = this.form.close ? addCurrentTimeToDate(this.form.close) : null
 
       const data = {
         ticket: this.form.ticket,
-        open: this.form.open ? Timestamp.fromDate(new Date(this.form.open)) : null,
-        close: this.form.close ? Timestamp.fromDate(new Date(this.form.close)) : null,
+        open: openDateTime ? Timestamp.fromMillis(openDateTime.getTime()) : null,
+        close: closeDateTime ? Timestamp.fromMillis(closeDateTime.getTime()) : null,
         type: this.form.type,
         volume: this.form.volume,
         symbol: this.form.symbol,

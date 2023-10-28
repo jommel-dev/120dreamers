@@ -53,16 +53,16 @@ async function fetchData (token, accountId, uid, getGlobalConnection, platformId
     console.log('accountInformation', accountInformation)
 
     const positions = await connection.getPositions()
-    console.log('positions', positions)
+    // console.log('positions', positions)
 
     const orders = await connection.getOrders()
-    console.log('orders', orders)
+    // console.log('orders', orders)
 
     const history = await connection.getHistoryOrdersByTimeRange('2023-10-01T00:00:00Z', '2023-10-30T00:00:00Z')
-    console.log('history', history)
+    // console.log('history', history)
 
     const dealsResult = await connection.getDealsByTimeRange('2023-10-01T00:00:00Z', '2023-10-30T00:00:00Z')
-    console.log('dealsResult', dealsResult)
+    // console.log('dealsResult', dealsResult)
 
     const deals = dealsResult.deals
 
