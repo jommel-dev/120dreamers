@@ -61,22 +61,24 @@ async function fetchData (token, accountId, uid, getGlobalConnection, platformId
 
     firestoreTrades.forEach((trade) => {
       const { close, symbol, type, volume, price, profit, commission, swap, comment, platform } = trade
-      deals.push({
-        time: formatFirebaseTimestamp(close),
-        symbol,
-        type,
-        volume,
-        price,
-        profit,
-        commission,
-        swap,
-        comment,
-        platform
-      })
+      if (close) {
+        deals.push({
+          time: formatFirebaseTimestamp(close),
+          symbol,
+          type,
+          volume,
+          price,
+          profit,
+          commission,
+          swap,
+          comment,
+          platform
+        })
+      }
     })
 
     const { data: profitsByDate, baseAmount } = getTotalProfitByDate(deals)
-    console.log({ baseAmount }, { profitsByDate })
+    // console.log({ baseAmount }, { profitsByDate })
 
     // Exclude base amount
     const profits = profitsByDate.filter(({ profit }) => profit !== baseAmount).map((profit) => ({

@@ -325,7 +325,7 @@ export default {
       dateTradeDetailModal: false,
       dashCards: [
         {
-          title: 'Net P&L2',
+          title: 'Net P&L',
           value: '$ 1,000',
           subVal: '35',
           type: '',
@@ -381,13 +381,12 @@ export default {
     }
   },
   created () {
-    this.$q.loading.show();
+    this.$q.loading.show()
     this.getCalendar().then(() => {
       this.catchTrades().then(() => {
-        this.$q.loading.hide();
+        this.$q.loading.hide()
       })
     })
-    
   },
   methods: {
     handleDateClick (data) {
@@ -525,10 +524,10 @@ export default {
 </script>
 <style scoped>
   .calendar  {
-    
-    background-image: url('../Dashboard/matix/Illustration.svg'); 
+
+    background-image: url('../Dashboard/matix/Illustration.svg');
     background-size:contain;
-    background-position: center; 
+    background-position: center;
     background-repeat: no-repeat;
     border-radius: 10px;
     padding: 15px;

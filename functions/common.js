@@ -99,6 +99,5 @@ exports.formatFirebaseTimestamp = function (timestamp) {
 
   // Format the Date object to the desired string format
   const formattedDate = date.toISOString()
-
   return formattedDate
 }
