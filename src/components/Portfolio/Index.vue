@@ -277,17 +277,8 @@ import openOrderTable from './tables/openOrderTable.vue'
 import historyTable from './tables/historyTable.vue'
 import exposureTable from './tables/exposureTable.vue'
 
-// Tables
-// import periodTable from './tables/reportTable.vue'
-// import goalsTable from './tables/goalsTable.vue'
-// import browserTable from './tables/browserTable.vue'
-
-// advance Statistics tables
-// import durationChart from './statistics/durationChart.vue'
-// import hourlyChart from './statistics/hourlyChart.vue'
-// import riskOfRuinChart from './statistics/riskOfRuinChart.vue'
-// import summaryChart from './statistics/summaryChart.vue'
-// import tradesChart from './statistics/tradesChart.vue'
+import { syncAccount } from '../../stores/syncAccount'
+const store = syncAccount()
 
 // Trading Activity
 
@@ -339,7 +330,7 @@ export default {
       this.dataLoader = true
 
       // Fetch Data
-      const data = await this.$fireApi.trades.getTrades()
+      const data = await this.$fireApi.trades.getTrades({ platformIds: this.getId })
 
       this.trades = Object.keys(data).length !== 0 ? data : null
 
@@ -357,6 +348,11 @@ export default {
 
       // Close Loading State
       this.dataLoader = false
+    }
+  },
+  computed: {
+    getId () {
+      return store.getSelectedId
     }
   }
 }

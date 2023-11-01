@@ -168,12 +168,12 @@ export default {
 
     //   return lastProfitValue
     // },
-    lastDeposit(){
-        let deposits = this.infoStatsData.deals.filter((el) => {
-            return el.comment === "Deposit"
-        })
-        let lastDeposit = deposits.slice(-1)
-        return lastDeposit.length > 0 ? lastDeposit[0] : {profit:0};
+    lastDeposit () {
+      const deposits = this.infoStatsData.deals.filter((el) => {
+        return el.comment === 'Deposit'
+      })
+      const lastDeposit = deposits.slice(-1)
+      return lastDeposit.length > 0 ? lastDeposit[0] : { profit: 0 }
     },
     highestBalance () {
       // Use the reduce function to find the highest balance in the array
