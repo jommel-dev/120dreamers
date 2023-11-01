@@ -291,6 +291,10 @@ import listPlugin from '@fullcalendar/list'
 // import mixLineBar from './matix/mixLineBar.vue'
 import moment from 'moment'
 
+import { syncAccount } from '../../stores/syncAccount';
+const store = syncAccount()
+
+
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: 'Dashboard',
@@ -380,14 +384,6 @@ export default {
       trades: {}
     }
   },
-  created () {
-    this.$q.loading.show()
-    this.getCalendar().then(() => {
-      this.catchTrades().then(() => {
-        this.$q.loading.hide()
-      })
-    })
-  },
   methods: {
     handleDateClick (data) {
       const selectedDate = data.dateStr
@@ -453,16 +449,25 @@ export default {
       return (dividend / total) * 100
     },
     async getCalendar () {
-      const data = await this.$fireApi.trades.getCalendar()
-      this.calendarData = data.profits
-      this.eventList = [...this.calendarData.map(item => ({
-        title: `${item.profit} (${item.dataCount} trades)`,
-        start: item.date,
-        display: 'background',
-        allDay: true,
-        color: this.checkValueColor(item.profit),
-        textColor: '#ffffff'
-      }))]
+      let payload = {
+        endpoint: 'getCalendar',
+        params: {
+          platformId: this.getId
+        }
+      }
+
+      const data = await this.$fireApi.trades.syncGetData(payload)
+
+      console.log(data)
+      // this.calendarData = data.profits
+      // this.eventList = [...this.calendarData.map(item => ({
+      //   title: `${item.profit} (${item.dataCount} trades)`,
+      //   start: item.date,
+      //   display: 'background',
+      //   allDay: true,
+      //   color: this.checkValueColor(item.profit),
+      //   textColor: '#ffffff'
+      // }))]
     },
     checkValueColor (val) {
       const positiveMatch = /[+]/gi
@@ -502,9 +507,20 @@ export default {
   watch: {
     eventList (newVal) {
       this.calendarOptions.events = newVal
+    },
+    getId(){
+      // this.$q.loading.show()
+      this.getCalendar().then(() => {
+        this.catchTrades().then(() => {
+          // this.$q.loading.hide()
+        })
+      })
     }
   },
   computed: {
+    getId(){
+      return store.getSelectedId
+    },
     tradeCols () {
       return [
         { name: 'time', required: true, label: 'Open Time', align: 'center', field: row => moment(row.time).format('h:mm:ss'), sortable: true },

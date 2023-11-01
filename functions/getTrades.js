@@ -26,6 +26,7 @@ exports.handler = async function (request, response, logger, admin, firestore, g
     const { token, accountId, broker } = userPlatformData
     switch (broker) {
       case MT4:
+        // execute the For Loop for Each data
         result = await fetchData(token, accountId, uid, getGlobalConnection, platformId)
         response.status(200).json(result)
         break

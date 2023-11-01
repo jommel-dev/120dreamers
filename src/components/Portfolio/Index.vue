@@ -335,25 +335,32 @@ export default {
   },
   methods: {
     async catchTrades () {
-      // Set Loading State
-      this.dataLoader = true
+        // Set Loading State
+        this.dataLoader = true
 
       // Fetch Data
-      const data = await this.$fireApi.trades.getTrades()
+    //   const data = await this.$fireApi.trades.getTrades()
 
-      this.trades = Object.keys(data).length !== 0 ? data : null
-
-      if (this.trades) {
-        if (this.trades?.history?.historyOrders?.length && this.trades.positions.length) {
-          this.trades.history.historyOrders.map((order) => {
-            const positionData = this.trades.positions.find((position) => position.id === order.positionId)
-            if (positionData) {
-              order.profit = positionData.profit
-            }
-            return order
-          })
+        let payload = {
+            endpoint: 'getTrades',
+            // params:
         }
-      }
+        const data = await this.$fireApi.trades.syncGetData(payload)
+        console.log(data)
+
+    //   this.trades = Object.keys(data).length !== 0 ? data : null
+
+    //   if (this.trades) {
+    //     if (this.trades?.history?.historyOrders?.length && this.trades.positions.length) {
+    //       this.trades.history.historyOrders.map((order) => {
+    //         const positionData = this.trades.positions.find((position) => position.id === order.positionId)
+    //         if (positionData) {
+    //           order.profit = positionData.profit
+    //         }
+    //         return order
+    //       })
+    //     }
+    //   }
 
       // Close Loading State
       this.dataLoader = false

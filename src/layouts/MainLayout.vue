@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-   <q-header class="bg-indigo-10" elevated>
+   <q-header class="bg-indigo-10 q-pa-sm" elevated>
     <q-toolbar>
       <q-btn
         dense
@@ -31,20 +31,18 @@
         :label="balance"
       />
       <q-select
-          filled
-          color="black"
-          v-model="filterAccount"
-          :options="options"
-          label="Accounts"
           dense
           outlined
           bg-color="white"
-          emit-value
-          map-options
-          class="q-ml-sm q-mr-sm"
-          style="width: 200px;"
+          class="q-ml-sm q-mr-md"
+          filled
+          v-model="filterAccount"
+          multiple
+          :options="options"
+          label="Accounts"
+          style="width: 260px;"
       >
-        <template v-slot:option="{ itemProps, opt, selected, toggleOption }">
+        <!-- <template v-slot:option="{ itemProps, opt, selected, toggleOption }">
           <q-item v-bind="itemProps">
             <q-item-section>
               <q-item-label v-html="opt.label" />
@@ -53,7 +51,7 @@
               <q-toggle :model-value="selected" @update:model-value="toggleOption(opt)" />
             </q-item-section>
           </q-item>
-        </template>
+        </template> -->
       </q-select>
       <q-btn
         dense
@@ -127,6 +125,8 @@ import { LocalStorage } from 'quasar'
 import SideNav from '../components/Templates/Sidenav.vue'
 import Profile from '../components/Templates/Profile.vue'
 import listDocuments from 'src/firebase/firebase-list'
+import { syncAccount } from '../stores/syncAccount';
+const store = syncAccount()
 
 const linksList = [
   {
@@ -186,15 +186,6 @@ export default {
   async created () {
     await this.fetchBrokers() // Fetch brokers when the component is created
     this.getDisplayNameFromLocalStorage()
-
-    const savedBrokerId = LocalStorage.getItem('selectedBrokerId')
-    if (savedBrokerId && this.brokers.some(broker => broker.id === savedBrokerId)) {
-      this.filterAccount = savedBrokerId
-    } else if (this.brokers.length > 0) {
-      this.filterAccount = this.brokers[0].id
-    }
-
-    this.getCalendar()
   },
   methods: {
     toggleLeftDrawer () {
@@ -220,8 +211,8 @@ export default {
         }
       })
 
-      if (!this.filterAccount && this.brokers.length > 0) {
-        this.filterAccount = this.brokers[0].id
+      if (this.brokers.length > 0) {
+        this.filterAccount = [this.options[0]]
       }
     },
     async getCalendar () {
@@ -233,11 +224,7 @@ export default {
   },
   watch: {
     filterAccount (newVal, oldVal) {
-      LocalStorage.set('selectedBrokerId', newVal)
-      // added condition to prevent reload on init
-      if (typeof oldVal === 'string' && typeof newVal === 'string') {
-        window.location.reload()
-      }
+      store.setSelectedId(newVal);
     }
   }
 }
