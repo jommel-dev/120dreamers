@@ -291,9 +291,8 @@ import listPlugin from '@fullcalendar/list'
 // import mixLineBar from './matix/mixLineBar.vue'
 import moment from 'moment'
 
-import { syncAccount } from '../../stores/syncAccount';
+import { syncAccount } from '../../stores/syncAccount'
 const store = syncAccount()
-
 
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
@@ -426,7 +425,7 @@ export default {
       this.dataLoader = true
 
       // Fetch Data
-      const data = await this.$fireApi.trades.getTrades()
+      const data = await this.$fireApi.trades.getTrades({ platformIds: this.getId })
 
       this.trades = Object.keys(data).length !== 0 ? data : null
 
@@ -449,25 +448,16 @@ export default {
       return (dividend / total) * 100
     },
     async getCalendar () {
-      let payload = {
-        endpoint: 'getCalendar',
-        params: {
-          platformId: this.getId
-        }
-      }
-
-      const data = await this.$fireApi.trades.syncGetData(payload)
-
-      console.log(data)
-      // this.calendarData = data.profits
-      // this.eventList = [...this.calendarData.map(item => ({
-      //   title: `${item.profit} (${item.dataCount} trades)`,
-      //   start: item.date,
-      //   display: 'background',
-      //   allDay: true,
-      //   color: this.checkValueColor(item.profit),
-      //   textColor: '#ffffff'
-      // }))]
+      const data = await this.$fireApi.trades.getCalendar({ platformIds: this.getId })
+      this.calendarData = data.profits
+      this.eventList = [...this.calendarData.map(item => ({
+        title: `${item.profit} (${item.dataCount} trades)`,
+        start: item.date,
+        display: 'background',
+        allDay: true,
+        color: this.checkValueColor(item.profit),
+        textColor: '#ffffff'
+      }))]
     },
     checkValueColor (val) {
       const positiveMatch = /[+]/gi
@@ -508,17 +498,22 @@ export default {
     eventList (newVal) {
       this.calendarOptions.events = newVal
     },
-    getId(){
+    async getId () {
       // this.$q.loading.show()
-      this.getCalendar().then(() => {
-        this.catchTrades().then(() => {
-          // this.$q.loading.hide()
-        })
-      })
+      // this.getCalendar().then(() => {
+      //   this.catchTrades().then(() => {
+      //     // this.$q.loading.hide()
+      //   })
+      // })
+
+      await Promise.all([
+        this.getCalendar(),
+        this.catchTrades()
+      ])
     }
   },
   computed: {
-    getId(){
+    getId () {
       return store.getSelectedId
     },
     tradeCols () {

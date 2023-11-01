@@ -277,17 +277,8 @@ import openOrderTable from './tables/openOrderTable.vue'
 import historyTable from './tables/historyTable.vue'
 import exposureTable from './tables/exposureTable.vue'
 
-// Tables
-// import periodTable from './tables/reportTable.vue'
-// import goalsTable from './tables/goalsTable.vue'
-// import browserTable from './tables/browserTable.vue'
-
-// advance Statistics tables
-// import durationChart from './statistics/durationChart.vue'
-// import hourlyChart from './statistics/hourlyChart.vue'
-// import riskOfRuinChart from './statistics/riskOfRuinChart.vue'
-// import summaryChart from './statistics/summaryChart.vue'
-// import tradesChart from './statistics/tradesChart.vue'
+import { syncAccount } from '../../stores/syncAccount'
+const store = syncAccount()
 
 // Trading Activity
 
@@ -335,35 +326,33 @@ export default {
   },
   methods: {
     async catchTrades () {
-        // Set Loading State
-        this.dataLoader = true
+      // Set Loading State
+      this.dataLoader = true
 
       // Fetch Data
-    //   const data = await this.$fireApi.trades.getTrades()
+      const data = await this.$fireApi.trades.getTrades({ platformIds: this.getId })
 
-        let payload = {
-            endpoint: 'getTrades',
-            // params:
+      this.trades = Object.keys(data).length !== 0 ? data : null
+
+      if (this.trades) {
+        if (this.trades?.history?.historyOrders?.length && this.trades.positions.length) {
+          this.trades.history.historyOrders.map((order) => {
+            const positionData = this.trades.positions.find((position) => position.id === order.positionId)
+            if (positionData) {
+              order.profit = positionData.profit
+            }
+            return order
+          })
         }
-        const data = await this.$fireApi.trades.syncGetData(payload)
-        console.log(data)
-
-    //   this.trades = Object.keys(data).length !== 0 ? data : null
-
-    //   if (this.trades) {
-    //     if (this.trades?.history?.historyOrders?.length && this.trades.positions.length) {
-    //       this.trades.history.historyOrders.map((order) => {
-    //         const positionData = this.trades.positions.find((position) => position.id === order.positionId)
-    //         if (positionData) {
-    //           order.profit = positionData.profit
-    //         }
-    //         return order
-    //       })
-    //     }
-    //   }
+      }
 
       // Close Loading State
       this.dataLoader = false
+    }
+  },
+  computed: {
+    getId () {
+      return store.getSelectedId
     }
   }
 }

@@ -11,31 +11,69 @@ exports.handler = async function (request, response, logger, admin, firestore, g
   try {
     logger.info('Hello logs!', { structuredData: true })
 
-    const platformId = request.query.platformId
-    if (!platformId) {
+    const platformIds = request.body.platformIds
+
+    if (!platformIds) {
       response.status(401).json({
         message: 'Platform id is required.'
       })
       return
     }
 
+    const resultArray = []
     const uid = await validateAuthorization(request.headers.authorization, admin)
-    const userPlatformData = await getPlatformData(uid, firestore, platformId)
 
-    let result = null
-    const { token, accountId, broker } = userPlatformData
-    switch (broker) {
-      case MT4:
-        // execute the For Loop for Each data
-        result = await fetchData(token, accountId, uid, getGlobalConnection, platformId)
-        response.status(200).json(result)
-        break
-      default:
-        response.status(404).json({
-          message: 'Default reached.'
-        })
-        break
+    await Promise.all(platformIds.map(async (platform) => {
+      const userPlatformData = await getPlatformData(uid, firestore, platform.value)
+      const { token, accountId, broker } = userPlatformData
+      if (broker === MT4) {
+        const result = await fetchData(token, accountId, uid, getGlobalConnection, platform.value)
+        resultArray.push(result)
+      }
+    }))
+
+    const deals = []
+    const positions = []
+    const orders = []
+    const history = { historyOrders: [] }
+    const profits = []
+    const growth = []
+    const balance = []
+
+    let finalAccountInfo = {}
+    let finalBalance = 0
+    resultArray.forEach((result) => {
+      deals.push(...result.profits)
+      positions.push(...result.positions)
+      orders.push(...result.orders)
+      if (result.history.historyOrders) {
+        history.historyOrders.push(...result.history.historyOrders)
+      }
+      profits.push(...result.profits)
+      growth.push(...result.growth)
+      balance.push(...result.balance)
+      finalBalance += result.accountInformation.balance
+    })
+
+    if (resultArray.length > 0) {
+    // Get other account info from the first result
+      finalAccountInfo = {
+        ...resultArray[0].accountInformation,
+        balance: finalBalance
+      }
     }
+
+    // return the response
+    response.status(200).json({
+      accountInformation: finalAccountInfo,
+      deals,
+      positions,
+      orders,
+      history,
+      profits,
+      growth,
+      balance
+    })
     // response.status(200).json(userPlatformData)
   } catch (error) {
     console.error('Error:', error)
@@ -57,13 +95,14 @@ async function fetchData (token, accountId, uid, getGlobalConnection, platformId
     // console.log('positions', positions)
 
     const orders = await connection.getOrders()
-    // console.log('orders', orders)
 
-    const history = await connection.getHistoryOrdersByTimeRange('2023-10-01T00:00:00Z', '2023-10-30T00:00:00Z')
-    // console.log('history', history)
+    const date = new Date()
+    const firstDay = new Date(date.getFullYear(), date.getMonth() - 1, 1)
+    const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0)
 
-    const dealsResult = await connection.getDealsByTimeRange('2023-10-01T00:00:00Z', '2023-10-30T00:00:00Z')
-    // console.log('dealsResult', dealsResult)
+    const history = await connection.getHistoryOrdersByTimeRange(firstDay.toISOString().split('.')[0] + 'Z', lastDay.toISOString().split('.')[0] + 'Z')
+
+    const dealsResult = await connection.getDealsByTimeRange(firstDay.toISOString().split('.')[0] + 'Z', lastDay.toISOString().split('.')[0] + 'Z')
 
     const deals = dealsResult.deals
 

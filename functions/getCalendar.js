@@ -10,72 +10,64 @@ const MT4 = 'MetaTrader4'
 exports.handler = async function (request, response, logger, admin, firestore, getGlobalConnection) {
   try {
     logger.info('Hello logs!', { structuredData: true })
-    
+
     // Check the
-    const platformId = request.body.platformId
-    if (platformId.length === 0) {
+    const platformIds = request.body.platformIds
+    if (platformIds.length === 0) {
       response.status(401).json({
         message: 'Platform id is required.'
       })
       return
     }
 
-    // get Each data of the Select accounts 
-    let setOfData = [];
-    platformId.forEach(async (el, index) => {
-      const uid = await validateAuthorization(request.headers.authorization, admin)
-      const userPlatformData = await getPlatformData(uid, firestore, el.value)
+    const resultArray = []
+    const uid = await validateAuthorization(request.headers.authorization, admin)
+
+    await Promise.all(platformIds.map(async (platform) => {
+      const userPlatformData = await getPlatformData(uid, firestore, platform.value)
       // let result = null
       const { token, accountId, broker } = userPlatformData
-      switch (broker) {
-        case MT4:
-          console.log(accountId, uid, getGlobalConnection, el.value, firestore)
-          let result = await fetchData(token, accountId, uid, getGlobalConnection, el.value, firestore)
-          // response.status(200).json(result)
-          
-          logger.info('Hello Result!', { structuredData: true })
-          console.log(result)
-          setOfData.push(result.json())
-          break
-        default:
-          response.status(404).json({
-            message: 'Default reached.'
-          })
-          break
+      if (broker === MT4) {
+        const result = await fetchData(token, accountId, uid, getGlobalConnection, platform.value)
+        resultArray.push(result)
       }
+    }))
+
+    const deals = []
+    let finalAccountInfo = {}
+    let finalBalance = 0
+
+    resultArray.forEach((result) => {
+      deals.push(...result.profits)
+      finalBalance += result.accountInformation.balance
     })
 
+    if (resultArray.length > 0) {
+      // Get other account info from the first result
+      finalAccountInfo = {
+        ...resultArray[0].accountInformation,
+        balance: finalBalance
+      }
+    }
+
+    const firestoreTrades = await getFirestoreTrades(uid, firestore)
+
+    deals.push(...firestoreTrades)
+
+    const { data: profitsByDate, baseAmount } = getTotalProfitByDate(deals)
+
+    const profits = profitsByDate.filter(({ profit }) => profit !== baseAmount).map((profit) => ({
+      date: formatDate(profit.time),
+      profit: profit.profit.toFixed(2),
+      dataCount: profit.dataCount,
+      trades: profit.trades
+    }))
+
     // return the response
-    let statusRes = setOfData.length > 0 ? 200 : 404;
-    response.status(statusRes).json(setOfData)
-    
-
-    // Old GET
-    // const platformId = request.query.platformId
-    // if (!platformId) {
-    //   response.status(401).json({
-    //     message: 'Platform id is required.'
-    //   })
-    //   return
-    // }
-
-    // const uid = await validateAuthorization(request.headers.authorization, admin)
-    // const userPlatformData = await getPlatformData(uid, firestore, platformId)
-
-    // let result = null
-    // const { token, accountId, broker } = userPlatformData
-    // switch (broker) {
-    //   case MT4:
-    //     result = await fetchData(token, accountId, uid, getGlobalConnection, platformId, firestore)
-    //     response.status(200).json(result)
-    //     break
-    //   default:
-    //     response.status(404).json({
-    //       message: 'Default reached.'
-    //     })
-    //     break
-    // }
-    // response.status(200).json(userPlatformData)
+    response.status(200).json({
+      accountInformation: finalAccountInfo,
+      profits
+    })
   } catch (error) {
     console.error('Error:', error)
     response.status(403).json({
@@ -85,56 +77,23 @@ exports.handler = async function (request, response, logger, admin, firestore, g
   }
 }
 
-async function fetchData (token, accountId, uid, getGlobalConnection, platformId, firestore) {
+async function fetchData (token, accountId, uid, getGlobalConnection, platformId) {
   try {
     const connection = await getGlobalConnection(token, accountId, uid, platformId)
 
     const accountInformation = await connection.getAccountInformation()
-    console.log('accountInformation', accountInformation)
 
     // Date of 1st and lasts
-    var date = new Date();
-    var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-    var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+    const date = new Date()
+    const firstDay = new Date(date.getFullYear(), date.getMonth() - 1, 1)
+    const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0)
 
-    const dealsResult = await connection.getDealsByTimeRange(`${firstDay}T00:00:00Z`, `${lastDay}T00:00:00Z`)
-    // console.log('dealsResult', dealsResult)
+    const dealsResult = await connection.getDealsByTimeRange(firstDay.toISOString().split('.')[0] + 'Z', lastDay.toISOString().split('.')[0] + 'Z')
 
     const deals = dealsResult.deals
 
-    const firestoreTrades = await fetchTradesFromFirestore(uid, firestore)
-
-    firestoreTrades.forEach((trade) => {
-      const { close, symbol, type, volume, price, profit, commission, swap, comment, platform } = trade
-      if (close) {
-        deals.push({
-          time: formatFirebaseTimestamp(close),
-          symbol,
-          type,
-          volume,
-          price,
-          profit,
-          commission,
-          swap,
-          comment,
-          platform
-        })
-      }
-    })
-
-    const { data: profitsByDate, baseAmount } = getTotalProfitByDate(deals)
-    // console.log({ baseAmount }, { profitsByDate })
-
-    // Exclude base amount
-    const profits = profitsByDate.filter(({ profit }) => profit !== baseAmount).map((profit) => ({
-      date: formatDate(profit.time),
-      profit: profit.profit.toFixed(2),
-      dataCount: profit.dataCount,
-      trades: profit.trades
-    }))
-
     return {
-      profits,
+      profits: deals,
       accountInformation
     }
   } catch (e) {
@@ -149,4 +108,30 @@ function formatDate (dateStr) {
   const day = String(dateObj.getDate()).padStart(2, '0')
 
   return `${year}-${month}-${day}`
+}
+
+// Get imported/created trades from firestore
+async function getFirestoreTrades (uid, firestore) {
+  const firestoreTrades = await fetchTradesFromFirestore(uid, firestore)
+
+  const firestoreDeals = []
+  firestoreTrades.forEach((trade) => {
+    const { close, symbol, type, volume, price, profit, commission, swap, comment, platform } = trade
+    if (close) {
+      firestoreDeals.push({
+        time: formatFirebaseTimestamp(close),
+        symbol,
+        type,
+        volume,
+        price,
+        profit,
+        commission,
+        swap,
+        comment,
+        platform
+      })
+    }
+  })
+
+  return firestoreDeals
 }

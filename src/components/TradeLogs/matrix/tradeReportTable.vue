@@ -74,7 +74,8 @@
 <script>
 import moment from 'moment'
 import { getTrades } from 'src/firebase/firebase-functions'
-
+import { syncAccount } from '../../stores/syncAccount'
+const store = syncAccount()
 export default {
   name: 'PeriodTable',
   data () {
@@ -174,7 +175,7 @@ export default {
   components: {},
   async mounted () {
     try {
-      const trades = await getTrades()
+      const trades = await getTrades({ platformIds: this.getId })
       // console.log({ trades })
 
       if (trades?.positions) {
@@ -317,6 +318,9 @@ export default {
         }
 
       ]
+    },
+    getId () {
+      return store.getSelectedId
     }
   }
 }

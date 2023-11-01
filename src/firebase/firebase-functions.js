@@ -1,20 +1,21 @@
 import { auth } from './index'
 import { LocalStorage } from 'quasar'
 
-const fetchData = async (endpoint) => {
+const fetchData = async (endpoint, method, params = {}) => {
   try {
     // const platform = 'MetaTrader4' // TODO: add more platforms
-    const savedBrokerId = LocalStorage.getItem('selectedBrokerId')
+    // const savedBrokerId = LocalStorage.getItem('selectedBrokerId')
 
     const user = LocalStorage.getItem('user')
     const authToken = await auth.currentUser?.getIdToken() ?? user?.stsTokenManager?.accessToken
 
-    const response = await fetch(`${process.env.BASE_URL}/${endpoint}?platformId=${savedBrokerId}`, {
-      method: 'GET',
+    const response = await fetch(`${process.env.BASE_URL}/${endpoint}`, {
+      method,
       headers: {
         'Content-Type': 'application/json',
         Authorization: authToken
-      }
+      },
+      ...(method === 'POST' && { body: JSON.stringify(params) })
     })
 
     if (!response.ok) {
@@ -33,7 +34,7 @@ const postFetchData = async (payload) => {
   try {
     // const platform = 'MetaTrader4' // TODO: add more platforms
     // const savedBrokerId = LocalStorage.getItem('selectedBrokerId')
-    console.log(payload, "Expected to the payload req. params")
+    console.log(payload, 'Expected to the payload req. params')
 
     const user = LocalStorage.getItem('user')
     const authToken = await auth.currentUser?.getIdToken() ?? user?.stsTokenManager?.accessToken
@@ -60,12 +61,12 @@ const postFetchData = async (payload) => {
 }
 
 // Old and Only GET request
-export const getTrades = async () => {
-  return fetchData('getTrades')
+export const getTrades = async (params) => {
+  return fetchData('getTrades', 'POST', params)
 }
 
-export const getCalendar = async () => {
-  return fetchData('getCalendar')
+export const getCalendar = async (params) => {
+  return fetchData('getCalendar', 'POST', params)
 }
 
 // New on POST Request

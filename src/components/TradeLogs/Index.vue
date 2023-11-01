@@ -46,13 +46,13 @@
 
 <script>
 import tradeReportTableVue from './matrix/tradeReportTable.vue'
-import areaChart from './matrix/areaChart.vue'
 
+import { syncAccount } from '../../stores/syncAccount'
+const store = syncAccount()
 export default {
   name: 'TradeLogsComponent',
   components: {
-    tradeReportTableVue,
-    areaChart
+    tradeReportTableVue
   },
   data () {
     return {
@@ -94,7 +94,7 @@ export default {
           iconColor: 'blue-7',
           valueType: '',
           // eslint-disable-next-line no-trailing-spaces
-          chartType: '' 
+          chartType: ''
         }
       ]
     }
@@ -104,8 +104,13 @@ export default {
   },
   methods: {
     async catchTrades () {
-      const trades = await this.$fireApi.trades.getTrades()
+      const trades = await this.$fireApi.trades.getTrades({ platformIds: this.getId })
       console.log(trades)
+    }
+  },
+  computed: {
+    getId () {
+      return store.getSelectedId
     }
   }
 }

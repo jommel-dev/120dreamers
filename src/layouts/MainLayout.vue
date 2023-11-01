@@ -17,7 +17,6 @@
       <!-- <q-btn unelevated rounded color="white" text-color="black" @click="openModal">Add trade log</q-btn>
       <q-btn unelevated rounded color="white" text-color="black" @click="openFilePicker">Import trade log (CSV)</q-btn> -->
 
-      
      </q-toolbar-title>
 
      <!-- <q-toolbar-subtitle v-if="displayName">Welcome, {{ displayName }}!</q-toolbar-subtitle> -->
@@ -125,7 +124,7 @@ import { LocalStorage } from 'quasar'
 import SideNav from '../components/Templates/Sidenav.vue'
 import Profile from '../components/Templates/Profile.vue'
 import listDocuments from 'src/firebase/firebase-list'
-import { syncAccount } from '../stores/syncAccount';
+import { syncAccount } from '../stores/syncAccount'
 const store = syncAccount()
 
 const linksList = [
@@ -181,11 +180,15 @@ export default {
   computed: {
     filteredMenus: function () {
       return this.linksList
+    },
+    getId () {
+      return store.getSelectedId
     }
   },
   async created () {
     await this.fetchBrokers() // Fetch brokers when the component is created
     this.getDisplayNameFromLocalStorage()
+    this.getCalendar()
   },
   methods: {
     toggleLeftDrawer () {
@@ -216,15 +219,17 @@ export default {
       }
     },
     async getCalendar () {
-      const data = await this.$fireApi.trades.getCalendar()
+      const data = await this.$fireApi.trades.getCalendar({ platformIds: this.getId })
       if (data.accountInformation.balance) {
         this.balance = data.accountInformation.balance
       }
-    },
+    }
   },
   watch: {
+
     filterAccount (newVal, oldVal) {
-      store.setSelectedId(newVal);
+      store.setSelectedId(newVal)
+      this.getCalendar()
     }
   }
 }
