@@ -74,7 +74,7 @@
 <script>
 import moment from 'moment'
 import { getTrades } from 'src/firebase/firebase-functions'
-import { syncAccount } from '../../stores/syncAccount'
+import { syncAccount } from '../../../stores/syncAccount'
 const store = syncAccount()
 export default {
   name: 'PeriodTable',
