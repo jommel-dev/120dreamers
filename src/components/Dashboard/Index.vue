@@ -1,277 +1,150 @@
 <template>
-    <div class="q-pa-md" style="width: 100%;">
-      <div class="row">
-        <!-- Small cards -->
-        <div
-          v-for="(item, index) in dashCards"
-          :key="index"
-          class="col col-md-3 col-lg-3 q-pa-sm"
-        >
-            <q-card flat bordered class="my-card q-pa-sm">
-              <q-card-section  class="bg-white text-weight-light">
-                <div class="text-subtitle2 text-grey-5">{{item.title}} <q-icon name="info" /></div>
-                <div class="text-h6" :class="[item.color]">
-                  <span class="">{{item.value}}</span>
-                  <!-- <q-space /> -->
-                  <q-icon class="float-right" :color="item.iconColor" :name="item.icon" size="lg" />
-                </div>
-              </q-card-section>
-            </q-card>
+  <div class="q-pa-md" style="width: 100%;">
+    <div class="row">
+       <div class="col col-md-6 q-pa-sm">
+          <!-- Calendar -->
+          <FullCalendar
+            :options="calendarOptions"
+            :events="eventList"
+          ></FullCalendar>
+           
+          <input
+            ref="fileInput"
+            type="file"
+            accept=".csv,text/csv"
+            style="display: none"
+            @change="handleFileSelected"
+          />
         </div>
-      </div>
-      <div class="row">
-        <!-- Cards -->
-        <div class="col col-12 q-pa-md example-row-equal-width">
+        <div class="col col-md-6 q-pa-sm">
+          <!-- Cards and Tables -->
           <div class="row">
-            <div class="col">
-            <div>
-                <h5>Trading activity</h5>
-           </div>
-            <div class="col col-md-12 q-pa-sm">
-                <q-tabs
-                    v-model="tradeActTab"
-                    dense
-                    align="left"
-                    no-caps
-                    inline-label
-                    :breakpoint="0"
-                >
-
-                    <q-tab name="openTrade" icon="scatter_plot" :label="`Open Trades (${trades?.positions?.length})`" />
-                    <!-- <q-tab name="openOrder" icon="ads_click" label="Open Orders" /> -->
-                    <q-tab name="history" icon="candlestick_chart" :label="`History (${trades?.history?.historyOrders?.length})`" />
-                    <!-- <q-tab name="exposure" icon="candlestick_chart" label="Exposure" /> -->
-                </q-tabs>
-
-                <q-tab-panels v-model="tradeActTab" animated>
-                    <q-tab-panel name="openTrade">
-                        <openTradeTable
-                        v-if="trades != null"
-                        :openTrades="trades.positions"
-                        />
-                    </q-tab-panel>
-                    <q-tab-panel name="openOrder">
-                        <openOrderTable />
-                    </q-tab-panel>
-                    <q-tab-panel name="history">
-                        <historyTable
-                        v-if="trades != null"
-                        :tradeHistory="trades.history.historyOrders"
-                        />
-                    </q-tab-panel>
-                    <q-tab-panel name="exposure">
-                        <exposureTable />
-                    </q-tab-panel>
-                </q-tab-panels>
-            </div>
-            </div>
-            <div class="col calendar">
-               <!-- test calendar -->
-               <FullCalendar
-                :options="calendarOptions"
-                :events="eventList"
-                >
-                <!-- <template v-slot:eventContent='arg'>
-                    <b>{{ arg.event.title }}</b>
-                </template> -->
-               </FullCalendar>
-
-           </div>
-          </div>
-        </div>
-        <!-- <div class="col col-md-6 q-pa-sm">
-          <div class="row">
-            <div class="col col-md-6 q-pr-sm">
-              <q-card class="my-card q-mb-sm " flat bordered>
-                  <q-item>
-                      <q-item-section>
-                      <q-item-label>Title</q-item-label>
-                      <q-item-label caption>
-                          Subhead
-                      </q-item-label>
-                      </q-item-section>
-                  </q-item>
-
-                  <q-separator />
-
-                  <q-card-section horizontal class="row q-pa-md">
-                      <mixLineBar />
-                  </q-card-section>
-
-                  <q-separator />
-
-                  <q-card-actions>
-                      <q-btn flat round icon="event" />
-                      <q-btn flat>
-                      7:30PM
-                      </q-btn>
-                      <q-btn flat color="primary">
-                      Reserve
-                      </q-btn>
-                  </q-card-actions>
-              </q-card>
-            </div>
-            <div class="col col-md-6 q-pr-sm">
-              <q-card class="my-card q-mb-sm" flat bordered>
-                  <q-item>
-                      <q-item-section>
-                      <q-item-label>Title</q-item-label>
-                      <q-item-label caption>
-                          Subhead
-                      </q-item-label>
-                      </q-item-section>
-                  </q-item>
-
-                  <q-separator />
-
-                  <q-card-section horizontal class="row q-pa-md">
-                    <roundVue />
-                  </q-card-section>
-
-                  <q-separator />
-
-                  <q-card-actions>
-                      <q-btn flat round icon="event" />
-                      <q-btn flat>
-                      7:30PM
-                      </q-btn>
-                      <q-btn flat color="primary">
-                      Reserve
-                      </q-btn>
-                  </q-card-actions>
-              </q-card>
-            </div>
-            <div class="col col-md-6">
-              <q-card class="my-card q-mb-sm" flat bordered>
-                  <q-item>
-                      <q-item-section>
-                      <q-item-label>Title</q-item-label>
-                      <q-item-label caption>
-                          Subhead
-                      </q-item-label>
-                      </q-item-section>
-                  </q-item>
-
-                  <q-separator />
-
-                  <q-card-section horizontal class="row q-pa-md">
-                      some content of matrix
-                  </q-card-section>
-
-                  <q-separator />
-
-                  <q-card-actions>
-                      <q-btn flat round icon="event" />
-                      <q-btn flat>
-                      7:30PM
-                      </q-btn>
-                      <q-btn flat color="primary">
-                      Reserve
-                      </q-btn>
-                  </q-card-actions>
-              </q-card>
-            </div>
-          </div>
-        </div> -->
-
-            <div class="col col-md-3 q-pa-sm">
-
-            </div>
-            <div class="col col-md-3 q-pa-sm">
-
-            </div>
-        </div>
-
-      <q-dialog
-        v-model="dateTradeDetailModal"
-        persistent
-      >
-        <q-card style="width: 750px; max-width: 80vw;">
-          <q-bar class="bg-white text-black">
-            <q-icon name="event" />
-            <div>{{ selectedData.date }}</div>
-            <div>-</div>
-            <div :class="checkModalValueColor(selectedData.profit)">NET P&L {{ `$${selectedData.profit}` }}</div>
-
-            <q-space />
-
-            <q-btn dense flat icon="close" v-close-popup>
-              <q-tooltip>Close</q-tooltip>
-            </q-btn>
-          </q-bar>
-
-          <q-card-section>
-            <div class="row">
-              <div class="col col-3-md q-pa-md">
-                <table style="width:100%;">
-                  <tr>
-                    <td>Total Trades:</td>
-                    <td>{{ selectedData.dataCount }}</td>
-                  </tr>
-                  <tr>
-                    <td  class="q-pt-lg">Winrate:</td>
-                    <td  class="q-pt-lg">{{ `${selectedData.winrate}%` }}</td>
-                  </tr>
-                </table>
-              </div>
-              <q-separator vertical inset />
-              <div class="col col-3-md q-pa-md">
-                <table style="width:100%;">
-                  <tr>
-                    <td>Winners:</td>
-                    <td>{{ selectedData.win }}</td>
-                  </tr>
-                  <tr>
-                    <td class="q-pt-lg">Losers:</td>
-                    <td class="q-pt-lg">{{ selectedData.lost }}</td>
-                  </tr>
-                </table>
-              </div>
-              <q-separator vertical inset />
-              <div class="col col-3-md q-pa-md">
-                <table style="width:100%;">
-                  <tr>
-                    <td>Gross P&L:</td>
-                    <td>{{ `$${selectedData.profit}` }}</td>
-                  </tr>
-                  <tr>
-                    <td class="q-pt-lg">Lot Size:</td>
-                    <td class="q-pt-lg">{{ selectedData.volumes }}</td>
-                  </tr>
-                </table>
-              </div>
-              <!-- <q-separator vertical inset />
-              <div class="col col-3-md q-pa-md">
-                <table style="width:100%;">
-                  <tr>
-                    <td>Commissions:</td>
-                    <td>--</td>
-                  </tr>
-                  <tr>
-                    <td class="q-pt-lg">Profit Factor:</td>
-                    <td class="q-pt-lg">--</td>
-                  </tr>
-                </table>
-              </div> -->
-            </div>
-
-          </q-card-section>
-
-          <q-card-section class="q-pt-none">
-            <q-separator />
-            <q-table
-              class="q-mt-md"
-              :rows="selectedData.trades"
-              :columns="tradeCols"
-              row-key="id"
-              title="Trade List"
-              dense
+            <!-- Cards -->
+            <div
+              v-for="(item, index) in dashCards"
+              :key="index"
+              class="col col-md-12 col-lg-12 q-pa-sm"
             >
-            </q-table>
-          </q-card-section>
-        </q-card>
-      </q-dialog>
+                <q-card flat bordered class="my-card q-pa-sm">
+                  <q-card-section  class="bg-white text-weight-light">
+                    <div class="text-subtitle2 text-grey-5">{{item.title}} <q-icon name="info" /></div>
+                    <div class="text-h6" :class="[item.color]">
+                      <span class="">{{`${item.prefix} ${item.value}`}}</span>
+                      <q-icon class="float-right" :color="item.iconColor" :name="item.icon" size="lg" />
+                    </div>
+                  </q-card-section>
+                </q-card>
+            </div>
+            <!-- Table -->
+            <div class="col col-md-12 q-pa-sm">
+              <h5>Trading activity</h5>
+              <q-tabs
+                  v-model="tradeActTab"
+                  dense
+                  align="left"
+                  no-caps
+                  inline-label
+                  :breakpoint="0"
+              >
+                <q-tab name="openTrade" icon="scatter_plot" :label="`Open Trades (${trades?.positions?.length})`" />
+                <q-tab name="history" icon="candlestick_chart" :label="`History (${trades?.history?.historyOrders?.length})`" />
+              </q-tabs>
+              <q-tab-panels v-model="tradeActTab" animated>
+                <q-tab-panel name="openTrade">
+                    <openTradeTable
+                    v-if="trades != null"
+                    :openTrades="trades.positions"
+                    />
+                </q-tab-panel>
+                <q-tab-panel name="history">
+                    <historyTable
+                    v-if="trades != null"
+                    :tradeHistory="trades.history.historyOrders"
+                    />
+                </q-tab-panel>
+              </q-tab-panels>
+            </div>
+          </div>
+        </div>
     </div>
+
+    <q-dialog
+      v-model="dateTradeDetailModal"
+      persistent
+    >
+      <q-card style="width: 750px; max-width: 80vw;">
+        <q-bar class="bg-white text-black">
+          <q-icon name="event" />
+          <div>{{ selectedData.date }}</div>
+          <div>-</div>
+          <div :class="checkModalValueColor(selectedData.profit)">NET P&L {{ `$${selectedData.profit}` }}</div>
+
+          <q-space />
+
+          <q-btn dense flat icon="close" v-close-popup>
+            <q-tooltip>Close</q-tooltip>
+          </q-btn>
+        </q-bar>
+
+        <q-card-section>
+          <div class="row">
+            <div class="col col-3-md q-pa-md">
+              <table style="width:100%;">
+                <tr>
+                  <td>Total Trades:</td>
+                  <td>{{ selectedData.dataCount }}</td>
+                </tr>
+                <tr>
+                  <td  class="q-pt-lg">Winrate:</td>
+                  <td  class="q-pt-lg">{{ `${selectedData.winrate}%` }}</td>
+                </tr>
+              </table>
+            </div>
+            <q-separator vertical inset />
+            <div class="col col-3-md q-pa-md">
+              <table style="width:100%;">
+                <tr>
+                  <td>Winners:</td>
+                  <td>{{ selectedData.win }}</td>
+                </tr>
+                <tr>
+                  <td class="q-pt-lg">Losers:</td>
+                  <td class="q-pt-lg">{{ selectedData.lost }}</td>
+                </tr>
+              </table>
+            </div>
+            <q-separator vertical inset />
+            <div class="col col-3-md q-pa-md">
+              <table style="width:100%;">
+                <tr>
+                  <td>Gross P&L:</td>
+                  <td>{{ `$${selectedData.profit}` }}</td>
+                </tr>
+                <tr>
+                  <td class="q-pt-lg">Lot Size:</td>
+                  <td class="q-pt-lg">{{ selectedData.volumes }}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+
+        </q-card-section>
+
+        <q-card-section class="q-pt-none">
+          <q-separator />
+          <q-table
+            class="q-mt-md"
+            :rows="selectedData.trades"
+            :columns="tradeCols"
+            row-key="id"
+            title="Trade List"
+            dense
+          >
+          </q-table>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
+  </div>
 </template>
 
 <script>
@@ -290,6 +163,10 @@ import listPlugin from '@fullcalendar/list'
 // import roundVue from './matix/round.vue'
 // import mixLineBar from './matix/mixLineBar.vue'
 import moment from 'moment'
+import Papa from 'papaparse'
+import { Timestamp } from '@firebase/firestore'
+import createDocument from 'src/firebase/firebase-create'
+
 
 import { syncAccount } from '../../stores/syncAccount'
 const store = syncAccount()
@@ -312,24 +189,31 @@ export default {
         plugins: [dayGridPlugin, interactionPlugin, listPlugin, timeGridPlugin],
         dayMaxEvents: true,
         initialView: 'dayGridMonth',
+        themeSystem: 'bootstrap5', 
+        customButtons: {
+          importCSV: {
+            text: 'Import Trades',
+            click: () => { return this.openFilePicker() }
+          }
+        },
         headerToolbar: {
-          left: 'prev, next, today',
+          left: 'prev next today importCSV',
           center: 'title',
-          right: 'dayGridMonth, dayGridWeek, listDay'
-
+          right: 'dayGridMonth dayGridWeek listDay'
         },
         // Date Action Handler
         dateClick: (args) => { return this.handleDateClick(args) },
         selectable: true,
         // editable: true,
-        events: this.eventList
+        events: this.eventList,
         // eventContent: 'Show Details'
       },
       dateTradeDetailModal: false,
       dashCards: [
         {
           title: 'Net P&L',
-          value: '$ 1,000',
+          value: 0,
+          prefix: '$',
           subVal: '35',
           type: '',
           info: '',
@@ -339,51 +223,92 @@ export default {
           valueType: '',
           chartType: ''
         },
-        {
-          title: 'Trade Win %',
-          value: '75.43%',
-          subVal: '35',
-          type: '',
-          info: '',
-          color: '',
-          icon: 'speed',
-          iconColor: 'green',
-          valueType: '',
-          chartType: ''
-        },
-        {
-          title: 'Profit Factor',
-          value: 10.86,
-          subVal: '35',
-          type: '',
-          info: '',
-          color: '',
-          icon: 'donut_large',
-          iconColor: 'blue-7',
-          valueType: '',
-          chartType: ''
-        },
-        {
-          title: 'Day Win',
-          value: 91.73,
-          subVal: '35',
-          type: '',
-          info: '',
-          color: '',
-          icon: 'emoji_events',
-          iconColor: 'yellow-6',
-          valueType: '',
-          chartType: ''
-        }
       ],
       eventList: [],
       calendarData: null,
       selectedData: null,
       tradeActTab: 'openTrade',
-      trades: {}
+      trades: {},
+      evntCal: null
     }
   },
+  created(){
+    this.asyncCallofData();
+  },
   methods: {
+    async asyncCallofData(){
+      this.$q.loading.show()
+      await Promise.all([
+        this.getCalendar(),
+        this.catchTrades()
+      ])
+      this.$q.loading.hide()
+    },
+    openFilePicker () {
+      this.$refs.fileInput.click()
+    },
+    handleFileSelected (event) {
+      const selectedFile = event.target.files[0]
+      if (selectedFile) {
+        const user = LocalStorage.getItem('user')
+        Papa.parse(selectedFile, {
+          complete: async (results) => {
+            for (const row of results.data) {
+            // Assuming the first row of CSV contains headers
+              if (results.data.indexOf(row) === 0) continue
+
+              const data = {
+                ticket: row[0],
+                open: Timestamp.fromDate(new Date(row[1])),
+                type: row[2],
+                volume: row[3],
+                symbol: row[4],
+                price: parseFloat(row[5]),
+                sl: row[6],
+                tp: row[7],
+                close: Timestamp.fromDate(new Date(row[8])),
+                price: parseFloat(row[9]),
+                swap: row[10],
+                commissions: parseFloat(row[11]),
+                profit: parseFloat(row[12]),
+                pips: row[13],
+                tradeDuration: row[14]
+              }
+
+              try {
+                const userId = user ? user.uid : null
+                if (userId) {
+                  await createDocument(`platforms/${userId}/trades`, data)
+
+                  this.$nextTick(async () => {
+                    await Promise.all([
+                      this.getCalendar(),
+                      this.catchTrades()
+                    ])
+                  })
+                  
+                } else {
+                  this.$q.notify({
+                    type: 'negative',
+                    message: 'Missing user id!'
+                  })
+                }
+              } catch (error) {
+                this.$q.notify({
+                  type: 'negative',
+                  message: `Error saving data: ${error.message}`
+                })
+              }
+            }
+
+            this.$q.notify({
+              type: 'positive',
+              message: 'Data imported successfully!'
+            })
+          }
+        })
+      }
+    },
     handleDateClick (data) {
       const selectedDate = data.dateStr
       const filterData = this.calendarData.filter((el) => {
@@ -450,14 +375,24 @@ export default {
     async getCalendar () {
       const data = await this.$fireApi.trades.getCalendar({ platformIds: this.getId })
       this.calendarData = data.profits
-      this.eventList = [...this.calendarData.map(item => ({
+      
+      this.eventList = [...this.calendarData.map((item, index) => ({
         title: `${item.profit} (${item.dataCount} trades)`,
         start: item.date,
         display: 'background',
         allDay: true,
         color: this.checkValueColor(item.profit),
-        textColor: '#ffffff'
+        // textColor: '#ffffff'
       }))]
+
+      // compute NET P&L
+      let netpnl = 0;
+      for (let index = 0; index < data.profits.length; index++) {
+        const profitVal = data.profits[index].profit;
+        netpnl += Number(profitVal);
+      }
+
+      this.dashCards[0].value = netpnl.toLocaleString("en-US");
     },
     checkValueColor (val) {
       const positiveMatch = /[+]/gi
@@ -498,18 +433,8 @@ export default {
     eventList (newVal) {
       this.calendarOptions.events = newVal
     },
-    async getId () {
-      // this.$q.loading.show()
-      // this.getCalendar().then(() => {
-      //   this.catchTrades().then(() => {
-      //     // this.$q.loading.hide()
-      //   })
-      // })
-
-      await Promise.all([
-        this.getCalendar(),
-        this.catchTrades()
-      ])
+    getId () {
+      this.asyncCallofData();
     }
   },
   computed: {
@@ -546,8 +471,13 @@ export default {
       background-color: #242423;
 
       /*  */
-      box-shadow: 0px 0px 14px 8px rgba(15,51,224,0.88) inset;
+      /* box-shadow: 0px 0px 14px 8px rgba(15,51,224,0.88) inset;
       -webkit-box-shadow: 0px 0px 14px 8px rgba(15,51,224,0.88) inset;
-      -moz-box-shadow: 0px 0px 14px 8px rgba(15,51,224,0.88) inset;
+      -moz-box-shadow: 0px 0px 14px 8px rgba(15,51,224,0.88) inset; */
+  }
+  .calendarBtnUpload{
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
   }
 </style>
