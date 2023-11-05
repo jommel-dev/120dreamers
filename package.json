@@ -27,6 +27,7 @@
     "dotenv": "^16.3.1",
     "echarts": "^5.4.3",
     "firebase": "^10.4.0",
+    "marked": "^9.1.5",
     "moment": "^2.29.4",
     "papaparse": "^5.4.1",
     "pinia": "^2.0.11",

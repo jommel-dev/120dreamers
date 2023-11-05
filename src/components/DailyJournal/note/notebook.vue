@@ -74,7 +74,7 @@
             'removeFormat'
           ],
           ['quote', 'unordered', 'ordered', 'outdent', 'indent'],
-  
+
           ['undo', 'redo'],
           ['viewsource']
         ]"
@@ -89,23 +89,94 @@
           verdana: 'Verdana'
         }"
       />
-      <button class="">
-        save
-      </button>
+      <q-btn outline rounded color="primary" icon="stream" label="Save" @click="saveToFirestore" :loading="isSaving" />
+
       </div>
   </template>
-  
-  <script>
-  import { ref } from 'vue'
-  
-  export default {
-    setup () {
-      return {
-        qeditor: ref(
-          '<pre>Check out the two different types of dropdowns' +
-          ' in each of the "Align" buttons.</pre> '
-        )
+
+<script>
+import { ref } from 'vue'
+import { Timestamp } from '@firebase/firestore'
+import { LocalStorage } from 'quasar'
+import createDocument from 'src/firebase/firebase-create'
+import getQueryWithFilter from 'src/firebase/firebase-query'
+import updateDocument from 'src/firebase/firebase-update'
+
+export default {
+  data: function () {
+    return {
+      isSaving: false
+    }
+  },
+  setup () {
+    const qeditor = ref('<pre>Loading journal...</pre>') // Default text while loading
+
+    async function loadJournal () {
+      const today = new Date().toISOString().split('T')[0]
+      const user = LocalStorage.getItem('user')
+      const userId = user ? user.uid : null
+
+      if (userId) {
+        const journals = await getQueryWithFilter(`platforms/${userId}/journals`, 'dateOnly', today)
+        if (journals.length) {
+          qeditor.value = journals[0].body
+        } else {
+          qeditor.value = '<pre>No journal entry for today.</pre>'
+        }
+      }
+    }
+
+    // onMounted(loadJournal)
+    loadJournal()
+
+    return {
+      qeditor
+    }
+  },
+  methods: {
+    async saveToFirestore () {
+      this.isSaving = true
+
+      const data = {
+        body: this.qeditor,
+        createdAt: Timestamp.now(),
+        dateOnly: new Date().toISOString().split('T')[0]
+      }
+
+      try {
+        const today = new Date().toISOString().split('T')[0]
+
+        const user = LocalStorage.getItem('user')
+        const userId = user ? user.uid : null
+        if (userId) {
+          const journals = await getQueryWithFilter(`platforms/${userId}/journals`, 'dateOnly', today)
+          if (journals.length) {
+            delete data.createdAt
+            await updateDocument(`platforms/${userId}/journals`, journals[0].id, data)
+          } else {
+            await createDocument(`platforms/${userId}/journals`, data)
+          }
+          this.$q.notify({
+            type: 'positive',
+            message: 'Data saved successfully!'
+          })
+          this.$emit('journal-saved')
+        } else {
+          this.$q.notify({
+            type: 'negative',
+            message: 'Missing user id!'
+          })
+        }
+      } catch (error) {
+        this.$q.notify({
+          type: 'negative',
+          message: `Error saving data: ${error.message}`
+        })
+      } finally {
+        this.isSaving = false
+        this.modalOpen = false
       }
     }
   }
-  </script>
+}
+</script>
