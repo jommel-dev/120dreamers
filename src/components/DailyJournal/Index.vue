@@ -72,7 +72,24 @@
             <q-page-container>
               <q-page padding>
                 <!-- test note book -->
-                  <Notebook/>
+                  <Notebook  @journal-saved="fetchJournals"/>
+
+                  <q-table
+                    title="Journal Entries"
+                    :rows="journals"
+                    :columns="columns"
+                    row-key="id"
+                    dense
+                  >
+                  <template v-slot:body="props">
+                    <q-tr :props="props">
+                      <q-td key="createdAt" :props="props">{{ formatDate(props.row.createdAt) }}</q-td>
+                      <q-td key="body" :props="props">
+                        <div v-html="renderMarkdown(props.row.body)"></div>
+                      </q-td>
+                    </q-tr>
+                  </template>
+                </q-table>
               </q-page>
             </q-page-container>
           </q-layout>
@@ -82,25 +99,56 @@
 </template>
 
 <script>
+// eslint-disable-next-line import/namespace
+import { marked } from 'marked'
 import { ref } from 'vue'
-  import Notebook from './note/notebook.vue'
-  
+import Notebook from './note/notebook.vue'
+import listDocuments from 'src/firebase/firebase-list'
+import { LocalStorage } from 'quasar'
 
 export default {
   setup () {
+    const journals = ref([])
+
+    async function fetchJournals () {
+      const user = LocalStorage.getItem('user')
+      const userId = user ? user.uid : null
+      journals.value = await listDocuments(`platforms/${userId}/journals`)
+    }
+
+    fetchJournals()
+
+    const renderMarkdown = (text) => {
+      return marked(text)
+    }
+
+    const formatDate = (val) => {
+      return new Date(val.seconds * 1000).toLocaleDateString()
+    }
+
+    const columns = [
+      { name: 'createdAt', label: 'Date', field: 'createdAt', align: 'left' },
+      { name: 'body', label: 'Body', field: 'body', align: 'left' }
+    ]
+
     return {
+      formatDate,
+      renderMarkdown,
+      fetchJournals,
+      columns,
+      journals,
       drawer: ref(false)
     }
   },
 
   name: 'DailyJournalComponent',
   components: {
-    Notebook,
+    Notebook
   },
-  data(){
+  data () {
     return {}
   },
-  created(){},
+  created () {},
   methods: {}
 }
 </script>
