@@ -52,11 +52,10 @@
                   <br>
                   <br>
                   <br>
-                  <q-btn unelevated rounded color="primary" label="START YOUR JOURNEY" to="/features" class="q-mt-xl" />
+                  <q-btn unelevated rounded color="primary" label="Live Trading Now" to="/features" class="q-mt-xl" />
                 </div>
                 <div class="col col-md-6 col-lg-6">
                   <img class="landing-img"  src="/imgs/landing_2.png" />
-                  <!-- <img src="/imgs/landing.svg" /> -->
                 </div>
               </div>
             </div>
