@@ -6,7 +6,7 @@
           <q-item-label header>Daily Journal List</q-item-label>
 
           <q-item
-            v-for="(item, index) in journals" 
+            v-for="(item, index) in journals"
             :key="index"
             class="rounded-borders q-mb-xs"
             style="border: 1px solid #80808024;"
@@ -36,7 +36,7 @@
         </q-card>
       </div>
     </div>
-    
+
   </div>
 </template>
 
@@ -56,9 +56,8 @@ export default {
     async function fetchJournals () {
       const user = LocalStorage.getItem('user')
       const userId = user ? user.uid : null
-      let res = await listDocuments(`platforms/${userId}/journals`)
-
-      journals.value = res.sort(() => { return -1 })
+      const res = await listDocuments(`platforms/${userId}/journals`)
+      journals.value = res.sort((a, b) => (new Date(b.dateOnly) - new Date(a.dateOnly)))
     }
 
     fetchJournals()
@@ -95,7 +94,7 @@ export default {
   },
   methods: {
     moment,
-    checkActiveJournal(val){
+    checkActiveJournal (val) {
       return val === moment().format('l')
     }
   }
