@@ -1,101 +1,43 @@
 <template>
-    <div class="q-pa-md" style="width: 100%;">
-        <div class="q-pa-md">
-          <q-layout view="hHh Lpr lff" container style="height: 500px" class="shadow-2 rounded-borders">
-            <q-header elevated :class="$q.dark.isActive ? 'bg-primary' : 'bg-indigo-9'">
-              <q-toolbar>
-                <q-btn flat @click="drawer = !drawer" round dense icon="menu" />
-                <q-toolbar-title>Daily Journal</q-toolbar-title>
-              </q-toolbar>
-            </q-header>
+  <div class="q-pa-md" style="width: 100%;">
+    <div class="row">
+      <div class="col col-md-2 q-pa-xs" style="height: 80vh;">
+        <q-list class="rounded-borders" style="max-width: 600px">
+          <q-item-label header>Daily Journal List</q-item-label>
 
-            <q-drawer
-              v-model="drawer"
-              show-if-above
-              :width="200"
-              :breakpoint="500"
-            >
-              <q-scroll-area class="fit">
-                <q-list padding class="menu-list">
-                  <q-item clickable v-ripple>
-                    <q-item-section avatar>
-                      <q-icon name="inbox" />
-                    </q-item-section>
-
-                    <q-item-section>
-                     Journals/Notes
-                    </q-item-section>
-                  </q-item>
-
-                  <q-item active clickable v-ripple>
-                    <q-item-section avatar>
-                      <q-icon name="star" />
-                    </q-item-section>
-
-                    <q-item-section>
-                     note 1 (example)
-                    </q-item-section>
-                  </q-item>
-                  <q-item active clickable v-ripple>
-                    <q-item-section avatar>
-                      <q-icon name="star" />
-                    </q-item-section>
-
-                    <q-item-section>
-                     note 2 (example)
-                    </q-item-section>
-                  </q-item>
-
-                  <!-- <q-item clickable v-ripple>
-                    <q-item-section avatar>
-                      <q-icon name="send" />
-                    </q-item-section>
-
-                    <q-item-section>
-                      Send
-                    </q-item-section>
-                  </q-item> -->
-
-                  <!-- <q-item clickable v-ripple>
-                    <q-item-section avatar>
-                      <q-icon name="drafts" />
-                    </q-item-section>
-
-                    <q-item-section>
-                      Drafts
-                    </q-item-section>
-                  </q-item> -->
-                </q-list>
-              </q-scroll-area>
-            </q-drawer>
-
-            <q-page-container>
-              <q-page padding>
-                <!-- test note book -->
-                  <Notebook  @journal-saved="fetchJournals"/>
-
-                  <q-table
-                    title="Journal Entries"
-                    :rows="journals"
-                    :columns="columns"
-                    row-key="id"
-                    dense
-                  >
-                  <template v-slot:body="props">
-                    <q-tr :props="props">
-                      <q-td key="createdAt" :props="props">{{ formatDate(props.row.createdAt) }}</q-td>
-                      <q-td key="body" :props="props">
-                        <div v-html="renderMarkdown(props.row.body)"></div>
-                      </q-td>
-                    </q-tr>
-                  </template>
-                </q-table>
-              </q-page>
-            </q-page-container>
-          </q-layout>
-        </div>
-
+          <q-item
+            v-for="(item, index) in journals" 
+            :key="index"
+            class="rounded-borders q-mb-xs"
+            style="border: 1px solid #80808024;"
+            clickable
+            :active="checkActiveJournal(formatDate(item.createdAt))"
+           >
+            <!-- <q-item-section avatar top>
+              <q-icon name="sticky_note_2" color="warning" size="lg" />
+            </q-item-section> -->
+            <q-item-section top>
+              <q-item-label lines="1">
+                <span class="text-weight-medium">[{{formatDate(item.createdAt)}}]</span>
+              </q-item-label>
+              <q-item-label caption lines="1">
+                <div v-html="renderMarkdown(item.body)"></div>
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-list>
+      </div>
+      <div class="col col-md-10 q-pa-sm" style="height: 80vh;">
+        <q-card
+          class="my-card"
+          style="height: 100%;"
+        >
+          <Notebook  @journal-saved="fetchJournals"/>
+        </q-card>
+      </div>
     </div>
+    
+  </div>
 </template>
 
 <script>
@@ -105,6 +47,7 @@ import { ref } from 'vue'
 import Notebook from './note/notebook.vue'
 import listDocuments from 'src/firebase/firebase-list'
 import { LocalStorage } from 'quasar'
+import moment from 'moment'
 
 export default {
   setup () {
@@ -113,7 +56,9 @@ export default {
     async function fetchJournals () {
       const user = LocalStorage.getItem('user')
       const userId = user ? user.uid : null
-      journals.value = await listDocuments(`platforms/${userId}/journals`)
+      let res = await listDocuments(`platforms/${userId}/journals`)
+
+      journals.value = res.sort(() => { return -1 })
     }
 
     fetchJournals()
@@ -148,7 +93,11 @@ export default {
   data () {
     return {}
   },
-  created () {},
-  methods: {}
+  methods: {
+    moment,
+    checkActiveJournal(val){
+      return val === moment().format('l')
+    }
+  }
 }
 </script>

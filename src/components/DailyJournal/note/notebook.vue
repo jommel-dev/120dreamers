@@ -1,5 +1,6 @@
 <template>
     <div class="q-pa-md q-gutter-sm">
+      <span class="text-h5">{{displayDate}}</span>
       <q-editor
         v-model="qeditor"
         :dense="$q.screen.lt.md"
@@ -92,7 +93,7 @@
       <q-btn outline rounded color="primary" icon="stream" label="Save" @click="saveToFirestore" :loading="isSaving" />
 
       </div>
-  </template>
+</template>
 
 <script>
 import { ref } from 'vue'
@@ -101,23 +102,27 @@ import { LocalStorage } from 'quasar'
 import createDocument from 'src/firebase/firebase-create'
 import getQueryWithFilter from 'src/firebase/firebase-query'
 import updateDocument from 'src/firebase/firebase-update'
+import moment from 'moment'
+
+const currDate = moment().format('YYYY-MM-DD');
 
 export default {
   data: function () {
     return {
-      isSaving: false
+      isSaving: false,
+      displayDate: currDate
     }
   },
   setup () {
     const qeditor = ref('<pre>Loading journal...</pre>') // Default text while loading
 
     async function loadJournal () {
-      const today = new Date().toISOString().split('T')[0]
       const user = LocalStorage.getItem('user')
       const userId = user ? user.uid : null
-
       if (userId) {
-        const journals = await getQueryWithFilter(`platforms/${userId}/journals`, 'dateOnly', today)
+        console.log(currDate)
+        const journals = await getQueryWithFilter(`platforms/${userId}/journals`, 'dateOnly', currDate)
+        console.log(journals)
         if (journals.length) {
           qeditor.value = journals[0].body
         } else {
@@ -140,16 +145,17 @@ export default {
       const data = {
         body: this.qeditor,
         createdAt: Timestamp.now(),
-        dateOnly: new Date().toISOString().split('T')[0]
+        dateOnly: currDate
+        // dateOnly: new Date().toISOString().split('T')[0]
       }
 
       try {
-        const today = new Date().toISOString().split('T')[0]
+        // const today = new Date().toISOString().split('T')[0]
 
         const user = LocalStorage.getItem('user')
         const userId = user ? user.uid : null
         if (userId) {
-          const journals = await getQueryWithFilter(`platforms/${userId}/journals`, 'dateOnly', today)
+          const journals = await getQueryWithFilter(`platforms/${userId}/journals`, 'dateOnly', currDate)
           if (journals.length) {
             delete data.createdAt
             await updateDocument(`platforms/${userId}/journals`, journals[0].id, data)
