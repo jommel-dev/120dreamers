@@ -45,6 +45,11 @@ const routes = [
         component: () => import('pages/DreamersUniversity.vue')
       },
       {
+        path: 'account',
+        name: 'account',
+        component: () => import('pages/AccountProfile.vue')
+      },
+      {
         path: 'newTrade',
         name: 'newTrade',
         component: () => import('pages/NewTrade.vue')

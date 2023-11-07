@@ -146,7 +146,7 @@
   
         links1: [
           { icon: 'home', text: 'Home' },
-          { icon: 'whatshot', text: 'Trending' },
+          { icon: 'whatshot', text: ' Trading Trades' },
           { icon: 'subscriptions', text: 'Subscriptions' }
         ],
         links2: [
@@ -156,25 +156,13 @@
           { icon: 'thumb_up_alt', text: 'Liked videos' }
         ],
         links3: [
-          { icon: fabYoutube, text: 'YouTube Premium' },
-          { icon: 'local_movies', text: 'Movies & Shows' },
-          { icon: 'videogame_asset', text: 'Gaming' },
-          { icon: 'live_tv', text: 'Live' }
+          { icon: fabYoutube, text: 'Dreamers Premium' },
+          { icon: 'live_tv', text: 'Live Trading' }
         ],
         links4: [
           { icon: 'settings', text: 'Settings' },
           { icon: 'flag', text: 'Report history' },
           { icon: 'help', text: 'Help' },
-          { icon: 'feedback', text: 'Send feedback' }
-        ],
-        buttons1: [
-          { text: 'About' },
-          { text: 'Press' },
-          { text: 'Copyright' },
-          { text: 'Contact us' },
-          { text: 'Creators' },
-          { text: 'Advertise' },
-          { text: 'Developers' }
         ],
         buttons2: [
           { text: 'Terms' },

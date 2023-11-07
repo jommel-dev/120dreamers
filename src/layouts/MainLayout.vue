@@ -157,7 +157,13 @@ const linksList = [
     icon: 'cast_for_education',
     link: 'dreamers',
     code: 101
-  }
+  },
+  {
+    title: 'Account Profile',
+    icon: 'dvr',
+    link: 'account',
+    code: 101
+  },
 ]
 
 export default {
