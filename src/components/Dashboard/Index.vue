@@ -237,11 +237,19 @@ export default {
   },
   methods: {
     async asyncCallofData(){
+
+      if(this.getId.length === 0){
+        return false
+      }
+
       this.$q.loading.show()
       await Promise.all([
         this.getCalendar(),
         this.catchTrades()
-      ])
+      ]).catch((err) => {
+        console.log(err)
+        this.$q.loading.hide()
+      })
       this.$q.loading.hide()
     },
     openFilePicker () {
