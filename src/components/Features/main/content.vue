@@ -25,7 +25,7 @@
             </div>
             <!-- sample video placement -->
             <div>
-                <h1>samplpe</h1>
+                <h2>Live Streaming Soon</h2>
             </div>
 
         </div>

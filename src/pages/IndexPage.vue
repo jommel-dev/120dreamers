@@ -55,7 +55,7 @@
                   <q-btn unelevated rounded color="primary" label="Live Trading Now" to="/features" class="q-mt-xl" />
                 </div>
                 <div class="col col-md-6 col-lg-6">
-                  <img class="landing-img"  src="/imgs/landing_2.png" />
+                  <img class="landing-img"  src="/imgs/120_landing.svg" />
                 </div>
               </div>
             </div>
@@ -95,6 +95,13 @@ export default defineComponent({
   /* background-position: 136% 0%; */
   background-size: fill;
  
+}
+.landing-img {
+  height: 80%;
+  width: 100%;
+  box-shadow: 0px 0px 26px 12px rgba(9,78,255,0.75);
+-webkit-box-shadow: 0px 0px 26px 12px rgba(9,78,255,0.75);
+-moz-box-shadow: 0px 0px 26px 12px rgba(9,78,255,0.75);
 }
 
 
