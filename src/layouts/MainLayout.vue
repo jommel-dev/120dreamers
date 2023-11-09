@@ -137,24 +137,24 @@ const linksList = [
     link: 'dashboard',
     code: 101
   },
-  {
-    title: 'Daily Journal',
-    icon: 'stacked_bar_chart',
-    link: 'dailyJournal',
-    code: 101
-  },
+  // {
+  //   title: 'Daily Journal',
+  //   icon: 'stacked_bar_chart',
+  //   link: 'dailyJournal',
+  //   code: 101
+  // },
   {
     title: 'Portfolio',
     icon: 'insights',
     link: 'portfolio',
     code: 101
   },
-  {
-    title: 'Trade Logs',
-    icon: 'dvr',
-    link: 'tradeLogs',
-    code: 101
-  },
+  // {
+  //   title: 'Trade Logs',
+  //   icon: 'dvr',
+  //   link: 'tradeLogs',
+  //   code: 101
+  // },
   {
     title: 'Dreamers University',
     icon: 'cast_for_education',
@@ -230,7 +230,9 @@ export default {
     async getCalendar () {
       const data = await this.$fireApi.trades.getCalendar({ platformIds: this.getId })
       if (data.accountInformation.balance) {
-        this.balance = data.accountInformation.balance
+
+        let bal = data.accountInformation.balance
+        this.balance = bal.toLocaleString("en-US")
       }
     }
   },
