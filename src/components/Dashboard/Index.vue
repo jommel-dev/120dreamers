@@ -441,7 +441,8 @@ export default {
     eventList (newVal) {
       this.calendarOptions.events = newVal
     },
-    getId () {
+    getId (newVal) {
+      console.log(newVal)
       this.asyncCallofData();
     }
   },
