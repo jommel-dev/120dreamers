@@ -29,7 +29,7 @@
                   <q-card-section  class="bg-white text-weight-light">
                     <div class="text-subtitle2 text-grey-5">{{item.title}} <q-icon name="info" /></div>
                     <div class="text-h6" :class="[item.color]">
-                      <span class="">{{`${item.prefix} ${item.value}`}}</span>
+                      <span :class="checkValueColor(item.value)">{{`${item.prefix} ${item.value}`}}</span>
                       <q-icon class="float-right" :color="item.iconColor" :name="item.icon" size="lg" />
                     </div>
                   </q-card-section>
@@ -372,6 +372,23 @@ export default {
             return order
           })
         }
+
+
+        if(this.trades?.positions){
+          let openTrades = this.trades.positions;
+          const currDate = moment().format('YYYY-MM-DD');
+          // compute NET P&L
+          let netpnl = 0;
+          for (let index = 0; index < openTrades.length; index++) {
+            let possDate = moment(openTrades[index].time).format('YYYY-MM-DD');
+            if(possDate === currDate){
+              const profitVal = openTrades[index].profit;
+              netpnl += Number(profitVal);
+            }
+          }
+
+          this.dashCards[0].value = netpnl.toLocaleString("en-US");
+        }
       }
 
       // Close Loading State
@@ -392,23 +409,14 @@ export default {
         color: this.checkValueColor(item.profit),
         // textColor: '#ffffff'
       }))]
-
-      // compute NET P&L
-      let netpnl = 0;
-      for (let index = 0; index < data.profits.length; index++) {
-        const profitVal = data.profits[index].profit;
-        netpnl += Number(profitVal);
-      }
-
-      this.dashCards[0].value = netpnl.toLocaleString("en-US");
     },
     checkValueColor (val) {
       const positiveMatch = /[+]/gi
       const negativeMatch = /[-]/gi
       let color = '#89ff92'
-      if (val.match(positiveMatch)) {
+      if (val.toString().match(positiveMatch)) {
         color = '#89ff92'
-      } else if (val.match(negativeMatch)) {
+      } else if (val.toString().match(negativeMatch)) {
         color = '#f44336'
       }
 
@@ -442,7 +450,6 @@ export default {
       this.calendarOptions.events = newVal
     },
     getId (newVal) {
-      console.log(newVal)
       this.asyncCallofData();
     }
   },
