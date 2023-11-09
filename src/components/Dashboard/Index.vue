@@ -372,23 +372,6 @@ export default {
             return order
           })
         }
-
-
-        if(this.trades?.positions){
-          let openTrades = this.trades.positions;
-          const currDate = moment().format('YYYY-MM-DD');
-          // compute NET P&L
-          let netpnl = 0;
-          for (let index = 0; index < openTrades.length; index++) {
-            let possDate = moment(openTrades[index].time).format('YYYY-MM-DD');
-            if(possDate === currDate){
-              const profitVal = openTrades[index].profit;
-              netpnl += Number(profitVal);
-            }
-          }
-
-          this.dashCards[0].value = netpnl.toLocaleString("en-US");
-        }
       }
 
       // Close Loading State
@@ -409,6 +392,20 @@ export default {
         color: this.checkValueColor(item.profit),
         // textColor: '#ffffff'
       }))]
+
+      
+      // compute NET P&L
+      const currDate = moment().format('YYYY-MM-DD');
+      let netpnl = 0;
+      for (let index = 0; index < data.profits.length; index++) {
+        let possDate = moment(data.profits[index].date).format('YYYY-MM-DD');
+        if(possDate === currDate){
+          const profitVal = data.profits[index].profit;
+          netpnl += Number(profitVal);
+        }
+      }
+
+      this.dashCards[0].value = netpnl.toLocaleString("en-US");
     },
     checkValueColor (val) {
       const positiveMatch = /[+]/gi
