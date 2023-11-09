@@ -12,7 +12,6 @@
         @click="toggleLeftDrawer"
       />
      <q-toolbar-title>
-      <q-btn unelevated rounded icon="addchart" color="white" text-color="black" to="/allPlatforms">Add Trade</q-btn>
       <!-- <q-btn unelevated rounded icon="addchart" color="white" text-color="black" to="/newTrade">Add Trade</q-btn> -->
       <!-- <q-btn unelevated rounded color="white" text-color="black" @click="openModal">Add trade log</q-btn>
       <q-btn unelevated rounded color="white" text-color="black" @click="openFilePicker">Import trade log (CSV)</q-btn> -->
@@ -37,11 +36,13 @@
           filled
           v-model="filterAccount"
           multiple
+          emit-value
+          map-options
           :options="options"
           label="Accounts"
           style="width: 260px;"
       >
-        <!-- <template v-slot:option="{ itemProps, opt, selected, toggleOption }">
+        <template v-slot:option="{ itemProps, opt, selected, toggleOption }">
           <q-item v-bind="itemProps">
             <q-item-section>
               <q-item-label v-html="opt.label" />
@@ -50,7 +51,7 @@
               <q-toggle :model-value="selected" @update:model-value="toggleOption(opt)" />
             </q-item-section>
           </q-item>
-        </template> -->
+        </template>
       </q-select>
       <q-btn
         dense
@@ -63,7 +64,9 @@
           <div class="row no-wrap q-pa-md">
             <div class="column">
               <div class="text-h6 q-mb-md">Settings</div>
-              <q-toggle v-model="mobileData" label="Use Mobile Data" />
+              <q-btn unelevated rounded class="q-mb-sm" color="primary" size="sm"  to="/account">My Profile</q-btn>
+              <q-btn unelevated rounded color="primary" size="sm"  to="/allPlatforms">Add Broker</q-btn>
+
               <!-- <q-toggle v-model="bluetooth" label="Bluetooth" /> -->
             </div>
 
@@ -221,7 +224,7 @@ export default {
       })
 
       if (this.brokers.length > 0) {
-        this.filterAccount = [this.options[0]]
+        this.filterAccount = [this.options[0].value]
       }
     },
     async getCalendar () {

@@ -24,11 +24,11 @@ exports.handler = async function (request, response, logger, admin, firestore, g
     const uid = await validateAuthorization(request.headers.authorization, admin)
 
     await Promise.all(platformIds.map(async (platform) => {
-      const userPlatformData = await getPlatformData(uid, firestore, platform.value)
+      const userPlatformData = await getPlatformData(uid, firestore, platform)
       // let result = null
       const { token, accountId, broker } = userPlatformData
       if (broker === MT4) {
-        const result = await fetchData(token, accountId, uid, getGlobalConnection, platform.value)
+        const result = await fetchData(token, accountId, uid, getGlobalConnection, platform)
         resultArray.push(result)
       }
     }))
