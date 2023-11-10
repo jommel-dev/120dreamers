@@ -1,7 +1,7 @@
 <template>
-    <div class="q-pa-md" style="width: 100%;">
-        <div class="row">
-            <div class="col col-md-3 q-pa-sm">
+    <div class="portfolio-container q-pa-md" style="width: 100%;">
+        <div class="row ">
+            <div class="col info-container col-md-3 q-pa-sm">
                 <q-card class="my-card" flat bordered>
                     <q-card-section>
                         <div class="text-h6">Information</div>
@@ -357,3 +357,15 @@ export default {
   }
 }
 </script>
+<style scoped>
+    .portfolio-container {
+        background: rgb(96,110,255);
+    background: linear-gradient(187deg, rgba(96,110,255,0.40940126050420167) 0%, rgba(5,161,255,0.4234068627450981) 51%, rgba(85,111,255,0.40379901960784315) 100%);
+  }
+
+  .info-container {
+    margin-top: 35px;
+   
+  }
+    
+</style>
