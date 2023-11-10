@@ -181,6 +181,11 @@ data(){
   margin-top: 1rem;
 }
 
+.container {
+    background: rgb(96,110,255);
+    background: linear-gradient(187deg, rgba(96,110,255,0.40940126050420167) 0%, rgba(5,161,255,0.4234068627450981) 51%, rgba(85,111,255,0.40379901960784315) 100%);
+}
+
 
 
 

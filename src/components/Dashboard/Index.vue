@@ -1,7 +1,7 @@
 <template>
-  <div class="q-pa-md" style="width: 100%;">
+  <div class="dash-container q-pa-md" style="width: 100%; height: 93vh;">
     <div class="row">
-       <div class="col col-md-6 q-pa-sm">
+       <div class="calendar col col-md-6 q-pa-sm">
           <!-- Calendar -->
           <FullCalendar
             :options="calendarOptions"
@@ -78,7 +78,7 @@
                 </q-card>
             </div>
             <!-- Table -->
-            <div class="col col-md-12 q-pa-sm">
+            <div class="trade-activity col col-md-12 q-pa-sm">
               <h5>Trading activity</h5>
               <q-tabs
                   v-model="tradeActTab"
@@ -114,11 +114,11 @@
       v-model="dateTradeDetailModal"
       persistent
     >
-      <q-card style="width: 750px; max-width: 80vw;">
-        <q-bar class="bg-white text-black">
+      <q-card  style="width: 750px; max-width: 80vw;">
+        <q-bar class="bg-white  text-black">
           <q-icon name="event" />
           <div>{{ selectedData.date }}</div>
-          <div>-</div>
+          <!-- <div >-</div> -->
           <div :class="checkModalValueColor(selectedData.profit)">NET P&L {{ `$${selectedData.profit}` }}</div>
 
           <q-space />
@@ -156,7 +156,7 @@
               </table>
             </div>
             <q-separator vertical inset />
-            <div class="col col-3-md q-pa-md">
+            <div class=" col col-3-md q-pa-md">
               <table style="width:100%;">
                 <tr>
                   <td>Gross P&L:</td>
@@ -561,21 +561,37 @@ export default {
 }
 </script>
 <style scoped>
+
+  .dash-container {
+    background: rgb(96,110,255);
+    background: linear-gradient(187deg, rgba(96,110,255,0.40940126050420167) 0%, rgba(5,161,255,0.4234068627450981) 51%, rgba(85,111,255,0.40379901960784315) 100%);
+  }
   .calendar  {
 
-    background-image: url('../Dashboard/matix/Illustration.svg');
-    background-size:contain;
-    background-position: center;
-    background-repeat: no-repeat;
+
     border-radius: 10px;
     padding: 15px;
       color: white;
-      background-color: #242423;
+      background: rgb(34,86,195);
+    background: linear-gradient(0deg, rgba(34,86,195,1) 0%, rgba(69,45,253,0.49343487394957986) 100%);
 
       /*  */
-      /* box-shadow: 0px 0px 14px 8px rgba(15,51,224,0.88) inset;
-      -webkit-box-shadow: 0px 0px 14px 8px rgba(15,51,224,0.88) inset;
-      -moz-box-shadow: 0px 0px 14px 8px rgba(15,51,224,0.88) inset; */
+      box-shadow: 0px 0px 5px 6px rgba(0,0,0,0.75);
+      -webkit-box-shadow: 0px 0px 5px 6px rgba(0,0,0,0.75);
+      -moz-box-shadow: 0px 0px 5px 6px rgba(0,0,0,0.75);
+  }
+
+
+  .trade-activity {
+    background: rgb(96,110,255);
+    background: linear-gradient(187deg, rgba(96,110,255,0.40940126050420167) 0%, rgba(5,161,255,0.4234068627450981) 51%, rgba(85,111,255,0.40379901960784315) 100%);
+    border-radius: 10px;
+    margin-top: 34px;
+    margin-left: 12px;
+
+      box-shadow: 0px 0px 5px 6px rgba(0,0,0,0.75);
+      -webkit-box-shadow: 0px 0px 5px 6px rgba(0,0,0,0.75);
+      -moz-box-shadow: 0px 0px 5px 6px rgba(0,0,0,0.75);
   }
   .calendarBtnUpload{
     position: absolute;
