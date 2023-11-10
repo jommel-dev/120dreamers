@@ -69,7 +69,7 @@
             >
                 <q-card flat bordered class="my-card q-pa-sm">
                   <q-card-section  class="bg-white text-weight-light">
-                    <div class="text-subtitle2 text-grey-5">{{item.title}} <q-icon name="info" /></div>
+                    <div class="text-subtitle2">{{item.title}} <q-icon name="info" /></div>
                     <div class="text-h6" :class="[item.color]">
                       <span :class="checkModalValueColor(item.value)">{{`${item.prefix} ${item.value}`}}</span>
                       <q-icon class="float-right" :color="item.iconColor" :name="item.icon" size="lg" />
@@ -242,6 +242,7 @@ import TradeForm from './TradeForm.vue'
 
 
 import { syncAccount } from '../../stores/syncAccount'
+import { fabBlackTie } from '@quasar/extras/fontawesome-v6'
 const store = syncAccount()
 
 export default {
@@ -260,6 +261,7 @@ export default {
   data () {
     return {
       calendarOptions: {
+        eventRender: this.customEventRender,
         plugins: [dayGridPlugin, interactionPlugin, listPlugin, timeGridPlugin],
         dayMaxEvents: true,
         initialView: 'dayGridMonth',
@@ -291,7 +293,7 @@ export default {
           subVal: '35',
           type: '',
           info: '',
-          color: 'text-green-5',
+          color: 'text-grey-10',
           icon: 'analytics',
           iconColor: 'primary',
           valueType: '',
@@ -310,6 +312,11 @@ export default {
     this.asyncCallofData();
   },
   methods: {
+    customEventRender(info) {
+      // Customize the event rendering here
+      info.el.style.fontWeight = 'bold'; // Make text bold
+      info.el.style.color = 'white'; // Change text color to black
+    },
     openModal (data) {
       let comp = this.$refs.tradeFormModal
       comp.$data.form.open = moment(data.date).format('YYYY-MM-DD')
@@ -563,17 +570,18 @@ export default {
 <style scoped>
 
   .dash-container {
-    background: rgb(96,110,255);
-    background: linear-gradient(187deg, rgba(96,110,255,0.40940126050420167) 0%, rgba(5,161,255,0.4234068627450981) 51%, rgba(85,111,255,0.40379901960784315) 100%);
+         background: rgb(34,86,195);
+    background: linear-gradient(0deg, rgba(34,86,195,1) 0%, rgba(69,45,253,0.49343487394957986) 100%);
   }
   .calendar  {
 
 
     border-radius: 10px;
     padding: 15px;
-      color: white;
-      background: rgb(34,86,195);
-    background: linear-gradient(0deg, rgba(34,86,195,1) 0%, rgba(69,45,253,0.49343487394957986) 100%);
+      color: black;
+      background: rgb(96,110,255);
+    background: linear-gradient(187deg, rgba(96,110,255,0.40940126050420167) 0%, rgba(5,161,255,0.4234068627450981) 51%, rgba(85,111,255,0.40379901960784315) 100%);
+
 
       /*  */
       box-shadow: 0px 0px 5px 6px rgba(0,0,0,0.75);
