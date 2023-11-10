@@ -182,6 +182,36 @@
             title="Trade List"
             dense
           >
+            <template v-slot:header="props">
+                <q-tr :props="props">
+                    <q-th
+                        v-for="col in props.cols"
+                        :key="col.name"
+                        :props="props"
+                    >
+                        {{ col.label }}
+                    </q-th>
+                </q-tr>
+            </template>
+            <template v-slot:body="props">
+                <q-tr :props="props">
+                  <q-td
+                    v-for="col in props.cols"
+                    :key="col.name"
+                    :props="props"
+                  >
+                    <q-chip v-if="col.name === 'position'"
+                      size="sm"
+                      :color="col.value === 'Buy' ? 'green-7' : 'red-7'"
+                      text-color="white"
+                      :label="col.value"
+                    />
+                    <span v-else class="text-bold">
+                      {{ `${col.value}` }}
+                    </span>
+                  </q-td>
+                </q-tr>
+            </template>
           </q-table>
         </q-card-section>
       </q-card>
@@ -483,7 +513,7 @@ export default {
       const negativeMatch = /[-]/gi
       let color = 'text-green-7'
 
-      if (val.match(negativeMatch)) {
+      if (val.toString().match(negativeMatch)) {
         color = 'text-red-7'
       }
 
@@ -517,11 +547,11 @@ export default {
       return [
         { name: 'time', required: true, label: 'Open Time', align: 'center', field: row => moment(row.time).format('h:mm:ss'), sortable: true },
         { name: 'lotSize', required: true, label: 'Lot Size', align: 'center', field: row => row.volume, sortable: true },
-        { name: 'netPL', required: true, label: 'Net P&L', align: 'center', field: row => row.profit, sortable: true },
+        // { name: 'netPL', required: true, label: 'Net P&L', align: 'center', field: row => row.profit, sortable: true },
         { name: 'symbol', required: true, label: 'Symbol', align: 'center', field: row => row.symbol, sortable: true },
         { name: 'profit', label: 'Profit', align: 'center', field: row => row.profit, sortable: true },
         { name: 'position', label: 'Position', align: 'center', field: row => row.type === 'ORDER_TYPE_BUY' ? 'Buy' : 'Sell', sortable: true },
-        { name: 'platform', label: 'Platform', align: 'center', field: row => row.platform, sortable: true }
+        { name: 'platform', label: 'Platform', align: 'center', field: row => row?.platform || 'mt4', sortable: true }
 
         // new Set
 
