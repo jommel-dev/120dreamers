@@ -21,13 +21,18 @@
      <!-- <q-toolbar-subtitle v-if="displayName">Welcome, {{ displayName }}!</q-toolbar-subtitle> -->
 
      <!-- <q-btn flat @click="logout">Logout</q-btn> -->
-     <q-btn
+     <!-- Balance -->
+     <q-icon name="monetization_on" color="amber-7" size="sm"/>
+     <span class="text-green-6 text-bold">{{balance}}</span>
+     <!-- <q-btn
         dense
         color=""
-        text-color="amber-7"
+        text-color="green-9"
         icon="paid"
         :label="balance"
-      />
+      /> -->
+
+      <!-- Accounts -->
       <q-select
           dense
           outlined

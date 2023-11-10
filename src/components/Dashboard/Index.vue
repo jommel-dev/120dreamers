@@ -71,7 +71,7 @@
                   <q-card-section  class="bg-white text-weight-light">
                     <div class="text-subtitle2 text-grey-5">{{item.title}} <q-icon name="info" /></div>
                     <div class="text-h6" :class="[item.color]">
-                      <span :class="checkValueColor(item.value)">{{`${item.prefix} ${item.value}`}}</span>
+                      <span :class="checkModalValueColor(item.value)">{{`${item.prefix} ${item.value}`}}</span>
                       <q-icon class="float-right" :color="item.iconColor" :name="item.icon" size="lg" />
                     </div>
                   </q-card-section>
