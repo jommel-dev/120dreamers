@@ -6,8 +6,50 @@
           <FullCalendar
             :options="calendarOptions"
             :events="eventList"
-          ></FullCalendar>
-           
+          >
+            <!-- <template v-slot:eventContent='arg'>
+              <q-btn
+                size="md"
+                @click="handleDateClick(arg)"
+                flat 
+                color="primary" 
+                :label="" 
+              />
+              <q-btn 
+                class="calendarBtnUpload" 
+                size="sm" 
+                push 
+                color="primary" 
+                round 
+                icon="add_chart" 
+              />
+            </template> -->
+            <template v-slot:dayCellContent='arg'>
+              <q-btn
+                v-if="dateCheckerTrade(arg)"
+                class="calendarBtnUploadDay" 
+                size="sm" 
+                push 
+                color="primary" 
+                round 
+                icon="add_chart"
+                @click="openModal(arg)"
+              />
+              <q-btn
+                v-if="dateCheckerTrade(arg)"
+                class="previewTradeDay" 
+                size="sm" 
+                push 
+                color="primary" 
+                round 
+                icon="fullscreen"
+                @click="handleDateClick(arg)"
+              />
+              {{ arg.dayNumberText }}
+              
+            </template>
+          </FullCalendar>
+          <TradeForm ref="tradeFormModal" />
           <input
             ref="fileInput"
             type="file"
@@ -166,6 +208,7 @@ import moment from 'moment'
 import Papa from 'papaparse'
 import { Timestamp } from '@firebase/firestore'
 import createDocument from 'src/firebase/firebase-create'
+import TradeForm from './TradeForm.vue'
 
 
 import { syncAccount } from '../../stores/syncAccount'
@@ -179,7 +222,8 @@ export default {
     openTradeTable,
     openOrderTable,
     historyTable,
-    exposureTable
+    exposureTable,
+    TradeForm
     // roundVue,
     // mixLineBar
   },
@@ -202,7 +246,7 @@ export default {
           right: 'dayGridMonth dayGridWeek listDay'
         },
         // Date Action Handler
-        dateClick: (args) => { return this.handleDateClick(args) },
+        // dateClick: (args) => { return this.handleDateClick(args) },
         selectable: true,
         // editable: true,
         events: this.eventList,
@@ -236,6 +280,18 @@ export default {
     this.asyncCallofData();
   },
   methods: {
+    openModal (data) {
+      let comp = this.$refs.tradeFormModal
+      comp.$data.form.open = moment(data.date).format('YYYY-MM-DD')
+      comp.$data.form.close = moment(data.date).format('YYYY-MM-DD')
+      comp.openModal()
+    },
+    dateCheckerTrade(data){
+      let calDate = moment(data.date).format('YYYY-MM-DD')
+      let currDate = moment().format('YYYY-MM-DD')
+      let listOfTradeDates = this.eventList.map(evt => evt.start)
+      return listOfTradeDates.includes(calDate) || calDate === currDate
+    },
     async asyncCallofData(){
 
       if(this.getId.length === 0){
@@ -318,7 +374,10 @@ export default {
       }
     },
     handleDateClick (data) {
-      const selectedDate = data.dateStr
+      // console.log(data)
+      // return
+      // const selectedDate = data.dateStr
+      const selectedDate = moment(data.date).format('YYYY-MM-DD')
       const filterData = this.calendarData.filter((el) => {
         return el.date === selectedDate
       })
@@ -326,7 +385,7 @@ export default {
         const res = {
           ...filterData[0]
         }
-        console.log(res)
+        // console.log(res)
         let win = 0
         let lost = 0
         let totalVolume = 0
@@ -347,7 +406,7 @@ export default {
         res.lost = lost
         res.volumes = totalVolume
 
-        console.log(res)
+        // console.log(res)
         this.selectedData = res
 
         this.dateTradeDetailModal = true
@@ -492,5 +551,17 @@ export default {
     position: absolute;
     right: 10px;
     bottom: 10px;
+  }
+  .calendarBtnUploadDay{
+    z-index: 999999;
+    position: absolute;
+    right: 5px;
+    bottom: -55px;
+  }
+  .previewTradeDay{
+    z-index: 999999;
+    position: absolute;
+    right: 40px;
+    bottom: -55px;
   }
 </style>
