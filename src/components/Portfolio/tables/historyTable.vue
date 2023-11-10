@@ -145,7 +145,7 @@ export default {
           required: true,
           label: 'SL (Price)',
           align: 'left',
-          field: row => `$${row.stopLoss ?? 0}`,
+          field: row => `${row.stopLoss ?? 0}`,
           format: val => `${val}`,
           sortable: true
         },
@@ -154,7 +154,7 @@ export default {
           required: true,
           label: 'TP (Price)',
           align: 'left',
-          field: row => `$${row.takeProfit ?? 0}`,
+          field: row => `${row.takeProfit ?? 0}`,
           format: val => `${val}`,
           sortable: true
         },
@@ -163,7 +163,7 @@ export default {
           required: true,
           label: 'Open Price',
           align: 'left',
-          field: row => `$${row.openPrice}`,
+          field: row => `${row.openPrice}`,
           format: val => `${val}`,
           sortable: true
         },
@@ -172,7 +172,7 @@ export default {
           required: true,
           label: 'Close Price',
           align: 'left',
-          field: row => `$${row.openPrice}`,
+          field: row => `${row.openPrice}`,
           format: val => `${val}`,
           sortable: true
         },
@@ -185,15 +185,15 @@ export default {
         //   format: val => `${val}`,
         //   sortable: true
         // },
-        {
-          name: 'netProfit',
-          required: true,
-          label: 'Profit',
-          align: 'left',
-          field: row => row.profit ?? 0,
-          format: val => `$${val}`,
-          sortable: true
-        }
+        // {
+        //   name: 'netProfit',
+        //   required: true,
+        //   label: 'Profit',
+        //   align: 'left',
+        //   field: row => row.profit ?? 0,
+        //   format: val => `${val}`,
+        //   sortable: true
+        // }
         // {
         //   name: 'duration',
         //   required: true,
