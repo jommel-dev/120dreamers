@@ -161,11 +161,27 @@
 </template>
 
 <script>
-export default {
-name: "accountProfile",
-data(){
+import getDocument from 'src/firebase/firebase-get'
+import { LocalStorage } from 'quasar'
 
-}
+export default {
+    name: "accountProfile",
+    data(){
+        return{
+            userData: {}
+        }
+    },
+    created(){
+        this.getDetails
+    },
+    computed: {
+        async getDetails(){
+            const user = LocalStorage.getItem('user')
+            const userId = user ? user.uid : null
+            let res = userId !== null ? await getDocument(`userProfile`, userId) : {};
+            this.userData = res
+        }
+    }
 }
 </script>
 
