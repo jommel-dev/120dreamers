@@ -17,10 +17,13 @@ jobs:
       - name: Install Node.js and dependencies
         uses: actions/setup-node@v2
         with:
-          node-version: 14
+          node-version: 16
 
       - name: Install Firebase CLI
         run: npm install -g firebase-tools
+
+      - name: Install Quasar CLI
+        run: npm install -g @quasar/cli
 
       - name: Check for changes in the functions folder
         id: functions-changes
