@@ -92,7 +92,6 @@ async function fetchData (token, accountId, uid, getGlobalConnection, platformId
     console.log('accountInformation', accountInformation)
 
     const positions = await connection.getPositions()
-    // console.log('positions', positions)
 
     const orders = await connection.getOrders()
 
@@ -134,6 +133,6 @@ async function fetchData (token, accountId, uid, getGlobalConnection, platformId
       balance
     }
   } catch (e) {
-    console.log(e)
+    console.log('[fetchData] error:', e)
   }
 }
