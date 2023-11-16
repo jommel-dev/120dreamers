@@ -12,7 +12,8 @@
     "build": "quasar build",
     "dev:prod": "PROFILE=prod quasar dev",
     "build:prod": "PROFILE=prod quasar build",
-    "deploy:prod": "npm run build:prod && firebase deploy --only hosting"
+    "deploy:prod": "npm run build:prod && firebase deploy --only hosting",
+    "deploy:functions": "firebase deploy --only functions"
   },
   "dependencies": {
     "@fullcalendar/core": "^6.1.9",
