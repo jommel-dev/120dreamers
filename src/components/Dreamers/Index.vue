@@ -1,31 +1,31 @@
 <template>
-        
+
         <div class="text-grey">
             <div class="row">
 
                 <div class="col col-md-12 q-pa-lg ">
                     <span class="text-h3">120 University</span><br/>
                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit, eligendi.
-                </div>                
+                </div>
             </div>
-            
+
                 <div class="q-pa-md example-row-mix-and-match">
                     <!-- Stack the columns on mobile by making one full-width and the other half-width -->
                     <!-- <h4 class="text-center text-blue-grey-2">title</h4> -->
                     <div class="row">
                         <div class="col col-md-8">
-                            <span class="text-h5" >Discription</span> <br/>
+                            <span class="text-h5" >Description</span> <br/>
                             <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Possimus earum doloribus sint repudiandae libero eligendi similique animi qui nam debitis.</p>
                             <q-video
                                 :ratio="17/9"
                                 src="https://www.youtube.com/embed/PDdT-rWY1AI"
-                                title="🔴Live FOREX Day Trading (NAS100, US30) - Unemployment Claims" 
-                                frameborder="0" 
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                title="🔴Live FOREX Day Trading (NAS100, US30) - Unemployment Claims"
+                                frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                 allowfullscreen
                                 style="border-radius: 20px;"
                             ></q-video>
-                           
+
                         </div>
                         <div class="col-6 col-md-4">
                             <q-toolbar class="">
@@ -52,12 +52,12 @@
                     <!-- Columns start at 50% wide on mobile and bump up to 33.3% wide on desktop -->
                     <h4 class="text-center">Featured Content</h4>
                     <div class="row">
-                    
+
                         <div class="col-6 col-md-4">
                             <q-video
                             :ratio="17/9"
-                            src="https://www.youtube.com/embed/2Hwbj96eArg" 
-                            title="🔴Live FOREX Day Trading (NAS100, US30) - Core Retail Sales News!!!" 
+                            src="https://www.youtube.com/embed/2Hwbj96eArg"
+                            title="🔴Live FOREX Day Trading (NAS100, US30) - Core Retail Sales News!!!"
                             frameborder="0"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                             allowfullscreen
@@ -66,9 +66,9 @@
                         <div class="col-6 col-md-4">
                             <q-video
                             :ratio="17/9"
-                            src="https://www.youtube.com/embed/twp2riCcVPw" 
-                            title="🔴Live FOREX Day Trading (NAS100, US30) - BOE Gov Bailey Speaks &amp; Prelim UoM Consumer Sentiment" 
-                            frameborder="0" 
+                            src="https://www.youtube.com/embed/twp2riCcVPw"
+                            title="🔴Live FOREX Day Trading (NAS100, US30) - BOE Gov Bailey Speaks &amp; Prelim UoM Consumer Sentiment"
+                            frameborder="0"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                             allowfullscreen
                             ></q-video>
@@ -77,14 +77,14 @@
                             <q-video
                             :ratio="17/9"
                             src="https://www.youtube.com/embed/PDdT-rWY1AI"
-                            title="🔴Live FOREX Day Trading (NAS100, US30) - Unemployment Claims" 
-                            frameborder="0" 
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                            title="🔴Live FOREX Day Trading (NAS100, US30) - Unemployment Claims"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                             allowfullscreen
-                            
+
                             >
                             </q-video>
-                        
+
                         </div>
 
                     </div>
@@ -96,22 +96,22 @@
                             <q-video
                             :ratio="17/9"
                             src="https://www.youtube.com/embed/PDdT-rWY1AI"
-                            title="🔴Live FOREX Day Trading (NAS100, US30) - Unemployment Claims" 
-                            frameborder="0" 
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                            title="🔴Live FOREX Day Trading (NAS100, US30) - Unemployment Claims"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                             allowfullscreen
-                            
+
                             ></q-video>
                         </div>
                         <div class="col-6">
                             <q-video
                             :ratio="17/9"
                             src="https://www.youtube.com/embed/PDdT-rWY1AI"
-                            title="🔴Live FOREX Day Trading (NAS100, US30) - Unemployment Claims" 
-                            frameborder="0" 
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                            title="🔴Live FOREX Day Trading (NAS100, US30) - Unemployment Claims"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                             allowfullscreen
-                            
+
                             ></q-video>
                         </div>
                     </div>
@@ -157,7 +157,7 @@ export default {
 }
 </script>
 
-  
+
 <style scoped>
 header {
     background: rgb(0,0,94);
