@@ -33,7 +33,7 @@
                                     <q-icon name="menu" />
                                 </q-btn>
                                 <q-toolbar-title>
-                                    More Video's
+                                    More Videos
                                 </q-toolbar-title>
                                 <q-btn flat round dense>
                                     <q-icon name="more_vert" />
