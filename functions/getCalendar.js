@@ -1,5 +1,5 @@
 /**
- * Get current user and fetch data from firestore
+ * Get calendar details of user from selected trade platforms.
  */
 
 const { getTotalProfitByDate, validateAuthorization, getPlatformData, fetchTradesFromFirestore, formatFirebaseTimestamp } = require('./common')
