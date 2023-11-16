@@ -15,7 +15,7 @@
                     <div class="row">
                         <div class="col col-md-8">
                             <span class="text-h5" >Description</span> <br/>
-                            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Possimus earum doloribus sint repudiandae libero eligendi similique animi qui nam debitis.</p>
+                            <p>Find videos and tutorials here that can help you learn how to trade forex or enhance your skills in trading.</p>
                             <q-video
                                 :ratio="17/9"
                                 src="https://www.youtube.com/embed/PDdT-rWY1AI"
@@ -124,39 +124,38 @@
 
 <script>
 export default {
-    name: "dreamersUniversity",
-    data(){
-        return {
-            videoRatio: "17/9",
-            videoList: [
-                {
-                    src: "https://www.youtube.com/embed/2Hwbj96eArg",
-                    title:"🔴Live FOREX Day Trading (NAS100, US30) - Core Retail Sales News!!!",
-                    frameborder: "0",
-                    allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share",
-                    allowfullscreen: true
-                },
-                {
-                    src: "https://www.youtube.com/embed/twp2riCcVPw",
-                    title:"🔴Live FOREX Day Trading (NAS100, US50) - Core Retail Sales News!!!",
-                    frameborder: "0",
-                    allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share",
-                    allowfullscreen: false
-                },
-                {
-                    src: "https://www.youtube.com/embed/PDdT-rWY1AI",
-                    title:"🔴Live FOREX Day Trading (NAS100, US60) - Core Retail Sales News!!!",
-                    frameborder: "0",
-                    allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share",
-                    allowfullscreen: false
-                },
-            ]
+  name: 'dreamersUniversity',
+  data () {
+    return {
+      videoRatio: '17/9',
+      videoList: [
+        {
+          src: 'https://www.youtube.com/embed/2Hwbj96eArg',
+          title: '🔴Live FOREX Day Trading (NAS100, US30) - Core Retail Sales News!!!',
+          frameborder: '0',
+          allow: 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share',
+          allowfullscreen: true
+        },
+        {
+          src: 'https://www.youtube.com/embed/twp2riCcVPw',
+          title: '🔴Live FOREX Day Trading (NAS100, US50) - Core Retail Sales News!!!',
+          frameborder: '0',
+          allow: 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share',
+          allowfullscreen: false
+        },
+        {
+          src: 'https://www.youtube.com/embed/PDdT-rWY1AI',
+          title: '🔴Live FOREX Day Trading (NAS100, US60) - Core Retail Sales News!!!',
+          frameborder: '0',
+          allow: 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share',
+          allowfullscreen: false
         }
-    },
+      ]
+    }
+  }
 
 }
 </script>
-
 
 <style scoped>
 header {
