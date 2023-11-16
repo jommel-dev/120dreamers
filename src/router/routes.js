@@ -59,6 +59,26 @@ const routes = [
         name: 'allPlatforms',
         component: () => import('pages/BrokerList.vue')
       },
+      {
+        path: 'tradingFloor',
+        name: 'tradingFloor',
+        component: () => import('pages/TradingFloor.vue')
+      },
+      {
+        path: 'broadCastNewTrade',
+        name: 'broadCastNewTrade',
+        component: () => import('pages/BroadcastNewTradePage.vue')
+      },
+      {
+        path: 'goLivePage',
+        name: 'goLivePage',
+        component: () => import('pages/GoLivePage.vue')
+      },
+      {
+        path: 'tradingFloor',
+        name: 'tradingFloor',
+        component: () => import('pages/TradingFloor.vue')
+      },
     ],
     meta: { auth: true }
   },

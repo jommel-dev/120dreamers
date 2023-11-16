@@ -1,187 +1,96 @@
 <template>
-    <div class="container ">
-        <div id="q-app" style="min-height: 100vh;">
-            <div class="q-pa-md example-column-row-width">
-                <div class="column text-center items-center">
-                    <div class="col">
-                        
-                        <div class="q-pa-md q-gutter-sm">
-                            <q-avatar color="primary" size="100px"  text-color="white">J</q-avatar> 
-                        </div>
-                        <span> Profile Img</span>
-                    </div>
-                    <div class="col flex flex-start">
-                        <ul>
-                            <li>Username:</li>
-                            <li>Name:</li>
-                            <li>Country:</li>
-                        </ul>
-                    </div>
-                    <div class="col-5items-center">
-                        <div id="q-app"  style="min-height: 20vh;">
-                            <div class="q-pa-md" style="max-width: 100%">
-                                <q-list bordered padding>
-                                <q-item>
-                                    <q-item-section>
-                                        <q-item-label overline>OVERLINE</q-item-label>
-                                        <q-item-label>Single line item</q-item-label>
-                                        <q-item-label caption>Secondary line text. Lorem ipsum dolor sit amet, consectetur adipiscit elit.</q-item-label>
-                                    </q-item-section>
+     <div>
+    <q-splitter
+      v-model="splitterModel"
+      style="height: 400px"
+    >
 
-                                    <q-item-section side top>
-                                        <q-item-label caption>5 min ago</q-item-label>
-                                    </q-item-section>
-                                </q-item>
-
-                                <q-separator spaced></q-separator>
-                                <q-item-label header>List Header</q-item-label>
-
-                                <q-item>
-                                    <q-item-section avatar>
-                                    <q-icon color="primary" name="bluetooth"></q-icon>
-                                    </q-item-section>
-                                    <q-item-section>List item</q-item-section>
-                                    <q-item-section side>
-                                    <q-item-label caption>meta</q-item-label>
-                                    </q-item-section>
-                                </q-item>
-
-                                <q-separator spaced inset="item"></q-separator>
-
-                                <q-item>
-                                    <q-item-section top avatar>
-                                    <q-avatar color="primary" text-color="white" icon="bluetooth"></q-avatar>
-                                    </q-item-section>
-
-                                    <q-item-section>
-                                    <q-item-label>Single line item</q-item-label>
-                                    <q-item-label caption lines="2">Secondary line text. Lorem ipsum dolor sit amet, consectetur adipiscit elit.</q-item-label>
-                                     </q-item-section>
-
-                                    <q-item-section side top>
-                                    <q-item-label caption>5 min ago</q-item-label>
-                                    <q-icon name="star" color="yellow"></q-icon>
-                                    </q-item-section>
-                                </q-item>
-
-                                <q-separator spaced inset="item"></q-separator>
-
-                                <q-item>
-                                    <q-item-section top avatar>
-                                    <q-avatar color="primary" text-color="white" square icon="bluetooth"></q-avatar>
-                                    </q-item-section>
-
-                                    <q-item-section>
-                                    <q-item-label>Single line item</q-item-label>
-                                    <q-item-label caption>Secondary line text. Lorem ipsum dolor sit amet, consectetur adipiscit elit.</q-item-label>
-                                    </q-item-section>
-
-                                    <q-item-section side top>
-                                    <q-item-label caption>meta</q-item-label>
-                                    </q-item-section>
-                                </q-item>
-
-                                <q-separator spaced inset="item"></q-separator>
-
-                                <q-item>
-                                    <q-item-section top avatar>
-                                    <q-avatar>
-                                        <img src="https://cdn.quasar.dev/img/boy-avatar.png">
-                                    </q-avatar>
-                                    </q-item-section>
-
-                                    <q-item-section>
-                                    <q-item-label>Single line item</q-item-label>
-                                    <q-item-label caption>Secondary line text. Lorem ipsum dolor sit amet, consectetur adipiscit elit.</q-item-label>
-                                    </q-item-section>
-
-                                    <q-item-section side top>
-                                    <q-badge label="10k"></q-badge>
-                                    </q-item-section>
-                                </q-item>
-
-                                <q-separator spaced inset="item"></q-separator>
-
-                                <q-item>
-                                    <q-item-section top avatar>
-                                    <q-avatar rounded>
-                                        <img src="https://cdn.quasar.dev/img/boy-avatar.png">
-                                    </q-avatar>
-                                    </q-item-section>
-
-                                    <q-item-section>
-                                    <q-item-label>Single line item</q-item-label>
-                                    <q-item-label caption>Secondary line text. Lorem ipsum dolor sit amet, consectetur adipiscit elit.</q-item-label>
-                                    </q-item-section>
-
-                                    <q-item-section side top>
-                                    <q-item-label caption>meta</q-item-label>
-                                    </q-item-section>
-                                </q-item>
-
-                                <q-separator spaced></q-separator>
-
-                                <q-item>
-                                    <q-item-section top thumbnail class="q-ml-none">
-                                    <img src="https://cdn.quasar.dev/img/mountains.jpg">
-                                    </q-item-section>
-
-                                    <q-item-section>
-                                    <q-item-label>Single line item</q-item-label>
-                                    <q-item-label caption>Secondary line text. Lorem ipsum dolor sit amet, consectetur adipiscit elit.</q-item-label>
-                                    </q-item-section>
-
-                                    <q-item-section side top>
-                                    <q-item-label caption>meta</q-item-label>
-                                    </q-item-section>
-                                </q-item>
-                                </q-list>
-                            </div>
-                            </div>
-                    </div>
-                    <div class="col">
-                        .col
-                    </div>
-                </div>
-
-                <div class="column" style="height: 250px">
-                    <div class="col">
-                        .col
-                    </div>
-                    <div class="col-8">
-                        .col-8
-                    </div>
-                    <div class="col">
-                        .col
-                    </div>
-                </div>
-            </div>
+      <template v-slot:before>
+        <div class="q-pa-md">
+          <q-tree
+            :nodes="simple"
+            node-key="label"
+            selected-color="primary"
+            v-model:selected="selected"
+            default-expand-all
+          />
         </div>
-    </div>
+      </template>
+
+      <template v-slot:after>
+        <q-tab-panels
+          v-model="selected"
+          animated
+          transition-prev="jump-up"
+          transition-next="jump-up"
+        >
+          <q-tab-panel name="Relax Hotel">
+            <div class="text-h4 q-mb-md">Welcome</div>
+            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis praesentium cumque magnam odio iure quidem, quod illum numquam possimus obcaecati commodi minima assumenda consectetur culpa fuga nulla ullam. In, libero.</p>
+            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis praesentium cumque magnam odio iure quidem, quod illum numquam possimus obcaecati commodi minima assumenda consectetur culpa fuga nulla ullam. In, libero.</p>
+          </q-tab-panel>
+
+          <q-tab-panel name="Food">
+            <div class="text-h4 q-mb-md">Food</div>
+            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis praesentium cumque magnam odio iure quidem, quod illum numquam possimus obcaecati commodi minima assumenda consectetur culpa fuga nulla ullam. In, libero.</p>
+            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis praesentium cumque magnam odio iure quidem, quod illum numquam possimus obcaecati commodi minima assumenda consectetur culpa fuga nulla ullam. In, libero.</p>
+          </q-tab-panel>
+
+          <q-tab-panel name="Room service">
+            <div class="text-h4 q-mb-md">Room service</div>
+            sample2
+          </q-tab-panel>
+
+          <q-tab-panel name="Room view">
+            <div class="text-h4 q-mb-md">Room view</div>
+            <Account/>
+          </q-tab-panel>
+        </q-tab-panels>
+      </template>
+    </q-splitter>
+  </div>
+  
 </template>
 
 <script>
-import getDocument from 'src/firebase/firebase-get'
-import { LocalStorage } from 'quasar'
+
+import Account from '../Account/account.vue';
+import { ref } from 'vue'
 
 export default {
-    name: "accountProfile",
-    data(){
-        return{
-            userData: {}
+name: "accountProfile",
+components: {
+    Account
+  },
+data(){
+
+},
+setup () {
+    return {
+      splitterModel: ref(50),
+      selected: ref('Food'),
+
+      simple: [
+        {
+          label: 'Relax Hotel',
+          children: [
+            {
+              label: 'Food',
+              icon: 'restaurant_menu'
+            },
+            {
+              label: 'Room service',
+              icon: 'room_service'
+            },
+            {
+              label: 'Room view',
+              icon: 'photo'
+            }
+          ]
         }
-    },
-    created(){
-        this.getDetails
-    },
-    computed: {
-        async getDetails(){
-            const user = LocalStorage.getItem('user')
-            const userId = user ? user.uid : null
-            let res = userId !== null ? await getDocument(`userProfile`, userId) : {};
-            this.userData = res
-        }
+      ]
     }
+  }
 }
 </script>
 
