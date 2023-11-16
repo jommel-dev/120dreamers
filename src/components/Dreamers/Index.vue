@@ -5,7 +5,7 @@
 
                 <div class="col col-md-12 q-pa-lg ">
                     <span class="text-h3">120 University</span><br/>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit, eligendi.
+                    Dreamers university. Videos and tutorials to help you learn how to trade forex.
                 </div>
             </div>
 
