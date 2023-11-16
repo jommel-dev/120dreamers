@@ -1,6 +1,6 @@
 <template>
     <div class="q-pa-md q-gutter-sm">
-      <span class="text-h5">{{displayDate}}</span>
+      <!-- <span class="text-h5">{{displayDate}}</span> -->
       <q-editor
         v-model="qeditor"
         :dense="$q.screen.lt.md"
@@ -96,7 +96,6 @@
 </template>
 
 <script>
-import { ref } from 'vue'
 import { Timestamp } from '@firebase/firestore'
 import { LocalStorage } from 'quasar'
 import createDocument from 'src/firebase/firebase-create'
@@ -107,45 +106,45 @@ import moment from 'moment'
 const currDate = moment().format('YYYY-MM-DD');
 
 export default {
-  data: function () {
+  data() {
     return {
       isSaving: false,
-      displayDate: currDate
+      displayDate: currDate,
+      qeditor: '<pre>Loading journal...</pre>'
     }
   },
-  setup () {
-    const qeditor = ref('<pre>Loading journal...</pre>') // Default text while loading
-
-    async function loadJournal () {
-      const user = LocalStorage.getItem('user')
-      const userId = user ? user.uid : null
-      if (userId) {
-        console.log(currDate)
-        const journals = await getQueryWithFilter(`platforms/${userId}/journals`, 'dateOnly', currDate)
-        console.log(journals)
-        if (journals.length) {
-          qeditor.value = journals[0].body
-        } else {
-          qeditor.value = '<pre>No journal entry for today.</pre>'
-        }
+  props: {
+    dateSelected: String
+  },
+  watch: {
+    dateSelected: {
+      immediate: true,
+      handler (newVal) {
+        this.displayDate = newVal
+        this.loadJournal()
       }
-    }
-
-    // onMounted(loadJournal)
-    loadJournal()
-
-    return {
-      qeditor
     }
   },
   methods: {
+    async loadJournal(){
+      const user = LocalStorage.getItem('user')
+      const userId = user ? user.uid : null
+      if (userId) {
+        const journals = await getQueryWithFilter(`platforms/${userId}/journals`, 'dateOnly', this.displayDate)
+        if (journals.length) {
+          this.qeditor = journals[0].body
+        } else {
+          this.qeditor = '<pre>No journal entry for today.</pre>'
+        }
+      }
+    },
     async saveToFirestore () {
       this.isSaving = true
 
       const data = {
         body: this.qeditor,
         createdAt: Timestamp.now(),
-        dateOnly: currDate
+        dateOnly: this.displayDate
         // dateOnly: new Date().toISOString().split('T')[0]
       }
 
@@ -155,7 +154,7 @@ export default {
         const user = LocalStorage.getItem('user')
         const userId = user ? user.uid : null
         if (userId) {
-          const journals = await getQueryWithFilter(`platforms/${userId}/journals`, 'dateOnly', currDate)
+          const journals = await getQueryWithFilter(`platforms/${userId}/journals`, 'dateOnly', this.displayDate)
           if (journals.length) {
             delete data.createdAt
             await updateDocument(`platforms/${userId}/journals`, journals[0].id, data)
