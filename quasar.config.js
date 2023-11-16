@@ -12,8 +12,19 @@ const { configure } = require('quasar/wrappers')
 const path = require('path')
 
 module.exports = configure(function (/* ctx */) {
-  const envFile = `.env.${process.env.PROFILE || 'local'}`
-  const envConfig = require('dotenv').config({ path: envFile }).parsed
+  const envFile = process.env.PROFILE !== 'github' ? `.env.${process.env.PROFILE || 'local'}` : null
+  const envObject = envFile ? require('dotenv').config({ path: envFile }).parsed : process.env
+  const envConfig = {
+    VUE_APP_FIREBASE_API_KEY: envObject.VUE_APP_FIREBASE_API_KEY,
+    VUE_APP_FIREBASE_AUTH_DOMAIN: envObject.VUE_APP_FIREBASE_AUTH_DOMAIN,
+    VUE_APP_FIREBASE_PROJECT_ID: envObject.VUE_APP_FIREBASE_PROJECT_ID,
+    VUE_APP_FIREBASE_STORAGE_BUCKET: envObject.VUE_APP_FIREBASE_STORAGE_BUCKET,
+    VUE_APP_FIREBASE_MESSAGING_SENDER_ID: envObject.VUE_APP_FIREBASE_MESSAGING_SENDER_ID,
+    VUE_APP_FIREBASE_APP_ID: envObject.VUE_APP_FIREBASE_APP_ID,
+    VUE_APP_FIREBASE_MEASUREMENT_ID: envObject.VUE_APP_FIREBASE_MEASUREMENT_ID,
+    POLYGON_KEY: envObject.POLYGON_KEY,
+    BASE_URL: envObject.BASE_URL
+  }
   return {
     // eslint: {
     //   // fix: true,
@@ -72,14 +83,7 @@ module.exports = configure(function (/* ctx */) {
 
       // publicPath: '/',
       // analyze: true,
-      env: {
-        // Convert the envConfig object to a format that can be
-        // consumed by our application
-        ...Object.keys(envConfig).reduce((env, key) => {
-          env[key] = envConfig[key]
-          return env
-        }, {})
-      },
+      env: envConfig,
       // rawDefine: {}
       // ignorePublicFolder: true,
       // minify: false,
