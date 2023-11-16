@@ -114,8 +114,8 @@
       v-model="dateTradeDetailModal"
       persistent
     >
-      <q-card  style="width: 750px; max-width: 80vw;">
-        <q-bar class="bg-white  text-black">
+      <q-card  style="width: 60vw; max-width: 80vw;">
+        <q-bar class="bg-white text-black">
           <q-icon name="event" />
           <div>{{ selectedData.date }}</div>
           <!-- <div >-</div> -->
@@ -123,6 +123,15 @@
 
           <q-space />
 
+          <q-btn 
+            class="q-mr-md"
+            color="primary" 
+            dense  
+            icon="fact_check" 
+            :label="showJournal ? 'Hide Details' : 'View Details'"
+            @click="showJournal = !showJournal"
+          >
+          </q-btn>
           <q-btn dense flat icon="close" v-close-popup>
             <q-tooltip>Close</q-tooltip>
           </q-btn>
@@ -130,7 +139,10 @@
 
         <q-card-section>
           <div class="row">
-            <div class="col col-3-md q-pa-md">
+            <div v-if="showJournal" class="col col-sm-12 col-md-12 q-pa-md">
+              <Notebook :dateSelected="selectedData.date" />
+            </div>
+            <div class="col col-md-3 q-pa-md">
               <table style="width:100%;">
                 <tr>
                   <td>Total Trades:</td>
@@ -143,7 +155,7 @@
               </table>
             </div>
             <q-separator vertical inset />
-            <div class="col col-3-md q-pa-md">
+            <div class="col col-md-3 q-pa-md">
               <table style="width:100%;">
                 <tr>
                   <td>Winners:</td>
@@ -156,7 +168,7 @@
               </table>
             </div>
             <q-separator vertical inset />
-            <div class=" col col-3-md q-pa-md">
+            <div class=" col col-md-3 q-pa-md">
               <table style="width:100%;">
                 <tr>
                   <td>Gross P&L:</td>
@@ -240,6 +252,7 @@ import { Timestamp } from '@firebase/firestore'
 import createDocument from 'src/firebase/firebase-create'
 import TradeForm from './TradeForm.vue'
 
+import Notebook from '../DailyJournal/note/notebook.vue'
 
 import { syncAccount } from '../../stores/syncAccount'
 import { fabBlackTie } from '@quasar/extras/fontawesome-v6'
@@ -254,12 +267,14 @@ export default {
     openOrderTable,
     historyTable,
     exposureTable,
-    TradeForm
+    TradeForm,
+    Notebook
     // roundVue,
     // mixLineBar
   },
   data () {
     return {
+      showJournal: false,
       calendarOptions: {
         eventRender: this.customEventRender,
         plugins: [dayGridPlugin, interactionPlugin, listPlugin, timeGridPlugin],
