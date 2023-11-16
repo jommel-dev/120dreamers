@@ -13,7 +13,8 @@ const path = require('path')
 
 module.exports = configure(function (/* ctx */) {
   const envFile = process.env.PROFILE !== 'github' ? `.env.${process.env.PROFILE || 'local'}` : null
-  const envConfig = envFile ? require('dotenv').config({ path: envFile }).parsed : require('dotenv').config().parsed
+  const envConfig = envFile ? require('dotenv').config({ path: envFile }).parsed : process.env
+  console.log({ envConfig })
   return {
     // eslint: {
     //   // fix: true,
