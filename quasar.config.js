@@ -12,8 +12,8 @@ const { configure } = require('quasar/wrappers')
 const path = require('path')
 
 module.exports = configure(function (/* ctx */) {
-  const envFile = `.env.${process.env.PROFILE || 'local'}`
-  const envConfig = require('dotenv').config({ path: envFile }).parsed
+  const envFile = process.env.PROFILE !== 'github' ? `.env.${process.env.PROFILE || 'local'}` : null
+  const envConfig = envFile ? require('dotenv').config({ path: envFile }).parsed : require('dotenv').config().parsed
   return {
     // eslint: {
     //   // fix: true,
