@@ -48,7 +48,7 @@ jobs:
         if: steps.changes.outputs.firebase_functions != 'true'
         run: |
           npm install
-          PROFILE=prod quasar build
+          quasar build
           firebase deploy --only hosting
         env:
           VUE_APP_FIREBASE_API_KEY: ${{ secrets.VUE_APP_FIREBASE_API_KEY }}
