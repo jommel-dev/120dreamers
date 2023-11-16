@@ -25,11 +25,18 @@ jobs:
       - name: Check for changes in the functions folder
         id: functions-changes
         run: |
-          git --no-pager diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep 'functions/'
-          echo "::set-output name=changes::${PIPESTATUS[1]}"
+          CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
+
+          if echo "$CHANGED_FILES" | grep -q "functions/"; then
+            echo "Firebase functions changed"
+            echo "::set-output name=firebase_functions::true"
+          else
+            echo "No Firebase functions changes"
+            echo "::set-output name=firebase_functions::false"
+          fi
 
       - name: Deploy Firebase functions
-        if: steps.functions-changes.outputs.changes == '0'
+        if: steps.changes.outputs.firebase_functions == 'true'
         run: |
           cd functions
           npm install
@@ -38,7 +45,7 @@ jobs:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
 
       - name: Deploy Quasar app
-        if: steps.functions-changes.outputs.changes != '0'
+        if: steps.changes.outputs.firebase_functions != 'true'
         run: |
           npm install
           PROFILE=prod quasar build
