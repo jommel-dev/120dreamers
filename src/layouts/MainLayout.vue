@@ -169,8 +169,40 @@ const linksList = [
   {
     title: 'Account Profile',
     icon: 'dvr',
-    link: 'account',
-    code: 101
+    code: 101,
+    children:[
+      {
+        title: 'Account',
+        icon: 'dvr',
+        link: 'account',
+        code: 101,
+      },
+      {
+        title: 'Portfolio',
+        icon: 'dvr',
+        link: 'portfolio',
+        code: 101,
+      },
+      {
+        title: 'Broadcast New Trade',
+        icon: 'dvr',
+        link: 'broadCastNewTrade',
+        code: 101,
+      },
+      {
+        title: 'Go Live',
+        icon: 'dvr',
+        link: 'goLivePage',
+        code: 101,
+      },
+      {
+        title: 'Trading Floor',
+        icon: 'dvr',
+        link: 'tradingFloor',
+        code: 101,
+      },
+    ]
+  
   },
 ]
 
