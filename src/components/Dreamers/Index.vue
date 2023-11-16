@@ -15,7 +15,7 @@
                     <div class="row">
                         <div class="col col-md-8">
                             <span class="text-h5" >Description</span> <br/>
-                            <p>Find videos and tutorials here that can help you learn how to trade forex or enhance your skills in trading.</p>
+                            <p>Find videos and tutorials here that can help you learn how to trade forex or enhance your skills in trading. More details soon.</p>
                             <q-video
                                 :ratio="17/9"
                                 src="https://www.youtube.com/embed/PDdT-rWY1AI"

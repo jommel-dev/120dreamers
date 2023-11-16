@@ -36,8 +36,8 @@ jobs:
             echo "::set-output name=firebase_functions::true"
           fi
 
-          if [ "$CHANGED_FILES" != "" ] && [ "$firebase_functions" != 'true' ]; then
-            echo "Changes in the root folder (excluding functions)"
+          if echo "$CHANGED_FILES" | grep -q "^src/"; then
+            echo "Changes in the src folder"
             echo "::set-output name=quasar_app::true"
           fi
 
