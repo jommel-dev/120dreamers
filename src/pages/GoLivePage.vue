@@ -1,11 +1,16 @@
 <template>
     <div>
-        <h1>Go Live</h1>
+        <PageContent/>
     </div>
 </template>
 <script>
+import PageContent from "../components/GoLive/index.vue"
 export default {
-    
+  name: 'GoLivePage',
+  components: {
+    PageContent
+  },
+
 }
 </script>
 <style>

@@ -179,7 +179,7 @@ const linksList = [
       },
       {
         title: 'Portfolio',
-        icon: 'dvr',
+        icon: 'insights',
         link: 'portfolio',
         code: 101,
       },
