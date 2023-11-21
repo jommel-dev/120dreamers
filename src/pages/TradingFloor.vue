@@ -1,11 +1,16 @@
-<template >
+<template>
     <div>
-        <h1>Trading View</h1>
+        <PageContent/>
     </div>
 </template>
 <script>
+import PageContent from "../components/TradingFloor/index.vue"
 export default {
-    
+  name: 'TradingFloor',
+  components: {
+    PageContent
+  },
+
 }
 </script>
 <style>
