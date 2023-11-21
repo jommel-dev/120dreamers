@@ -57,7 +57,7 @@
 </script>
 <style >
 .app-container {
-    background: url("/imgs/illustration.svg") center no-repeat;
+    background: url("/imgs/Illustration.svg") center no-repeat;
   /* background-position: 136% 0%; */
   background-size: cover;
   background-color: rgba(0, 0, 0, 0.959);
