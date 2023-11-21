@@ -69,6 +69,9 @@ background: linear-gradient(56deg, rgba(27,27,28,0.8183648459383753) 0%, rgba(1,
   background: black;
     color:red;
   border: 1px solid rgba(153, 153, 153, 0.2);
+  box-shadow: 0px 0px 5px 5px rgba(119,193,255,0.49);
+-webkit-box-shadow: 0px 0px 5px 5px rgba(119,193,255,0.49);
+-moz-box-shadow: 0px 0px 5px 5px rgba(119,193,255,0.49);
 }
 .example-row-equal-width .row + .row {
   margin-top: 1rem;
