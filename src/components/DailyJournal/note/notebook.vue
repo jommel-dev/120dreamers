@@ -1,8 +1,9 @@
 <template>
     <div class="q-pa-md q-gutter-sm">
       <!-- <span class="text-h5">{{displayDate}}</span> -->
-      <q-editor
-        v-model="qeditor"
+      <div v-for="(journal, index) in journalList" :key="index">
+        <q-editor
+        v-model="journal.body"
         :dense="$q.screen.lt.md"
         :toolbar="[
           [
@@ -90,7 +91,9 @@
           verdana: 'Verdana'
         }"
       />
+      </div>
       <q-btn outline rounded color="primary" icon="stream" label="Save" @click="saveToFirestore" :loading="isSaving" />
+      <q-btn outline rounded color="primary" icon="add" label="Add journal" @click="addJournalArray" :loading="isSaving" />
 
       </div>
 </template>
@@ -103,14 +106,15 @@ import getQueryWithFilter from 'src/firebase/firebase-query'
 import updateDocument from 'src/firebase/firebase-update'
 import moment from 'moment'
 
-const currDate = moment().format('YYYY-MM-DD');
+const currDate = moment().format('YYYY-MM-DD')
 
 export default {
-  data() {
+  data () {
     return {
       isSaving: false,
       displayDate: currDate,
-      qeditor: '<pre>Loading journal...</pre>'
+      qeditor: '<pre>Loading journal...</pre>',
+      journalList: []
     }
   },
   props: {
@@ -126,27 +130,22 @@ export default {
     }
   },
   methods: {
-    async loadJournal(){
+    async loadJournal () {
       const user = LocalStorage.getItem('user')
       const userId = user ? user.uid : null
       if (userId) {
         const journals = await getQueryWithFilter(`platforms/${userId}/journals`, 'dateOnly', this.displayDate)
         if (journals.length) {
-          this.qeditor = journals[0].body
+          this.journalList = journals.sort((a, b) => a.createdAt.seconds - b.createdAt.seconds)
+          // this.qeditor = journals[0].body
         } else {
-          this.qeditor = '<pre>No journal entry for today.</pre>'
+          // this.qeditor = '<pre>No journal entry for today.</pre>'
+          this.journalList = [{ body: '<pre>New journal.</pre>' }]
         }
       }
     },
     async saveToFirestore () {
       this.isSaving = true
-
-      const data = {
-        body: this.qeditor,
-        createdAt: Timestamp.now(),
-        dateOnly: this.displayDate
-        // dateOnly: new Date().toISOString().split('T')[0]
-      }
 
       try {
         // const today = new Date().toISOString().split('T')[0]
@@ -154,13 +153,17 @@ export default {
         const user = LocalStorage.getItem('user')
         const userId = user ? user.uid : null
         if (userId) {
-          const journals = await getQueryWithFilter(`platforms/${userId}/journals`, 'dateOnly', this.displayDate)
-          if (journals.length) {
-            delete data.createdAt
-            await updateDocument(`platforms/${userId}/journals`, journals[0].id, data)
-          } else {
-            await createDocument(`platforms/${userId}/journals`, data)
+          // const journals = await getQueryWithFilter(`platforms/${userId}/journals`, 'dateOnly', this.displayDate)
+          const data = {
+            createdAt: Timestamp.now(),
+            dateOnly: this.displayDate
           }
+          await Promise.all(this.journalList.map((journal) => {
+            return journal.id
+              ? updateDocument(`platforms/${userId}/journals`, journal.id, { body: journal.body, updateAt: Timestamp.now() })
+              : createDocument(`platforms/${userId}/journals`, { ...data, body: journal.body })
+          }))
+
           this.$q.notify({
             type: 'positive',
             message: 'Data saved successfully!'
@@ -181,6 +184,9 @@ export default {
         this.isSaving = false
         this.modalOpen = false
       }
+    },
+    addJournalArray () {
+      this.journalList.push({ body: '<pre>New journal.</pre>' })
     }
   }
 }
