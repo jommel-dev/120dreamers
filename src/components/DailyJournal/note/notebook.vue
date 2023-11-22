@@ -91,6 +91,18 @@
           verdana: 'Verdana'
         }"
       />
+      <div class="">
+        <q-btn
+        outline
+        rounded
+        color="primary"
+        icon="delete"
+        class="q-mt-sm"
+        label="Remove"
+        @click="removeJournal(index)"
+        :loading="isSaving"
+      />
+      </div>
       </div>
       <q-btn outline rounded color="primary" icon="stream" label="Save" @click="saveToFirestore" :loading="isSaving" />
       <q-btn outline rounded color="primary" icon="add" label="Add journal" @click="addJournalArray" :loading="isSaving" />
@@ -105,6 +117,7 @@ import createDocument from 'src/firebase/firebase-create'
 import getQueryWithFilter from 'src/firebase/firebase-query'
 import updateDocument from 'src/firebase/firebase-update'
 import moment from 'moment'
+import deleteDocument from 'src/firebase/firebase-delete'
 
 const currDate = moment().format('YYYY-MM-DD')
 
@@ -114,7 +127,8 @@ export default {
       isSaving: false,
       displayDate: currDate,
       qeditor: '<pre>Loading journal...</pre>',
-      journalList: []
+      journalList: [],
+      journalIds: []
     }
   },
   props: {
@@ -137,6 +151,7 @@ export default {
         const journals = await getQueryWithFilter(`platforms/${userId}/journals`, 'dateOnly', this.displayDate)
         if (journals.length) {
           this.journalList = journals.sort((a, b) => a.createdAt.seconds - b.createdAt.seconds)
+          this.journalIds = journals.map((journal) => journal.id)
           // this.qeditor = journals[0].body
         } else {
           // this.qeditor = '<pre>No journal entry for today.</pre>'
@@ -158,11 +173,19 @@ export default {
             createdAt: Timestamp.now(),
             dateOnly: this.displayDate
           }
-          await Promise.all(this.journalList.map((journal) => {
-            return journal.id
-              ? updateDocument(`platforms/${userId}/journals`, journal.id, { body: journal.body, updateAt: Timestamp.now() })
-              : createDocument(`platforms/${userId}/journals`, { ...data, body: journal.body })
-          }))
+          await Promise.all([
+            this.journalList.map((journal) => {
+              return journal.id
+                ? updateDocument(`platforms/${userId}/journals`, journal.id, { body: journal.body, updateAt: Timestamp.now() })
+                : createDocument(`platforms/${userId}/journals`, { ...data, body: journal.body })
+            }),
+            this.journalIds.map((journalId) => {
+              if (!this.journalList.find((journal) => journal.id === journalId)) {
+                return deleteDocument(`platforms/${userId}/journals`, journalId)
+              }
+              return null
+            })
+          ])
 
           this.$q.notify({
             type: 'positive',
@@ -187,6 +210,9 @@ export default {
     },
     addJournalArray () {
       this.journalList.push({ body: '<pre>New journal.</pre>' })
+    },
+    removeJournal (index) {
+      this.journalList.splice(index, 1)
     }
   }
 }
