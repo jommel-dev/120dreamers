@@ -114,7 +114,7 @@
       v-model="dateTradeDetailModal"
       persistent
     >
-      <q-card  style="width: 60vw; max-width: 80vw;">
+      <q-card  style="width: 80vw; max-width: 80vw;">
         <q-bar class="bg-white text-black">
           <q-icon name="event" />
           <div>{{ selectedData.date }}</div>
@@ -140,7 +140,47 @@
         <q-card-section>
           <div class="row">
             <div v-if="showJournal" class="col col-sm-12 col-md-12 q-pa-md">
-              <Notebook :dateSelected="selectedData.date" />
+              <div class="row">
+                <div class="col col-sm-3 col-md-3">
+                  <q-list class="rounded-borders" style="max-width: 600px">
+                    <q-item-label header>Daily Journal List</q-item-label>
+
+                    <q-item
+                      v-for="(item, index) in journalList"
+                      :key="index"
+                      class="rounded-borders q-mb-xs"
+                      style="border: 1px solid #80808024;"
+                      clickable
+                      @click="showEditorBody(item)"
+                    >
+                      <!-- <q-item-section avatar top>
+                        <q-icon name="sticky_note_2" color="warning" size="lg" />
+                      </q-item-section> -->
+                      <q-item-section top>
+                        <!-- <q-item-label lines="1">
+                          <span class="text-weight-medium">{{item.id}}</span>
+                        </q-item-label> -->
+                        <q-item-label caption lines="1">
+                          <div v-html="renderMarkdown(item.body)"></div>
+                        </q-item-label>
+                      </q-item-section>
+
+                      <q-item-section top side>
+                        <div class="text-grey-8 q-gutter-xs">
+                          <q-btn @click="removeNote(item.id, index)" class="gt-xs" color="red" size="12px" flat dense round icon="delete" />
+                        </div>
+                      </q-item-section>
+                    </q-item>
+                  </q-list>
+                </div>
+                <div class="col col-sm-9 col-md-9">
+                  <Notebook 
+                    :dateSelected="selectedData.date" 
+                    :noteSelected="journalSelected"
+                    @listOfNotes="noteList" />
+                </div>
+              </div>
+              
             </div>
             <div class="col col-md-3 q-pa-md">
               <table style="width:100%;">
@@ -246,6 +286,8 @@ import listPlugin from '@fullcalendar/list'
 
 // import roundVue from './matix/round.vue'
 // import mixLineBar from './matix/mixLineBar.vue'
+import { LocalStorage } from 'quasar'
+import { marked } from 'marked'
 import moment from 'moment'
 import Papa from 'papaparse'
 import { Timestamp } from '@firebase/firestore'
@@ -255,7 +297,8 @@ import TradeForm from './TradeForm.vue'
 import Notebook from '../DailyJournal/note/notebook.vue'
 
 import { syncAccount } from '../../stores/syncAccount'
-import { fabBlackTie } from '@quasar/extras/fontawesome-v6'
+import deleteDocument from 'src/firebase/firebase-delete'
+
 const store = syncAccount()
 
 export default {
@@ -275,6 +318,8 @@ export default {
   data () {
     return {
       showJournal: false,
+      journalList: [],
+      journalSelected: {},
       calendarOptions: {
         eventRender: this.customEventRender,
         plugins: [dayGridPlugin, interactionPlugin, listPlugin, timeGridPlugin],
@@ -327,10 +372,33 @@ export default {
     this.asyncCallofData();
   },
   methods: {
+    showEditorBody(item){
+      this.journalSelected = item
+    },
+    removeNote(journalId, index){
+      const user = LocalStorage.getItem('user')
+      const userId = user ? user.uid : null
+
+      deleteDocument(`platforms/${userId}/journals`, journalId)
+      this.journalList.splice(index, 1)
+    },
+    checkActiveJournal (val) {
+      return val === moment().format('l')
+    },
+    renderMarkdown(text) {
+      return marked(text)
+    },
+    formatDate(val) {
+      return new Date(val.seconds * 1000).toLocaleDateString()
+    },
     customEventRender(info) {
       // Customize the event rendering here
       info.el.style.fontWeight = 'bold'; // Make text bold
       info.el.style.color = 'white'; // Change text color to black
+    },
+    noteList(value){
+      console.log(value)
+      this.journalList = value
     },
     openModal (data) {
       let comp = this.$refs.tradeFormModal
